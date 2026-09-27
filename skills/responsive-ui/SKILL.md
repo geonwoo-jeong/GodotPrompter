@@ -15,7 +15,7 @@ All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first,
 
 Configure base resolution and stretch behaviour in `Project > Project Settings > Display > Window`.
 
-Key settings and their `.godot/project.godot` keys:
+Key settings in `project.godot` (under its `[display]` section):
 
 | Setting | project.godot key | Recommended value |
 |---|---|---|
@@ -27,7 +27,7 @@ Key settings and their `.godot/project.godot` keys:
 
 > **Godot 4.7+:** Projects **newly created** in Godot 4.7 already default `display/window/stretch/mode` to `canvas_items` and `display/window/stretch/aspect` to `expand` (previously `disabled` / `keep`) — the recommendations above are now the out-of-the-box values. Projects created on older versions are unchanged (the property default is still `disabled`), so set both explicitly when upgrading. See the [4.7 migration guide](https://docs.godotengine.org/en/latest/tutorials/migrating/upgrading_to_godot_4.7.html).
 
-These can also be set at runtime:
+To change scaling at runtime, update the current `Window`. Changing a value in `ProjectSettings` does not automatically reconfigure an existing window.
 
 **GDScript:**
 
@@ -36,17 +36,17 @@ These can also be set at runtime:
 var viewport_size: Vector2 = get_viewport().get_visible_rect().size
 
 # Change stretch mode at runtime
-ProjectSettings.set_setting("display/window/stretch/mode", "canvas_items")
+get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
 ```
 
 **C#:**
 
 ```csharp
 // Read current viewport size
-Vector2I viewportSize = GetViewport().GetVisibleRect().Size;
+Vector2 viewportSize = GetViewport().GetVisibleRect().Size;
 
-// Change a project setting at runtime (takes effect next frame)
-ProjectSettings.SetSetting("display/window/stretch/mode", "canvas_items");
+// Change the existing window's scaling mode at runtime.
+GetWindow().ContentScaleMode = Window.ContentScaleModeEnum.CanvasItems;
 ```
 
 ---
@@ -55,8 +55,8 @@ ProjectSettings.SetSetting("display/window/stretch/mode", "canvas_items");
 
 | Mode | `project.godot` value | Rendering | Best For |
 |---|---|---|---|
-| `canvas_items` | `"canvas_items"` | Viewport rendered at design resolution, then upscaled — UI and 2D nodes scale smoothly | Most 2D and UI-heavy games |
-| `viewport` | `"viewport"` | Entire viewport is rendered at design resolution and stretched; no sub-pixel blending | Pixel art games needing pixel-perfect output |
+| `canvas_items` | `"canvas_items"` | 2D coordinates scale from the design size, but drawing happens directly at the target resolution; 3D is unaffected | Most 2D and UI-heavy games |
+| `viewport` | `"viewport"` | The scene renders to a viewport at the design resolution, then its image scales to the window; integer scaling and nearest filtering are separate choices | Pixel art games needing pixel-perfect output |
 | `disabled` | `"disabled"` | No automatic scaling; every Control node must handle its own layout | Complex custom scaling, 3D games with a Control HUD |
 
 **When to choose each:**

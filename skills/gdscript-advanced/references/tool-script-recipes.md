@@ -37,9 +37,10 @@ func _rebuild_mesh() -> void:
     for i in segments:
         var angle := i * TAU / segments
         verts.append(Vector3(cos(angle) * radius, 0, sin(angle) * radius))
+    verts.append(verts[0])  # LINE_STRIP closes only when the first vertex is repeated.
     arrays[Mesh.ARRAY_VERTEX] = verts
     var array_mesh := ArrayMesh.new()
-    array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINE_LOOP, arrays)
+    array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINE_STRIP, arrays)
     mesh = array_mesh
 ```
 

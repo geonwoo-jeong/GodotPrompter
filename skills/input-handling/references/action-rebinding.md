@@ -65,6 +65,10 @@ func _unhandled_input(event: InputEvent) -> void:
     if not (event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton):
         return
 
+    # Bind only a fresh press, never a release or key-repeat event.
+    if not event.is_pressed() or event.is_echo():
+        return
+
     # Ignore modifier-only presses (Shift, Ctrl, Alt alone)
     if event is InputEventKey and event.keycode in [KEY_SHIFT, KEY_CTRL, KEY_ALT, KEY_META]:
         return
@@ -115,6 +119,9 @@ public partial class RebindButton : Button
             return;
 
         if (@event is not (InputEventKey or InputEventMouseButton or InputEventJoypadButton))
+            return;
+
+        if (!@event.IsPressed() || @event.IsEcho())
             return;
 
         if (@event is InputEventKey keyEvent &&

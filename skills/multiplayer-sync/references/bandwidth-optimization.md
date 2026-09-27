@@ -12,30 +12,30 @@ Reference for `skills/multiplayer-sync/SKILL.md` — sync only changed propertie
 
 ### Sync Only Changed Properties
 
-Use `delta_interval` on `MultiplayerSynchronizer` so only dirty properties are sent each tick. Combine with a short `replication_interval` for a full-state heartbeat.
+Configure change-driven properties as `SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE`; `delta_interval` controls how often changes are sent. `replication_interval` separately controls properties in `REPLICATION_MODE_ALWAYS`. Setting both intervals does not turn ON_CHANGE properties into periodic full-state heartbeats.
 
 ```gdscript
 func _ready() -> void:
     var sync := $MultiplayerSynchronizer
-    sync.replication_interval = 1.0   # Full state every 1 s as fallback
-    sync.delta_interval        = 0.05  # Changed properties every 50 ms
+    sync.replication_interval = 1.0   # ALWAYS properties every 1 s
+    sync.delta_interval        = 0.05  # ON_CHANGE properties checked every 50 ms
 ```
 
 ```csharp
 public override void _Ready()
 {
     var sync = GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
-    sync.ReplicationInterval = 1.0;  // Full state every 1 s as fallback
-    sync.DeltaInterval       = 0.05; // Changed properties every 50 ms
+    sync.ReplicationInterval = 1.0;  // ALWAYS properties every 1 s
+    sync.DeltaInterval       = 0.05; // ON_CHANGE properties checked every 50 ms
 }
 ```
 
 ### Quantize Floats
 
-Reduce float precision before sending. A 16-bit integer covers ±32767 cm — more than enough for most game worlds.
+Reduce float precision before sending. A signed 16-bit integer at 1 cm precision covers approximately ±327 m; choose precision and range for your world. These helpers return an ordinary integer constrained to that range. An integer passed directly to an RPC is not automatically encoded in 16 bits: the bandwidth saving requires explicitly packing each quantized component into two bytes and unpacking it on receipt.
 
 ```gdscript
-# Encode a position component to a 16-bit integer (1 cm precision, ±327 m range).
+# Quantize to a signed 16-bit range (1 cm precision, approximately ±327 m).
 func quantize(value: float) -> int:
     return clampi(int(value * 100.0), -32768, 32767)
 
@@ -44,7 +44,7 @@ func dequantize(value: int) -> float:
 ```
 
 ```csharp
-// Encode a position component to a 16-bit integer (1 cm precision, +/-327 m range).
+// Quantize to a signed 16-bit range (1 cm precision, approximately +/-327 m).
 public static int Quantize(float value)
 {
     return Mathf.Clamp((int)(value * 100.0f), -32768, 32767);
@@ -133,4 +133,3 @@ private void TakeDamage(int amount)
 ```
 
 ---
-

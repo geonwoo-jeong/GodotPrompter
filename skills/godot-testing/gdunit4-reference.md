@@ -373,57 +373,46 @@ Verify(spyHealth).TakeDamage(10);                 // call tracked
 
 ---
 
-## CLI Commands
+## CLI Commands (gdUnit4 6.2.1)
+
+Use `bin/GdUnitCmdTool.gd` for both languages. Import the project first; for C# also install compatible packages and run `dotnet build` with the .NET SDK, then use the Godot .NET executable. These examples were checked against Godot 4.7.2. Do not put the addon flags after `--`: this runner reads engine command-line arguments.
 
 ### GDScript tests only
 
 ```bash
-godot --headless \
-  -s addons/gdUnit4/GdUnitRunner.gd \
-  -- \
-  --testsuites res://tests
+godot --headless --path . \
+  -s addons/gdUnit4/bin/GdUnitCmdTool.gd \
+  --ignoreHeadlessMode --add res://tests
 ```
 
 ### C# tests (requires .NET Godot build)
 
 ```bash
-godot --headless \
-  -s addons/gdUnit4/bin/GdUnit4CSharpApiLoader.cs \
-  -- \
-  --testsuites res://tests
+dotnet build
+godot --headless --path . \
+  -s addons/gdUnit4/bin/GdUnitCmdTool.gd \
+  --ignoreHeadlessMode --add res://tests
 ```
 
 ### Common CLI flags
 
-| Flag                          | Description                                          |
-|-------------------------------|------------------------------------------------------|
-| `--testsuites <path>`         | Path to test directory or specific file              |
-| `--report-dir <path>`         | Output directory for HTML/XML reports                |
-| `--report-count <n>`          | Number of reports to keep (default: 20)              |
-| `--verbose`                   | Verbose output                                       |
-| `--ignore-pause`              | Skip `pause()` calls during CI runs                  |
+| Flag | Description |
+|------|-------------|
+| `--add <path>` | Add a test directory or a specific suite; repeat to add more |
+| `--report-directory <path>` | Directory for test reports |
+| `--report-count <n>` | Number of report histories to keep |
+| `--continue` | Collect results after failures instead of failing fast |
+| `--ignoreHeadlessMode` | Allow headless logic tests; UI interaction tests need a display |
+| `--help-advanced` | Show the installed version's advanced options |
 
 ### Minimal CI invocation
 
 ```bash
-# GDScript
-godot --headless \
-  -s addons/gdUnit4/GdUnitRunner.gd \
-  -- \
-  --testsuites res://tests \
-  --report-dir ./reports
-
-# C# (mixed project)
-godot --headless \
-  -s addons/gdUnit4/bin/GdUnit4CSharpApiLoader.cs \
-  -- \
-  --testsuites res://tests \
-  --report-dir ./reports
+# Use the .NET Godot executable and build first when the project contains C#.
+godot --headless --path . \
+  -s addons/gdUnit4/bin/GdUnitCmdTool.gd \
+  --ignoreHeadlessMode --continue \
+  --add res://tests --report-directory res://reports
 ```
 
-### Exit codes
-
-| Code | Meaning                  |
-|------|--------------------------|
-| 0    | All tests passed         |
-| 1    | One or more tests failed |
+A successful run returns zero. Preserve any nonzero runner exit status in CI rather than masking it with an output pipeline. See [running-tests.md](references/running-tests.md) for the full workflow and [the versioned runner source](https://github.com/godot-gdunit-labs/gdUnit4/blob/v6.2.1/addons/gdUnit4/src/core/runners/GdUnitTestCIRunner.gd) for the accepted options.

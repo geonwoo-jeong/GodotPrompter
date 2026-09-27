@@ -36,7 +36,7 @@ Every UI widget (`Button`, `Label`, `LineEdit`, etc.) extends `Control`. Key pro
 - `theme` — a `Theme` resource; if `null`, walks up the tree to the nearest ancestor with one
 - `focus_mode` — whether the node can receive keyboard/gamepad focus
 
-Place UI nodes inside a `CanvasLayer` (or directly under the scene root's built-in canvas) so they render on top of the 3D/2D world, unaffected by `Camera` transforms.
+Place screen-space HUD nodes inside a `CanvasLayer` with `layer = 1` and `follow_viewport_enabled = false` (the default) so they render above the world and remain independent of the `Camera2D` transform. Controls in the viewport's default 2D canvas are affected by that camera.
 
 > ⚠️ **Changed in Godot 4.7:** `Control.accessibility_live` changed type from `DisplayServer.AccessibilityLiveMode` to `AccessibilityServer.AccessibilityLiveMode` (`LIVE_OFF = 0` default, `LIVE_POLITE`, `LIVE_ASSERTIVE`) — accessibility enums/APIs moved to the new `AccessibilityServer` singleton. GDScript-compatible; breaks C# binary/source compatibility (rebuild against the new enum). See the [4.7 migration guide](https://docs.godotengine.org/en/latest/tutorials/migrating/upgrading_to_godot_4.7.html).
 

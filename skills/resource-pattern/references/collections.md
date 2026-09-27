@@ -42,24 +42,18 @@ func _ready() -> void:
     var sword:  ItemData = preloader.get_resource("iron_sword")
 ```
 
-### Loading all resources from a directory
+### Loading all resources from a directory (Godot 4.4+)
+
+Use `ResourceLoader.list_directory()` instead of filesystem extension scans: it reports original resource names even when the export remaps files. This is a shallow scan. On Godot 4.3, use the typed `ItemDatabase.items` catalog above or a `ResourcePreloader`. In every version, include dynamically discovered assets in the export preset; discovery cannot load assets excluded from the package.
 
 ```gdscript
 func load_all_items(dir_path: String) -> Array[ItemData]:
     var result: Array[ItemData] = []
-    var dir := DirAccess.open(dir_path)
-    if dir == null:
-        push_error("ItemDatabase: cannot open directory '%s'" % dir_path)
-        return result
-
-    dir.list_dir_begin()
-    var file_name := dir.get_next()
-    while file_name != "":
-        if not dir.current_is_dir() and (file_name.ends_with(".tres") or file_name.ends_with(".res")):
+    for file_name in ResourceLoader.list_directory(dir_path):
+        if file_name.ends_with(".tres") or file_name.ends_with(".res"):
             var res := load(dir_path.path_join(file_name))
             if res is ItemData:
                 result.append(res)
-        file_name = dir.get_next()
 
     return result
 ```
@@ -91,24 +85,14 @@ public static class ItemDatabaseLoader
     public static Array<ItemData> LoadAllItems(string dirPath)
     {
         var result = new Array<ItemData>();
-        using var dir = DirAccess.Open(dirPath);
-        if (dir == null)
+        foreach (string fileName in ResourceLoader.ListDirectory(dirPath))
         {
-            GD.PushError($"ItemDatabase: cannot open directory '{dirPath}'");
-            return result;
-        }
-
-        dir.ListDirBegin();
-        string fileName = dir.GetNext();
-        while (fileName != string.Empty)
-        {
-            if (!dir.CurrentIsDir() && (fileName.EndsWith(".tres") || fileName.EndsWith(".res")))
+            if (fileName.EndsWith(".tres") || fileName.EndsWith(".res"))
             {
                 var res = ResourceLoader.Load(dirPath.PathJoin(fileName));
                 if (res is ItemData item)
                     result.Add(item);
             }
-            fileName = dir.GetNext();
         }
         return result;
     }

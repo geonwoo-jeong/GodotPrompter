@@ -10,10 +10,11 @@ $Panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 # Anchor to top-right corner, fixed 200x60 size
 $HUDLabel.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-$HUDLabel.size = Vector2(200.0, 60.0)
-# 16 px margin from the right and top edges
+# Set all four edges to preserve 200x60 size and 16 px right/top margins.
+$HUDLabel.offset_left   = -216.0
 $HUDLabel.offset_right  = -16.0
 $HUDLabel.offset_top    =  16.0
+$HUDLabel.offset_bottom =  76.0
 
 # Custom anchor: right half of screen, full height
 $SidePanel.anchor_left   = 0.5
@@ -35,9 +36,10 @@ GetNode<Control>("Panel").SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRe
 // Anchor to top-right corner
 var label = GetNode<Control>("HUDLabel");
 label.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopRight);
-label.Size = new Vector2(200f, 60f);
-label.OffsetRight = -16f;
-label.OffsetTop   =  16f;
+label.OffsetLeft   = -216f;
+label.OffsetRight  = -16f;
+label.OffsetTop    =  16f;
+label.OffsetBottom =  76f;
 
 // Custom anchor: right half of screen
 var panel = GetNode<Control>("SidePanel");

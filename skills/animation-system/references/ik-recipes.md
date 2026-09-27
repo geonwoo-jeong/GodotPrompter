@@ -17,9 +17,10 @@ Character (Node3D)
 ├── Skeleton3D
 │   ├── (bones: Spine, Shoulder, UpperArm, Forearm, Hand)
 │   └── CCDIK3D
-│       ├── target_node = NodePath("../../Target")
-│       ├── tip_bone = "Hand"
-│       └── root_bone = "Shoulder"
+│       ├── setting_count = 1
+│       ├── settings/0/target_node = NodePath("../../Target")
+│       ├── settings/0/end_bone_name = "Hand"
+│       └── settings/0/root_bone_name = "Shoulder"
 └── Target (Node3D)
 ```
 
@@ -75,9 +76,10 @@ Character (Node3D)
 ├── Skeleton3D
 │   ├── (bones: Hip, ThighL, ShinL, FootL)
 │   └── FABRIK3D_L
-│       ├── target_node = NodePath("../../FootTarget_L")
-│       ├── tip_bone = "FootL"
-│       └── root_bone = "Hip"
+│       ├── setting_count = 1
+│       ├── settings/0/target_node = NodePath("../../FootTarget_L")
+│       ├── settings/0/end_bone_name = "FootL"
+│       └── settings/0/root_bone_name = "Hip"
 ├── FootTarget_L (Node3D)   # IK target driven by raycast
 └── RayCast3D_L (RayCast3D) # downward ray from foot bone position
 ```
@@ -143,10 +145,12 @@ public partial class FootIK : Node3D
 
 ```
 Character (CharacterBody3D)
-└── Skeleton3D
-    └── FABRIK3D
-        (bone_chain = ["Shoulder", "Elbow", "Wrist"])
+├── Skeleton3D
+│   └── (bones: Shoulder → Elbow → Wrist)
+└── IKTarget (Node3D)
 ```
+
+Godot 4.6+ chain solvers use indexed settings. This setup, checked on 4.7.2, creates a FABRIK modifier and derives its chain from the skeleton's root/end bones; there is no `bone_chain` property.
 
 ```gdscript
 @onready var skeleton: Skeleton3D = $Skeleton3D
@@ -154,10 +158,11 @@ Character (CharacterBody3D)
 func _ready() -> void:
     var ik := FABRIK3D.new()
     skeleton.add_child(ik)
-    # Define the bone chain from root to tip
-    ik.bone_chain = PackedStringArray(["Shoulder", "Elbow", "Wrist"])
-    # Set the IK target — a Node3D in the scene
-    ik.target_node = $"../IKTarget"
+    ik.set_setting_count(1)
+    ik.set_root_bone_name(0, "Shoulder")
+    ik.set_end_bone_name(0, "Wrist")
+    # NodePath is relative to the modifier, not this controller.
+    ik.set_target_node(0, ik.get_path_to($IKTarget))
 ```
 
 ```csharp
@@ -166,11 +171,13 @@ public override void _Ready()
     var skeleton = GetNode<Skeleton3D>("Skeleton3D");
     var ik = new Fabrik3D();
     skeleton.AddChild(ik);
-    ik.BoneChain = new string[] { "Shoulder", "Elbow", "Wrist" };
-    ik.TargetNode = GetNode("../IKTarget").GetPath();
+    ik.SetSettingCount(1);
+    ik.SetRootBoneName(0, "Shoulder");
+    ik.SetEndBoneName(0, "Wrist");
+    ik.SetTargetNode(0, ik.GetPathTo(GetNode<Node3D>("IKTarget")));
 }
 ```
 
-> **Note:** `IKModifier3D` was introduced in Godot 4.6 beta 1 and is still being finalized. Property names, subclass count, and C# binding names may change before the stable release. The C# names here follow Godot's standard binding convention (acronyms PascalCased: `Fabrik3D`, `Ccdik3D`, `JacobianIk3D`, `TwoBoneIk3D`) — verify against your local 4.6 build before relying on them. See the [4.6 release announcement](https://godotengine.org/article/dev-snapshot-godot-4-6-beta-1/) for details.
+> **API references:** [IKModifier3D](https://docs.godotengine.org/en/4.7/classes/class_ikmodifier3d.html) supplies the indexed target settings; [ChainIK3D](https://docs.godotengine.org/en/4.7/classes/class_chainik3d.html) supplies root/end bone methods inherited by FABRIK3D and CCDIK3D. Use the reference matching the project's engine version.
 
 > **When to use:** `IKModifier3D` subclasses replace custom IK scripts and third-party IK plugins. Use `TwoBoneIK3D` for leg/arm IK (fastest, exact), `FABRIK3D` for longer chains and natural-looking reach, `CCDIK3D` for tentacles or tails.

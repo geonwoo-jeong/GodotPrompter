@@ -57,6 +57,8 @@ Prevents rendering objects hidden behind walls/large geometry.
 
 Render thousands of identical meshes (grass, trees, debris) in a single draw call.
 
+`positions` are local to the new MultiMeshInstance3D (which has the same local space as this spawner). Build rotation and scale around the instance origin first, then assign its position; global `rotated()` / `scaled()` also transform an already assigned origin. Convert world positions with `to_local()` / `ToLocal()` before passing them here.
+
 #### GDScript
 
 ```gdscript
@@ -68,12 +70,12 @@ func spawn_grass(positions: PackedVector3Array) -> void:
 
     for i in positions.size():
         var xform := Transform3D()
-        xform.origin = positions[i]
         # Random rotation around Y
         xform = xform.rotated(Vector3.UP, randf() * TAU)
         # Random scale variation
         var s := randf_range(0.8, 1.2)
         xform = xform.scaled(Vector3(s, s, s))
+        xform.origin = positions[i]
         mm.set_instance_transform(i, xform)
 
     var mmi := MultiMeshInstance3D.new()
@@ -94,10 +96,10 @@ public void SpawnGrass(Vector3[] positions)
     for (int i = 0; i < positions.Length; i++)
     {
         var xform = Transform3D.Identity;
-        xform.Origin = positions[i];
         xform = xform.Rotated(Vector3.Up, (float)GD.RandRange(0, Mathf.Tau));
         float s = (float)GD.RandRange(0.8, 1.2);
         xform = xform.Scaled(new Vector3(s, s, s));
+        xform.Origin = positions[i];
         mm.SetInstanceTransform(i, xform);
     }
 

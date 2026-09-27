@@ -9,7 +9,7 @@ Reference for `skills/dedicated-server/SKILL.md` — Dockerfile, Linux VPS setup
 
 ### Dockerfile
 
-The server binary must be the Linux server export (`dedicated_server` feature enabled). Build a minimal container from the exported binary and its PCK file.
+Use a Linux export with the `dedicated_server` feature enabled, or an ordinary Linux export started with `--headless`. Godot 4 does not require a separate server-only engine binary. The container below is for a GDScript export. Build a minimal container from the exported binary and its PCK file.
 
 ```dockerfile
 # Dockerfile
@@ -62,7 +62,7 @@ chmod +x /opt/my-game/my_game_server.x86_64
 sudo ufw allow 7777/udp
 
 # 3. Test a one-shot run to check for missing libraries.
-/opt/my-game/my_game_server.x86_64 --headless --port 7777
+/opt/my-game/my_game_server.x86_64 --headless -- --port 7777
 ```
 
 If you see `error while loading shared libraries`, install the missing package reported and re-run.
@@ -80,7 +80,7 @@ Wants=network-online.target
 Type=simple
 User=gameserver
 WorkingDirectory=/opt/my-game
-ExecStart=/opt/my-game/my_game_server.x86_64 --headless --port 7777 --max-players 16
+ExecStart=/opt/my-game/my_game_server.x86_64 --headless -- --port 7777 --max-players 16
 Restart=on-failure
 RestartSec=5s
 
@@ -130,7 +130,7 @@ func log_error(msg: String) -> void:
     push_error("[ERROR] %s  %s" % [Time.get_datetime_string_from_system(), msg])
 ```
 
-When exporting a C# dedicated server, ensure the .NET runtime is bundled in the export preset (Project → Export → Dotnet → Include Scripts Content = enabled, and the target system has the matching `dotnet` runtime installed).
+For C# deployment, copy the complete Godot .NET export output, including its generated data/dependency files. Verify the runtime/native dependencies of the selected export mode on the target system; the **Include Scripts Content** option does not bundle the .NET runtime. The minimal two-file GDScript Dockerfile above is not a complete C# deployment recipe.
 
 ```csharp
 using Godot;

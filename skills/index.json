@@ -975,7 +975,8 @@
       ],
       "addon": null,
       "references": [
-        "skills/state-machine/references/hierarchical-and-parallel.md"
+        "skills/state-machine/references/hierarchical-and-parallel.md",
+        "skills/state-machine/references/node-based-machine.md"
       ],
       "source": "skills/state-machine/SKILL.md"
     },

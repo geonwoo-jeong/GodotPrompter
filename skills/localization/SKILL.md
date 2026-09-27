@@ -162,14 +162,16 @@ var collected_text: String = tr("ITEM_COLLECTED") % item_name
 # Pluralization (Godot 4.x)
 var count := 5
 var msg: String = tr_n("ONE_ENEMY", "MANY_ENEMIES", count)
-# Requires PO files with plural forms
+# Requires plural entries in PO, or CSV on Godot 4.6+.
+# tr_n() selects a form; apply any placeholders to the returned string separately.
 ```
 
 ### C#
 
 ```csharp
 string labelText = Tr("MENU_START");
-string healthText = string.Format(Tr("PLAYER_HEALTH"), currentHealth);
+// This shared CSV uses %d, not the {0} placeholder used by string.Format().
+string healthText = Tr("PLAYER_HEALTH").Replace("%d", currentHealth.ToString());
 
 // Pluralization
 string msg = TrN("ONE_ENEMY", "MANY_ENEMIES", count);
@@ -308,7 +310,7 @@ ITEM_SWORD_DESC          # Inventory item description
 | Label shows key after scene change | Translation resource not loaded yet | Register translations in Project Settings (not at runtime) |
 | RTL text renders LTR | `layout_direction` not set | Set to `RTL` or `LOCALE` on root Control |
 | Font doesn't display characters | Missing Unicode range in font | Import a font covering the target script (Noto Sans recommended) |
-| Pluralization doesn't work with CSV | CSV doesn't support plural forms | Use PO format for languages with complex plural rules |
+| Pluralization doesn't work with CSV | Missing continuation rows/rules, or Godot older than 4.6 | On 4.6+, provide each plural form in a separate row; use PO on 4.3–4.5 |
 | `%s` in translation shows literal `%s` | Using `tr()` result as key instead of formatting it | Use `tr("KEY") % value`, not `tr("KEY" % value)` |
 
 ---
@@ -323,7 +325,7 @@ Steps and QA benefits: [references/editor-preview.md](references/editor-preview.
 
 ## 10. CSV Plural and Context Support (Godot 4.6+)
 
-Godot 4.6 extends CSV translation with three optional header columns — `?context`, `?plural`, `?pluralrule` — bringing context disambiguation and simple one/other plurals (previously PO-only) to CSV. Languages with 3+ plural forms (Russian, Polish, Arabic) still need PO format with full `msgstr[n]` plural arrays.
+Godot 4.6 extends CSV translation with optional `?context` and `?plural` columns and a special `?pluralrule` **row**. Plural forms occupy consecutive rows; each locale can have three or more forms. The optional rule row specifies a Gettext plural expression per locale, not a CLDR category index. Use PO for plural/context support on Godot 4.3–4.5.
 
 Column reference, example CSV, and `tr()` / `tr_n()` usage (GDScript + C#): [references/csv-plural-context.md](references/csv-plural-context.md).
 
@@ -340,7 +342,7 @@ Column reference, example CSV, and `tr()` / `tr_n()` usage (GDScript + C#): [ref
 - [ ] Format strings (`%s`, `%d`) are applied AFTER `tr()`, not before
 - [ ] Translation keys follow a consistent naming convention
 - [ ] UI layout adapts to longer/shorter text in different languages (no hardcoded widths)
-- [ ] PO format is used for languages with complex plural rules
+- [ ] Every required plural form is supplied in PO or CSV (CSV plural support requires Godot 4.6+)
 - [ ] Editor Locale Preview (Internationalization → Preview Language) used for translation QA instead of test runs (Godot 4.5+)
 - [ ] CSV `?context` column used when the same key has different meanings in different UI contexts (Godot 4.6+)
-- [ ] CSV `?plural` / `?pluralrule` columns used for simple one/other plurals; PO format used for 3+ plural forms (Godot 4.6+)
+- [ ] CSV `?plural` column, continuation rows, and optional `?pluralrule` row match each locale's plural forms (Godot 4.6+)

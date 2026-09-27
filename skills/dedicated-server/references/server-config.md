@@ -9,6 +9,10 @@ Reference for `skills/dedicated-server/SKILL.md` — command-line argument parsi
 
 ### Command Line Argument Parsing
 
+Precedence is defaults → config file → environment → CLI. Put custom arguments after `--` and read them with `OS.get_cmdline_user_args()` / `OS.GetCmdlineUserArgs()` so Godot does not interpret them as engine options.
+
+Place `ServerConfig` before autoloads that read it in the project's Autoload order so its `_ready()` / `_Ready()` finishes before those consumers initialize.
+
 ### GDScript
 
 ```gdscript
@@ -22,16 +26,16 @@ var log_level: int   = 1   # 0 = quiet, 1 = info, 2 = verbose
 
 
 func _ready() -> void:
-    _parse_args()
     _load_config_file("user://server.cfg")
     _apply_env_vars()
+    _parse_args()  # CLI overrides environment, file, and defaults.
 
     if OS.has_feature("dedicated_server") or DisplayServer.get_name() == "headless":
         print("[Config] port=%d  max_players=%d  tick_rate=%d" % [port, max_players, tick_rate])
 
 
 func _parse_args() -> void:
-    var args := OS.get_cmdline_args()
+    var args := OS.get_cmdline_user_args()
     var i := 0
     while i < args.size():
         match args[i]:
@@ -95,7 +99,7 @@ log_level=1
 **Example launch:**
 
 ```bash
-./my_game_server.x86_64 --headless --port 7778 --max-players 4 --tick-rate 30
+./my_game_server.x86_64 --headless -- --port 7778 --max-players 4 --tick-rate 30
 ```
 
 ### C#
@@ -113,9 +117,9 @@ public partial class ServerConfig : Node
 
     public override void _Ready()
     {
-        ParseArgs();
         LoadConfigFile("user://server.cfg");
         ApplyEnvVars();
+        ParseArgs(); // CLI has final precedence.
 
         if (OS.HasFeature("dedicated_server") || DisplayServer.GetName() == "headless")
             GD.Print($"[Config] port={Port}  max_players={MaxPlayers}  tick_rate={TickRate}");
@@ -123,7 +127,7 @@ public partial class ServerConfig : Node
 
     private void ParseArgs()
     {
-        var args = OS.GetCmdlineArgs();
+        var args = OS.GetCmdlineUserArgs();
         for (int i = 0; i < args.Length; i++)
         {
             switch (args[i])
@@ -163,4 +167,3 @@ public partial class ServerConfig : Node
 ```
 
 ---
-

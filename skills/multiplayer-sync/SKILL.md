@@ -18,7 +18,7 @@ All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first,
 ### What It Does
 
 - Sends property values from the **authority** peer to all others at a configured interval
-- Supports both **delta sync** (only changed values) and **full sync** (all values every tick)
+- Supports both **delta sync** (changed ON_CHANGE properties) and **full sync** (ALWAYS properties at the configured interval)
 - Allows **visibility filters** to control which peers receive updates
 
 ### Replication Config in the Editor
@@ -26,26 +26,28 @@ All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first,
 1. Select the `MultiplayerSynchronizer` node in the scene tree.
 2. In the Inspector, open **Replication** and click **Add Property**.
 3. Pick the parent node path and property name (e.g. `position`, `velocity`).
-4. Set **Sync** (send every interval) or **Spawn** (send only on spawn) per property.
-5. Set the **Replication Interval** (seconds). `0` means every physics frame.
+4. Choose **Always**, **On Change**, or **Never** for each property's replication mode. The separate **Spawn** checkbox controls whether its initial value is included when spawning; it can be enabled alongside ongoing synchronization.
+5. Set the **Replication Interval** (seconds). `0` means every network process frame.
 
 ### Key Properties
 
 | Property | Description |
 |---|---|
-| `replication_interval` | Seconds between full sync updates. `0` = every physics frame |
-| `delta_interval` | Seconds between delta sync updates. `0` = disabled |
+| `replication_interval` | Seconds between full sync updates. `0` = every network process frame |
+| `delta_interval` | Seconds between delta sync updates. `0` = every network process frame for ON_CHANGE properties |
 | `public_visibility` | When `true`, updates go to all peers (default) |
-| `visibility_filters` | Array of `Callable`s; each returns `true` if a peer should receive updates |
+| `visibility_update_mode` | When registered visibility filters are reevaluated (idle, physics, or manual) |
+
+Register/remove filter Callables with `add_visibility_filter()` / `remove_visibility_filter()`. Use `update_visibility()` when updates are manual; there is no public `visibility_filters` array property.
 
 ### Delta vs Full Sync
 
 | Mode | How It Works | Best For |
 |---|---|---|
-| **Full sync** | Sends all configured properties every `replication_interval` | Simple objects, low property count |
-| **Delta sync** | Sends only properties that changed since last sync, every `delta_interval` | Objects with many properties that change infrequently |
+| **Full sync** | Sends properties configured as `REPLICATION_MODE_ALWAYS` every `replication_interval` | Simple objects, low property count |
+| **Delta sync** | Sends changed properties configured as `REPLICATION_MODE_ON_CHANGE`, every `delta_interval` | Objects with many properties that change infrequently |
 
-Use both together: set `replication_interval` for periodic full state and `delta_interval` for frequent change-only bursts.
+Choose a replication mode per property in `SceneReplicationConfig`. The two intervals govern different property sets; setting both does not send an ON_CHANGE property again as a periodic full-state heartbeat. A zero interval does not disable ongoing replication; use `REPLICATION_MODE_NEVER` for that property. Its separate spawn flag still controls transmission during spawning.
 
 ### Visibility Filters (GDScript)
 
@@ -68,7 +70,7 @@ func _is_peer_in_range(peer_id: int) -> bool:
 public override void _Ready()
 {
     var sync = GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
-    sync.AddVisibilityFilter(Callable.From<int>(IsPeerInRange));
+    sync.AddVisibilityFilter(Callable.From<int, bool>(IsPeerInRange));
 }
 
 private bool IsPeerInRange(int peerId)
@@ -127,6 +129,12 @@ func _physics_process(_delta: float) -> void:
     synced_position = global_position
     synced_velocity = velocity
     synced_anim     = _compute_anim_state()
+
+
+func _compute_anim_state() -> int:
+    if not is_on_floor():
+        return 2
+    return 1 if velocity.length() > 1.0 else 0
 ```
 
 ### Synced Player (C#)
@@ -179,7 +187,7 @@ public partial class SyncedPlayer : CharacterBody2D
 
 `MultiplayerSynchronizer` updates target properties at sync intervals (e.g., 30 Hz), but rendering runs at frame rate (60+ Hz). Without interpolation, remote players appear to teleport between snapshots. The fix: store position snapshots with timestamps and lerp in `_process` toward the latest snapshot using a small offset (interpolation buffer ~100 ms).
 
-> See [references/interpolation.md](references/interpolation.md) for the full GDScript and C# interpolation buffer pattern (snapshot ring, latest-snapshot interpolation, render-time lerp).
+> See [references/interpolation.md](references/interpolation.md) for the full GDScript and C# interpolation buffer pattern (bounded timestamped snapshots, delayed render-time lerp).
 
 ---
 
@@ -220,7 +228,7 @@ Choose the synchronization model that fits your game's needs:
 
 ## 7. Bandwidth Optimization
 
-Four levers: **sync only changed properties** (replication-config flag per property), **quantize floats** (Vector3 components in mm not floats — 16-bit cuts bytes by 2×), **distance-based sync rate** (far-away objects sync at 5 Hz, close at 30 Hz), and **channel selection** (reliable for state changes that must arrive, unreliable for position streams that get superseded).
+Four levers: **sync only changed properties** (replication-config mode per property), **quantize and pack floats** (use a bounded integer range and an explicit compact wire format), **distance-based sync rate** (far-away objects sync at 5 Hz, close at 30 Hz), and **channel selection** (reliable for state changes that must arrive, unreliable for position streams that get superseded).
 
 > See [references/bandwidth-optimization.md](references/bandwidth-optimization.md) for full GDScript + C# recipes for each lever, plus the reliable-vs-unreliable channel decision tree.
 
@@ -230,10 +238,10 @@ Four levers: **sync only changed properties** (replication-config flag per prope
 
 - [ ] `MultiplayerSynchronizer` is a direct child of the node it replicates
 - [ ] Only the **authority** peer writes to synced properties; others are read-only
-- [ ] `set_multiplayer_authority()` is called at spawn time with the correct peer ID
+- [ ] `set_multiplayer_authority()` is called consistently on every peer during custom spawn initialization
 - [ ] `replication_interval` and `delta_interval` are tuned for the object's update rate
 - [ ] Remote player visuals use interpolation in `_process`, not `_physics_process`
-- [ ] Interpolation stores previous and current state and blends using `Engine.get_physics_interpolation_fraction()`
+- [ ] Network interpolation stores timestamped snapshots and blends against a delayed network render time, independent of the physics-tick fraction
 - [ ] Client-side prediction is applied only to the local player's own character
 - [ ] Pending input buffer is bounded (max ~128 ticks) to prevent memory growth
 - [ ] Reconciliation threshold prevents jitter from micro-corrections
