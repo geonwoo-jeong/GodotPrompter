@@ -63,7 +63,7 @@ Both expose `min_value`, `max_value`, and `value`. Set `step = 0` so tweening pr
 
 They are separate subclasses of `Range`; a script extending `Range` can attach to either node.
 
-The `HealthComponent` in **scene-organization** emits `(old_value, new_value)` after updating its state. Treat the two-argument signal as a change notification and read `current_health` / `max_health` from the component, so a project using `(current, maximum)` payloads also works without swapping their meanings.
+The `HealthComponent` in **scene-organization** emits `(old_value, new_value)`. Animate to `new_value` and read the maximum from `health_component.max_health`.
 
 ### GDScript
 
@@ -103,9 +103,9 @@ func _connect_component(component: HealthComponent) -> void:
     component.health_changed.connect(_on_health_changed)
 
 
-func _on_health_changed(_first: int, _second: int) -> void:
+func _on_health_changed(_old_value: int, new_value: int) -> void:
     max_value = health_component.max_health
-    _animate_to(health_component.current_health)
+    _animate_to(new_value)
 
 
 func _animate_to(target_value: float) -> void:
@@ -153,10 +153,10 @@ public partial class HealthBar : Godot.Range
         component.HealthChanged += OnHealthChanged;
     }
 
-    private void OnHealthChanged(int first, int second)
+    private void OnHealthChanged(int oldValue, int newValue)
     {
         MaxValue = HealthComponent.MaxHealth;
-        AnimateTo(HealthComponent.CurrentHealth);
+        AnimateTo(newValue);
     }
 
     private void AnimateTo(float targetValue)

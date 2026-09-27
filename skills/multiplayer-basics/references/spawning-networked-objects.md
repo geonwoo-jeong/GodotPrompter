@@ -9,6 +9,8 @@ Reference for `skills/multiplayer-basics/SKILL.md` — `MultiplayerSpawner` setu
 
 Use **MultiplayerSpawner** to replicate `add_child` calls from the server to all clients automatically. Without it, clients must handle spawning manually and objects will not appear remotely.
 
+This 2D recipe assumes `player.tscn` has a `Node2D`-derived root and uses `Vector2` spawn positions.
+
 ### Scene Setup
 
 ```
@@ -40,10 +42,10 @@ func _ready() -> void:
 func _custom_spawn(data: Variant) -> Node:
 	# data is whatever you passed to spawner.spawn(data).
 	var scene: PackedScene = load("res://scenes/player.tscn")
-	var player: Node2D = scene.instantiate() as Node2D
+	var player: Node2D = scene.instantiate()
 	player.name = str(data["peer_id"])
 	player.position = data["position"]  # Local to Players on every peer.
-	player.set_multiplayer_authority(int(data["peer_id"]))
+	player.set_multiplayer_authority(data["peer_id"])
 	return player
 
 

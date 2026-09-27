@@ -27,14 +27,14 @@ const MAX_SNAPSHOTS := 32
 var _snapshots: Array[Dictionary] = []
 
 @onready var _sync_source: Node = $"../SyncedPlayer"
-@onready var _sync: MultiplayerSynchronizer = $"../SyncedPlayer/MultiplayerSynchronizer"
 
 
 func _ready() -> void:
     set_physics_process(false)
     global_position = _sync_source.synced_position
     _record_snapshot(_now_seconds(), global_position)
-    _sync.synchronized.connect(_on_synchronized)
+    var sync: MultiplayerSynchronizer = _sync_source.get_node("MultiplayerSynchronizer")
+    sync.synchronized.connect(_on_synchronized)
 
 
 func _now_seconds() -> float:
@@ -47,7 +47,7 @@ func _on_synchronized() -> void:
 
 
 func _record_snapshot(time: float, pos: Vector2) -> void:
-    if not _snapshots.is_empty() and time <= float(_snapshots[-1]["time"]):
+    if not _snapshots.is_empty() and time <= _snapshots[-1]["time"]:
         # Multiple notifications in the same clock instant replace the latest value.
         _snapshots[-1]["position"] = pos
         return
@@ -59,14 +59,14 @@ func _record_snapshot(time: float, pos: Vector2) -> void:
 func _sample_position(render_time: float) -> Vector2:
     if _snapshots.is_empty():
         return global_position
-    while _snapshots.size() > 2 and float(_snapshots[1]["time"]) <= render_time:
+    while _snapshots.size() > 2 and _snapshots[1]["time"] <= render_time:
         _snapshots.pop_front()
-    if _snapshots.size() == 1 or render_time <= float(_snapshots[0]["time"]):
+    if _snapshots.size() == 1 or render_time <= _snapshots[0]["time"]:
         return _snapshots[0]["position"]
     var a: Dictionary = _snapshots[0]
     var b: Dictionary = _snapshots[1]
-    var span: float = float(b["time"]) - float(a["time"])
-    var weight: float = clampf((render_time - float(a["time"])) / span, 0.0, 1.0)
+    var span: float = b["time"] - a["time"]
+    var weight: float = clampf((render_time - a["time"]) / span, 0.0, 1.0)
     var start: Vector2 = a["position"]
     return start.lerp(b["position"], weight)
 
@@ -90,16 +90,15 @@ public partial class RemotePlayerDisplay : Node2D
     private const int MaxSnapshots = 32;
     private readonly List<(double Time, Vector2 Position)> _snapshots = new();
     private SyncedPlayer _syncSource = null!;
-    private MultiplayerSynchronizer _sync = null!;
 
     public override void _Ready()
     {
         SetPhysicsProcess(false);
         _syncSource = GetNode<SyncedPlayer>("../SyncedPlayer");
-        _sync = _syncSource.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+        var sync = _syncSource.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
         GlobalPosition = _syncSource.SyncedPosition;
         RecordSnapshot(NowSeconds(), GlobalPosition);
-        _sync.Synchronized += OnSynchronized;
+        sync.Synchronized += OnSynchronized;
     }
 
     private static double NowSeconds() => Time.GetTicksUsec() / 1_000_000.0;

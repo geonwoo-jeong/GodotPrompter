@@ -41,9 +41,16 @@ func run() -> void:
     widget.inventory = inventory
     widget.slot_index = 2
     assert(not widget._can_drop_data(Vector2.ZERO, "not a dictionary"))
-    widget._drop_data(Vector2.ZERO, "not a dictionary")
-    widget._drop_data(Vector2.ZERO, {"from_index": 0})
+    assert(not widget._can_drop_data(Vector2.ZERO, {}))
+    var payload := {"from_index": 0}
+    assert(widget._can_drop_data(Vector2.ZERO, payload))
+    widget._drop_data(Vector2.ZERO, payload)
     assert(inventory.slots[0].is_empty() and inventory.slots[2].item == item)
+    changes[0] = 0
+    registry.deserialize_inventory(inventory, [null, {"id": "potion", "qty": 1}, null, {"id": "potion", "qty": 1}])
+    assert(inventory.slots.size() == 3 and inventory.get_item_count(item) == 1, "Entries beyond capacity are ignored")
+    assert(inventory.slots[0].is_empty() and inventory.slots[2].is_empty(), "Explicit null entries clear slots")
+    assert(inventory.slots[1].item == item and changes[0] == 1, "Restoration keeps slot positions and emits one change")
     registry.deserialize_inventory(inventory, [])
     assert(inventory.get_item_count(item) == 0, "Empty save clears all slots")
     widget.free()

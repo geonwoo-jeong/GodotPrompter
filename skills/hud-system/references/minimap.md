@@ -34,7 +34,7 @@ The `SubViewport` renders a separate view of a shared `World2D`. Assign the main
 extends CanvasLayer
 
 func _ready() -> void:
-    var minimap := $MinimapContainer/MinimapViewport as SubViewport
+    var minimap: SubViewport = $MinimapContainer/MinimapViewport
     minimap.world_2d = get_viewport().find_world_2d()
     get_viewport().canvas_cull_mask = 1       # layer 1
     minimap.canvas_cull_mask = 1 | 2         # layers 1 and 2
