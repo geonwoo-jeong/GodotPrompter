@@ -3,7 +3,7 @@ name: csharp-godot
 description: Use when working with C# in Godot — conventions, GodotSharp API differences from GDScript, project setup, and interop
 ---
 
-# C# in Godot 4.3+
+# C# in Godot 4.3+ (Common)
 
 This skill covers C#-specific conventions, API differences from GDScript, project setup, and interop patterns. All examples are C# only. Target Godot 4.3+ with the GodotSharp NuGet package.
 

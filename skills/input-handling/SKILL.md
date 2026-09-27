@@ -3,11 +3,13 @@ name: input-handling
 description: Use when implementing input — InputEvent system, Input Map actions, controllers/gamepads, mouse/touch, action rebinding, and input architecture
 ---
 
-# Input Handling in Godot 4.3+
+# Input Handling in Godot 4.3+ (Common)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
 > **Related skills:** **player-controller** for movement driven by input, **godot-ui** for UI input focus and navigation, **save-load** for persisting custom key bindings, **responsive-ui** for touch vs desktop input adaptation, **xr-development** for XR controller and hand tracking input, **mobile-development** for mobile sensors and app lifecycle.
+
+> **Dimension routing:** Input Map, button events, gamepads, touch and GUI propagation are common. Map actions through [2D world input](references/2d-world-input.md) or [3D world input](references/3d-world-input.md); a Vector2 stick is also suitable for 3D movement.
 
 ---
 
@@ -75,7 +77,7 @@ Godot ships with `ui_*` actions: `ui_accept`, `ui_cancel`, `ui_left`, `ui_right`
 
 Actions can be created at runtime with `InputMap.add_action()` + `InputMap.action_add_event()` — typically in an autoload `_ready()`, guarded by `InputMap.has_action()`. Define actions in the editor Input Map; only add them in code for dynamically generated bindings or mod support.
 
-> See [references/action-rebinding.md](references/action-rebinding.md) for the GDScript and C# snippet.
+> See [references/common-action-rebinding.md](references/common-action-rebinding.md) for the GDScript and C# snippet.
 
 ### Recommended Action Names
 
@@ -188,7 +190,7 @@ public override void _PhysicsProcess(double delta)
 
 Buffer discrete actions so they aren't lost between physics frames: catch the action in `_unhandled_input()`, set a flag with a short timer (0.1 s is typical), and consume the flag in `_physics_process()`.
 
-> See [references/input-buffering.md](references/input-buffering.md) for the full GDScript and C# jump-buffer implementation.
+> See [references/common-input-buffering.md](references/common-input-buffering.md) for the full GDScript and C# jump-buffer implementation.
 
 ---
 
@@ -196,7 +198,7 @@ Buffer discrete actions so they aren't lost between physics frames: catch the ac
 
 `InputEventMouseMotion.relative` for camera look (with `Input.MOUSE_MODE_CAPTURED`), `InputEventMouseButton` for clicks. Mouse modes: `VISIBLE`, `HIDDEN`, `CAPTURED`, `CONFINED`. Custom cursor via `Input.set_custom_mouse_cursor(texture, shape, hotspot)`.
 
-> See [references/mouse.md](references/mouse.md) for the full GDScript and C# recipes (camera-look with sensitivity + invert toggle, mouse-mode switching, button events, custom cursor with shape variants).
+> See [references/common-mouse.md](references/common-mouse.md) for the full GDScript and C# recipes (camera-look with sensitivity + invert toggle, mouse-mode switching, button events, custom cursor with shape variants).
 
 ---
 
@@ -204,9 +206,9 @@ Buffer discrete actions so they aren't lost between physics frames: catch the ac
 
 `Input.get_connected_joypads()` for runtime detection, `Input.joy_connection_changed` signal for hot-plug. Use Input Map actions with joypad button events for portability. Analog sticks: `Input.get_vector("left", "right", "up", "down", deadzone)` returns a length-clamped Vector2 with built-in deadzone.
 
-> See [references/gamepad.md](references/gamepad.md) for the GDScript and C# recipes (controller detection, deadzone analog reading, vibration via `start_joy_vibration`, motion sensors, detecting last-input-device for UI prompt swapping).
+> See [references/common-gamepad.md](references/common-gamepad.md) for the GDScript and C# recipes (controller detection, deadzone analog reading, vibration via `start_joy_vibration`, motion sensors, detecting last-input-device for UI prompt swapping).
 
-> **Godot 4.7+:** Joypad motion sensors — `Input.get_joy_accelerometer(device)` / `get_joy_gyroscope(device)` (both `Vector3`), guarded by `has_joy_motion_sensors()` and enabled with `set_joy_motion_sensors_enabled()`; recipe in [references/gamepad.md](references/gamepad.md). Vibration is now queryable — `Input.has_joy_vibration(device)` plus `get_joy_vibration_strength/duration/remaining_duration()`. `JoyButton` gains `JOY_BUTTON_MISC2` (`21`) through `JOY_BUTTON_MISC6` (`25`) (C#: `JoyButton.Misc2`…). New project setting `input_devices/joypads/ignore_joypad_on_unfocused_application` (default `false`) ignores joypad input (including motion sensors) and LED changes and stops vibration while the app is unfocused.
+> **Godot 4.7+:** Joypad motion sensors — `Input.get_joy_accelerometer(device)` / `get_joy_gyroscope(device)` (both `Vector3`), guarded by `has_joy_motion_sensors()` and enabled with `set_joy_motion_sensors_enabled()`; recipe in [references/common-gamepad.md](references/common-gamepad.md). Vibration is now queryable — `Input.has_joy_vibration(device)` plus `get_joy_vibration_strength/duration/remaining_duration()`. `JoyButton` gains `JOY_BUTTON_MISC2` (`21`) through `JOY_BUTTON_MISC6` (`25`) (C#: `JoyButton.Misc2`…). New project setting `input_devices/joypads/ignore_joypad_on_unfocused_application` (default `false`) ignores joypad input (including motion sensors) and LED changes and stops vibration while the app is unfocused.
 
 ---
 
@@ -214,7 +216,7 @@ Buffer discrete actions so they aren't lost between physics frames: catch the ac
 
 `InputEventScreenTouch` for tap/release, `InputEventScreenDrag` for finger drag. Multi-touch tracked by `event.index`. Enable **Project Settings → Input Devices → Pointing → Emulate Touch From Mouse** to test on desktop.
 
-> See [references/touch.md](references/touch.md) for the GDScript and C# basic touch event handling and the emulate-touch-from-mouse setting.
+> See [references/common-touch.md](references/common-touch.md) for the GDScript and C# basic touch event handling and the emulate-touch-from-mouse setting.
 
 ### VirtualJoystick (Godot 4.7+)
 
@@ -264,7 +266,7 @@ Tune `deadzone_ratio` (default `0.0` — InputMap action deadzones apply on top)
 
 Three steps: (1) capture the user's chosen key via `_input` while in "rebinding" mode, (2) call `InputMap.action_erase_events(action)` then `InputMap.action_add_event(action, new_event)`, (3) persist via `ConfigFile` and reload on launch.
 
-> See [references/action-rebinding.md](references/action-rebinding.md) for the full GDScript and C# rebinding flow including ConfigFile save/load and the typical "press a key" capture UI.
+> See [references/common-action-rebinding.md](references/common-action-rebinding.md) for the full GDScript and C# rebinding flow including ConfigFile save/load and the typical "press a key" capture UI.
 
 ---
 
@@ -272,7 +274,7 @@ Three steps: (1) capture the user's chosen key via `_input` while in "rebinding"
 
 Input propagates in **reverse scene tree order** (deepest child first, root last); call `get_viewport().set_input_as_handled()` after consuming an event to stop it reaching other nodes. During pause, only nodes with `process_mode = PROCESS_MODE_ALWAYS` receive input.
 
-> See [references/event-propagation.md](references/event-propagation.md) for the GDScript and C# recipes (stopping propagation, node processing order, receiving input while paused).
+> See [references/common-event-propagation.md](references/common-event-propagation.md) for the GDScript and C# recipes (stopping propagation, node processing order, receiving input while paused).
 
 ---
 
@@ -307,3 +309,5 @@ Input propagates in **reverse scene tree order** (deepest child first, root last
 - [ ] `get_viewport().set_input_as_handled()` is called after consuming events that shouldn't propagate
 - [ ] Input device detection exists if showing keyboard vs gamepad UI prompts
 - [ ] Key rebinding saves to and loads from `user://` on game launch
+
+Spatial references: [3d-mouse-look](references/3d-mouse-look.md).

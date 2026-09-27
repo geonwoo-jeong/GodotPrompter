@@ -8,7 +8,20 @@
   "skills": [
     {
       "name": "2d-essentials",
-      "title": "2D Essentials in Godot 4.3+",
+      "title": "2D Essentials in Godot 4.3+ (2D)",
+      "dimension": "2d",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [
+          "skills/2d-essentials/references/2d-custom-drawing.md",
+          "skills/2d-essentials/references/2d-lights-and-shadows.md",
+          "skills/2d-essentials/references/2d-parallax.md",
+          "skills/2d-essentials/references/2d-particles.md",
+          "skills/2d-essentials/references/2d-surface-stamps.md",
+          "skills/2d-essentials/references/2d-tilemap.md"
+        ],
+        "3d": []
+      },
       "description": "Use when working with 2D-specific systems — TileMaps, parallax scrolling, 2D lights and shadows, canvas layers, particles 2D, custom drawing, and 2D meshes in Godot 4.3+",
       "relatedSkills": [
         "player-controller",
@@ -20,17 +33,36 @@
       ],
       "addon": null,
       "references": [
+        "skills/2d-essentials/references/2d-custom-drawing.md",
+        "skills/2d-essentials/references/2d-lights-and-shadows.md",
+        "skills/2d-essentials/references/2d-parallax.md",
         "skills/2d-essentials/references/2d-particles.md",
-        "skills/2d-essentials/references/custom-drawing.md",
-        "skills/2d-essentials/references/lights-and-shadows.md",
-        "skills/2d-essentials/references/parallax.md",
-        "skills/2d-essentials/references/tilemap.md"
+        "skills/2d-essentials/references/2d-surface-stamps.md",
+        "skills/2d-essentials/references/2d-tilemap.md"
       ],
       "source": "skills/2d-essentials/SKILL.md"
     },
     {
       "name": "3d-essentials",
-      "title": "3D Essentials in Godot 4.3+",
+      "title": "3D Essentials in Godot 4.3+ (3D)",
+      "dimension": "3d",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [],
+        "3d": [
+          "skills/3d-essentials/references/3d-common-pitfalls.md",
+          "skills/3d-essentials/references/3d-custom-geometry.md",
+          "skills/3d-essentials/references/3d-decals.md",
+          "skills/3d-essentials/references/3d-environment-and-post.md",
+          "skills/3d-essentials/references/3d-fog-recipes.md",
+          "skills/3d-essentials/references/3d-global-illumination.md",
+          "skills/3d-essentials/references/3d-godot-4.7-additions.md",
+          "skills/3d-essentials/references/3d-gridmap.md",
+          "skills/3d-essentials/references/3d-lod-and-culling.md",
+          "skills/3d-essentials/references/3d-materials-and-lighting-recipes.md",
+          "skills/3d-essentials/references/3d-renderer-comparison.md"
+        ]
+      },
       "description": "Use when working with 3D-specific systems — materials, lighting, shadows, environment, global illumination, fog, LOD, occlusion culling, and decals in Godot 4.3+",
       "relatedSkills": [
         "player-controller",
@@ -42,21 +74,33 @@
       ],
       "addon": null,
       "references": [
-        "skills/3d-essentials/references/common-pitfalls.md",
-        "skills/3d-essentials/references/decals.md",
-        "skills/3d-essentials/references/environment-and-post.md",
-        "skills/3d-essentials/references/fog-recipes.md",
-        "skills/3d-essentials/references/global-illumination.md",
-        "skills/3d-essentials/references/godot-4.7-additions.md",
-        "skills/3d-essentials/references/lod-and-culling.md",
-        "skills/3d-essentials/references/materials-and-lighting-recipes.md",
-        "skills/3d-essentials/references/renderer-comparison.md"
+        "skills/3d-essentials/references/3d-common-pitfalls.md",
+        "skills/3d-essentials/references/3d-custom-geometry.md",
+        "skills/3d-essentials/references/3d-decals.md",
+        "skills/3d-essentials/references/3d-environment-and-post.md",
+        "skills/3d-essentials/references/3d-fog-recipes.md",
+        "skills/3d-essentials/references/3d-global-illumination.md",
+        "skills/3d-essentials/references/3d-godot-4.7-additions.md",
+        "skills/3d-essentials/references/3d-gridmap.md",
+        "skills/3d-essentials/references/3d-lod-and-culling.md",
+        "skills/3d-essentials/references/3d-materials-and-lighting-recipes.md",
+        "skills/3d-essentials/references/3d-renderer-comparison.md"
       ],
       "source": "skills/3d-essentials/SKILL.md"
     },
     {
       "name": "ability-system",
-      "title": "Ability System",
+      "title": "Ability System (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/ability-system/references/common-stat-modifiers.md",
+          "skills/ability-system/references/common-tags-and-conditions.md",
+          "skills/ability-system/references/common-ui-binding.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when building character abilities — Resource-based abilities with cost/cooldown/cast, buffs/debuffs, stat modifiers, gameplay tags, and HUD binding",
       "relatedSkills": [
         "resource-pattern",
@@ -67,15 +111,31 @@
       ],
       "addon": null,
       "references": [
-        "skills/ability-system/references/stat-modifiers.md",
-        "skills/ability-system/references/tags-and-conditions.md",
-        "skills/ability-system/references/ui-binding.md"
+        "skills/ability-system/references/common-stat-modifiers.md",
+        "skills/ability-system/references/common-tags-and-conditions.md",
+        "skills/ability-system/references/common-ui-binding.md"
       ],
       "source": "skills/ability-system/SKILL.md"
     },
     {
       "name": "addon-development",
-      "title": "Addon Development in Godot 4.3+",
+      "title": "Addon Development in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/addon-development/references/common-dock-panels.md",
+          "skills/addon-development/references/common-inspector-plugins.md",
+          "skills/addon-development/references/common-testing-plugins.md"
+        ],
+        "2d": [
+          "skills/addon-development/references/2d-editor-overlay.md",
+          "skills/addon-development/references/2d-tool-sprite.md"
+        ],
+        "3d": [
+          "skills/addon-development/references/3d-gizmos-deep-dive.md",
+          "skills/addon-development/references/3d-tool-sprite.md"
+        ]
+      },
       "description": "Use when creating Godot editor plugins — EditorPlugin, @tool scripts, custom inspectors, and dock panels",
       "relatedSkills": [
         "resource-pattern",
@@ -84,16 +144,40 @@
       ],
       "addon": null,
       "references": [
-        "skills/addon-development/references/dock-panels.md",
-        "skills/addon-development/references/gizmos-deep-dive.md",
-        "skills/addon-development/references/inspector-plugins.md",
-        "skills/addon-development/references/testing-plugins.md"
+        "skills/addon-development/references/2d-editor-overlay.md",
+        "skills/addon-development/references/2d-tool-sprite.md",
+        "skills/addon-development/references/3d-gizmos-deep-dive.md",
+        "skills/addon-development/references/3d-tool-sprite.md",
+        "skills/addon-development/references/common-dock-panels.md",
+        "skills/addon-development/references/common-inspector-plugins.md",
+        "skills/addon-development/references/common-testing-plugins.md"
       ],
       "source": "skills/addon-development/SKILL.md"
     },
     {
       "name": "ai-navigation",
-      "title": "AI Navigation in Godot 4.3+",
+      "title": "AI Navigation in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/ai-navigation/references/common-async-baking.md",
+          "skills/ai-navigation/references/common-behavior-trees.md"
+        ],
+        "2d": [
+          "skills/ai-navigation/references/2d-behavior-tree-actor.md",
+          "skills/ai-navigation/references/2d-chase-attack.md",
+          "skills/ai-navigation/references/2d-navigation-agent.md",
+          "skills/ai-navigation/references/2d-patrol-patterns.md",
+          "skills/ai-navigation/references/2d-steering-behaviors.md"
+        ],
+        "3d": [
+          "skills/ai-navigation/references/3d-behavior-tree-actor.md",
+          "skills/ai-navigation/references/3d-chase-attack.md",
+          "skills/ai-navigation/references/3d-navigation-agent.md",
+          "skills/ai-navigation/references/3d-patrol-patterns.md",
+          "skills/ai-navigation/references/3d-steering-behaviors.md"
+        ]
+      },
       "description": "Use when implementing AI movement — NavigationAgent2D/3D, steering behaviors, behavior trees, and patrol patterns",
       "relatedSkills": [
         "state-machine",
@@ -107,17 +191,47 @@
       ],
       "addon": null,
       "references": [
-        "skills/ai-navigation/references/async-baking.md",
-        "skills/ai-navigation/references/behavior-trees.md",
-        "skills/ai-navigation/references/chase-attack.md",
-        "skills/ai-navigation/references/patrol-patterns.md",
-        "skills/ai-navigation/references/steering-behaviors.md"
+        "skills/ai-navigation/references/2d-behavior-tree-actor.md",
+        "skills/ai-navigation/references/2d-chase-attack.md",
+        "skills/ai-navigation/references/2d-navigation-agent.md",
+        "skills/ai-navigation/references/2d-patrol-patterns.md",
+        "skills/ai-navigation/references/2d-steering-behaviors.md",
+        "skills/ai-navigation/references/3d-behavior-tree-actor.md",
+        "skills/ai-navigation/references/3d-chase-attack.md",
+        "skills/ai-navigation/references/3d-navigation-agent.md",
+        "skills/ai-navigation/references/3d-patrol-patterns.md",
+        "skills/ai-navigation/references/3d-steering-behaviors.md",
+        "skills/ai-navigation/references/common-async-baking.md",
+        "skills/ai-navigation/references/common-behavior-trees.md"
       ],
       "source": "skills/ai-navigation/SKILL.md"
     },
     {
       "name": "animation-system",
-      "title": "Animation System in Godot 4.3+",
+      "title": "Animation System in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/animation-system/references/common-pitfalls.md",
+          "skills/animation-system/references/common-recipes.md"
+        ],
+        "2d": [
+          "skills/animation-system/references/2d-hit-flash.md",
+          "skills/animation-system/references/2d-skeleton-animation.md",
+          "skills/animation-system/references/2d-sprite-animation.md",
+          "skills/animation-system/references/2d-state-machine-examples.md"
+        ],
+        "3d": [
+          "skills/animation-system/references/3d-bone-constraints.md",
+          "skills/animation-system/references/3d-hit-flash.md",
+          "skills/animation-system/references/3d-ik-recipes.md",
+          "skills/animation-system/references/3d-ik-solver-comparison.md",
+          "skills/animation-system/references/3d-retargeting.md",
+          "skills/animation-system/references/3d-skeleton-modifiers.md",
+          "skills/animation-system/references/3d-sprite-animation.md",
+          "skills/animation-system/references/3d-state-machine-examples.md"
+        ]
+      },
       "description": "Use when implementing animations — AnimationPlayer, AnimationTree, blend trees, state machines, sprite animation, and code-driven animation",
       "relatedSkills": [
         "state-machine",
@@ -128,21 +242,38 @@
       ],
       "addon": null,
       "references": [
-        "skills/animation-system/references/bone-constraints.md",
+        "skills/animation-system/references/2d-hit-flash.md",
+        "skills/animation-system/references/2d-skeleton-animation.md",
+        "skills/animation-system/references/2d-sprite-animation.md",
+        "skills/animation-system/references/2d-state-machine-examples.md",
+        "skills/animation-system/references/3d-bone-constraints.md",
+        "skills/animation-system/references/3d-hit-flash.md",
+        "skills/animation-system/references/3d-ik-recipes.md",
+        "skills/animation-system/references/3d-ik-solver-comparison.md",
+        "skills/animation-system/references/3d-retargeting.md",
+        "skills/animation-system/references/3d-skeleton-modifiers.md",
+        "skills/animation-system/references/3d-sprite-animation.md",
+        "skills/animation-system/references/3d-state-machine-examples.md",
         "skills/animation-system/references/common-pitfalls.md",
-        "skills/animation-system/references/common-recipes.md",
-        "skills/animation-system/references/ik-recipes.md",
-        "skills/animation-system/references/ik-solver-comparison.md",
-        "skills/animation-system/references/retargeting.md",
-        "skills/animation-system/references/skeleton-modifiers.md",
-        "skills/animation-system/references/sprite-animation.md",
-        "skills/animation-system/references/state-machine-examples.md"
+        "skills/animation-system/references/common-recipes.md"
       ],
       "source": "skills/animation-system/SKILL.md"
     },
     {
       "name": "assets-pipeline",
-      "title": "Assets Pipeline in Godot 4.3+",
+      "title": "Assets Pipeline in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/assets-pipeline/references/common-runtime-resource-loading.md"
+        ],
+        "2d": [
+          "skills/assets-pipeline/references/2d-runtime-scene-loading.md"
+        ],
+        "3d": [
+          "skills/assets-pipeline/references/3d-runtime-scene-loading.md"
+        ]
+      },
       "description": "Use when importing and managing assets — image compression, 3D scene import, audio formats, resource formats, and import configuration",
       "relatedSkills": [
         "audio-system",
@@ -152,13 +283,32 @@
       ],
       "addon": null,
       "references": [
-        "skills/assets-pipeline/references/runtime-resource-loading.md"
+        "skills/assets-pipeline/references/2d-runtime-scene-loading.md",
+        "skills/assets-pipeline/references/3d-runtime-scene-loading.md",
+        "skills/assets-pipeline/references/common-runtime-resource-loading.md"
       ],
       "source": "skills/assets-pipeline/SKILL.md"
     },
     {
       "name": "audio-system",
-      "title": "Audio System in Godot 4.3+",
+      "title": "Audio System in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/audio-system/references/common-audio-settings.md",
+          "skills/audio-system/references/common-interactive-music.md",
+          "skills/audio-system/references/common-music-manager.md",
+          "skills/audio-system/references/common-sfx-pooling.md"
+        ],
+        "2d": [
+          "skills/audio-system/references/2d-sfx-pooling.md",
+          "skills/audio-system/references/2d-spatial-audio.md"
+        ],
+        "3d": [
+          "skills/audio-system/references/3d-sfx-pooling.md",
+          "skills/audio-system/references/3d-spatial-audio.md"
+        ]
+      },
       "description": "Use when implementing audio — audio buses, AudioStreamPlayer, spatial audio, music management, SFX pooling, and dynamic mixing",
       "relatedSkills": [
         "event-bus",
@@ -167,16 +317,32 @@
       ],
       "addon": null,
       "references": [
-        "skills/audio-system/references/audio-settings.md",
-        "skills/audio-system/references/interactive-music.md",
-        "skills/audio-system/references/music-manager.md",
-        "skills/audio-system/references/sfx-pooling.md"
+        "skills/audio-system/references/2d-sfx-pooling.md",
+        "skills/audio-system/references/2d-spatial-audio.md",
+        "skills/audio-system/references/3d-sfx-pooling.md",
+        "skills/audio-system/references/3d-spatial-audio.md",
+        "skills/audio-system/references/common-audio-settings.md",
+        "skills/audio-system/references/common-interactive-music.md",
+        "skills/audio-system/references/common-music-manager.md",
+        "skills/audio-system/references/common-sfx-pooling.md"
       ],
       "source": "skills/audio-system/SKILL.md"
     },
     {
       "name": "beehave",
-      "title": "Beehave",
+      "title": "Beehave (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/beehave/references/common-custom-nodes.md"
+        ],
+        "2d": [
+          "skills/beehave/references/2d-spatial-leaves.md"
+        ],
+        "3d": [
+          "skills/beehave/references/3d-spatial-leaves.md"
+        ]
+      },
       "description": "Use when using the Beehave addon — pure-GDScript behavior trees with composites, decorators, leaves, a blackboard, and a visual runtime debugger",
       "relatedSkills": [
         "ai-navigation",
@@ -186,13 +352,33 @@
       ],
       "addon": "Beehave · version `v2.9.2` · Godot 4.1+ · MIT · source: https://github.com/bitbrain/beehave · written in GDScript (no official C# API — this skill is GDScript-only by design).",
       "references": [
-        "skills/beehave/references/custom-nodes.md"
+        "skills/beehave/references/2d-spatial-leaves.md",
+        "skills/beehave/references/3d-spatial-leaves.md",
+        "skills/beehave/references/common-custom-nodes.md"
       ],
       "source": "skills/beehave/SKILL.md"
     },
     {
       "name": "camera-system",
-      "title": "Camera Systems in Godot 4.3+",
+      "title": "Camera Systems in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/camera-system/references/common-split-screen.md",
+          "skills/camera-system/references/common-transitions.md"
+        ],
+        "2d": [
+          "skills/camera-system/references/2d-camera-patterns.md",
+          "skills/camera-system/references/2d-camera-zones.md",
+          "skills/camera-system/references/2d-split-screen.md"
+        ],
+        "3d": [
+          "skills/camera-system/references/3d-camera-patterns.md",
+          "skills/camera-system/references/3d-camera-zones.md",
+          "skills/camera-system/references/3d-screen-shake.md",
+          "skills/camera-system/references/3d-split-screen.md"
+        ]
+      },
       "description": "Use when implementing cameras — smooth follow, screen shake, camera zones, and transitions for 2D and 3D",
       "relatedSkills": [
         "player-controller",
@@ -205,16 +391,31 @@
       ],
       "addon": null,
       "references": [
-        "skills/camera-system/references/camera-zones.md",
-        "skills/camera-system/references/camera3d-patterns.md",
-        "skills/camera-system/references/split-screen.md",
-        "skills/camera-system/references/transitions.md"
+        "skills/camera-system/references/2d-camera-patterns.md",
+        "skills/camera-system/references/2d-camera-zones.md",
+        "skills/camera-system/references/2d-split-screen.md",
+        "skills/camera-system/references/3d-camera-patterns.md",
+        "skills/camera-system/references/3d-camera-zones.md",
+        "skills/camera-system/references/3d-screen-shake.md",
+        "skills/camera-system/references/3d-split-screen.md",
+        "skills/camera-system/references/common-split-screen.md",
+        "skills/camera-system/references/common-transitions.md"
       ],
       "source": "skills/camera-system/SKILL.md"
     },
     {
       "name": "component-system",
-      "title": "Component System in Godot 4.3+",
+      "title": "Component System in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [
+          "skills/component-system/references/2d-hitboxes.md"
+        ],
+        "3d": [
+          "skills/component-system/references/3d-hitboxes.md"
+        ]
+      },
       "description": "Use when building reusable node components — composition patterns, component communication, and interface design",
       "relatedSkills": [
         "scene-organization",
@@ -224,12 +425,21 @@
         "ability-system"
       ],
       "addon": null,
-      "references": [],
+      "references": [
+        "skills/component-system/references/2d-hitboxes.md",
+        "skills/component-system/references/3d-hitboxes.md"
+      ],
       "source": "skills/component-system/SKILL.md"
     },
     {
       "name": "csharp-godot",
-      "title": "C# in Godot 4.3+",
+      "title": "C# in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when working with C# in Godot — conventions, GodotSharp API differences from GDScript, project setup, and interop",
       "relatedSkills": [
         "csharp-signals",
@@ -244,7 +454,18 @@
     },
     {
       "name": "csharp-signals",
-      "title": "Signals in C# (Godot 4.x)",
+      "title": "Signals in C# (Godot 4.x) (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/csharp-signals/references/common-awaiting-signals.md",
+          "skills/csharp-signals/references/common-connecting-gdscript-signals.md",
+          "skills/csharp-signals/references/common-custom-signal-patterns.md",
+          "skills/csharp-signals/references/common-disconnecting.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when implementing signals in C# — [Signal] delegates, EmitSignal patterns, async signal awaiting, and event-driven architecture",
       "relatedSkills": [
         "csharp-godot",
@@ -253,30 +474,56 @@
       ],
       "addon": null,
       "references": [
-        "skills/csharp-signals/references/awaiting-signals.md",
-        "skills/csharp-signals/references/connecting-gdscript-signals.md",
-        "skills/csharp-signals/references/custom-signal-patterns.md",
-        "skills/csharp-signals/references/disconnecting.md"
+        "skills/csharp-signals/references/common-awaiting-signals.md",
+        "skills/csharp-signals/references/common-connecting-gdscript-signals.md",
+        "skills/csharp-signals/references/common-custom-signal-patterns.md",
+        "skills/csharp-signals/references/common-disconnecting.md"
       ],
       "source": "skills/csharp-signals/SKILL.md"
     },
     {
       "name": "dedicated-server",
-      "title": "Dedicated Server in Godot 4.3+",
+      "title": "Dedicated Server in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/dedicated-server/references/common-deployment.md",
+          "skills/dedicated-server/references/common-lobby-management.md",
+          "skills/dedicated-server/references/common-match-flow.md",
+          "skills/dedicated-server/references/common-server-config.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when building dedicated servers — headless export, server architecture, lobby management, and deployment",
       "relatedSkills": [],
       "addon": null,
       "references": [
-        "skills/dedicated-server/references/deployment.md",
-        "skills/dedicated-server/references/lobby-management.md",
-        "skills/dedicated-server/references/match-flow.md",
-        "skills/dedicated-server/references/server-config.md"
+        "skills/dedicated-server/references/common-deployment.md",
+        "skills/dedicated-server/references/common-lobby-management.md",
+        "skills/dedicated-server/references/common-match-flow.md",
+        "skills/dedicated-server/references/common-server-config.md"
       ],
       "source": "skills/dedicated-server/SKILL.md"
     },
     {
       "name": "dependency-injection",
-      "title": "Dependency Injection in Godot 4.3+",
+      "title": "Dependency Injection in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/dependency-injection/references/common-autoloads.md",
+          "skills/dependency-injection/references/common-export-injection.md",
+          "skills/dependency-injection/references/common-service-locator.md",
+          "skills/dependency-injection/references/common-testing-with-di.md"
+        ],
+        "2d": [
+          "skills/dependency-injection/references/2d-scene-injection.md"
+        ],
+        "3d": [
+          "skills/dependency-injection/references/3d-scene-injection.md"
+        ]
+      },
       "description": "Use when managing dependencies between systems — autoloads, service locators, @export injection, and scene injection patterns",
       "relatedSkills": [
         "godot-testing",
@@ -285,17 +532,24 @@
       ],
       "addon": null,
       "references": [
-        "skills/dependency-injection/references/autoloads.md",
-        "skills/dependency-injection/references/export-injection.md",
-        "skills/dependency-injection/references/scene-injection.md",
-        "skills/dependency-injection/references/service-locator.md",
-        "skills/dependency-injection/references/testing-with-di.md"
+        "skills/dependency-injection/references/2d-scene-injection.md",
+        "skills/dependency-injection/references/3d-scene-injection.md",
+        "skills/dependency-injection/references/common-autoloads.md",
+        "skills/dependency-injection/references/common-export-injection.md",
+        "skills/dependency-injection/references/common-service-locator.md",
+        "skills/dependency-injection/references/common-testing-with-di.md"
       ],
       "source": "skills/dependency-injection/SKILL.md"
     },
     {
       "name": "dialogue-manager",
-      "title": "Dialogue Manager",
+      "title": "Dialogue Manager (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when using the Dialogue Manager addon — .dialogue files with titles, responses, conditions and mutations, runtime balloons, and C# support",
       "relatedSkills": [
         "dialogue-system",
@@ -308,7 +562,19 @@
     },
     {
       "name": "dialogue-system",
-      "title": "Dialogue Systems in Godot 4.3+",
+      "title": "Dialogue Systems in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/dialogue-system/references/common-branching-and-conditions.md",
+          "skills/dialogue-system/references/common-dialogue-manager.md",
+          "skills/dialogue-system/references/common-external-formats.md",
+          "skills/dialogue-system/references/common-ui-presentation.md",
+          "skills/dialogue-system/references/common-variable-interpolation.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when implementing dialogue — data structures for branching dialogue, conditions, and UI presentation",
       "relatedSkills": [
         "resource-pattern",
@@ -320,17 +586,27 @@
       ],
       "addon": null,
       "references": [
-        "skills/dialogue-system/references/branching-and-conditions.md",
-        "skills/dialogue-system/references/dialogue-manager.md",
-        "skills/dialogue-system/references/external-formats.md",
-        "skills/dialogue-system/references/ui-presentation.md",
-        "skills/dialogue-system/references/variable-interpolation.md"
+        "skills/dialogue-system/references/common-branching-and-conditions.md",
+        "skills/dialogue-system/references/common-dialogue-manager.md",
+        "skills/dialogue-system/references/common-external-formats.md",
+        "skills/dialogue-system/references/common-ui-presentation.md",
+        "skills/dialogue-system/references/common-variable-interpolation.md"
       ],
       "source": "skills/dialogue-system/SKILL.md"
     },
     {
       "name": "event-bus",
-      "title": "Event Bus in Godot 4.3+",
+      "title": "Event Bus in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/event-bus/references/common-anti-patterns.md",
+          "skills/event-bus/references/common-testing.md",
+          "skills/event-bus/references/common-typed-signals.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when implementing decoupled communication between nodes — global EventBus autoload with typed signals",
       "relatedSkills": [
         "component-system",
@@ -340,15 +616,24 @@
       ],
       "addon": null,
       "references": [
-        "skills/event-bus/references/anti-patterns.md",
-        "skills/event-bus/references/testing.md",
-        "skills/event-bus/references/typed-signals.md"
+        "skills/event-bus/references/common-anti-patterns.md",
+        "skills/event-bus/references/common-testing.md",
+        "skills/event-bus/references/common-typed-signals.md"
       ],
       "source": "skills/event-bus/SKILL.md"
     },
     {
       "name": "export-pipeline",
-      "title": "Export Pipeline in Godot 4.3+",
+      "title": "Export Pipeline in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/export-pipeline/references/common-ci-cd-github-actions.md",
+          "skills/export-pipeline/references/common-distribution-itch-steam.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when exporting and distributing Godot games — export presets, platform settings, CI/CD with GitHub Actions",
       "relatedSkills": [
         "godot-testing",
@@ -358,14 +643,27 @@
       ],
       "addon": null,
       "references": [
-        "skills/export-pipeline/references/ci-cd-github-actions.md",
-        "skills/export-pipeline/references/distribution-itch-steam.md"
+        "skills/export-pipeline/references/common-ci-cd-github-actions.md",
+        "skills/export-pipeline/references/common-distribution-itch-steam.md"
       ],
       "source": "skills/export-pipeline/SKILL.md"
     },
     {
       "name": "gdextension",
-      "title": "GDExtension",
+      "title": "GDExtension (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/gdextension/references/common-debugging-native.md",
+          "skills/gdextension/references/common-rust-gdext.md"
+        ],
+        "2d": [
+          "skills/gdextension/references/2d-native-class.md"
+        ],
+        "3d": [
+          "skills/gdextension/references/3d-native-class.md"
+        ]
+      },
       "description": "Use when building native extensions for Godot — godot-cpp (C++) or gdext (Rust), binding classes, building, and GDScript/C# interop",
       "relatedSkills": [
         "csharp-godot",
@@ -376,14 +674,30 @@
       ],
       "addon": null,
       "references": [
-        "skills/gdextension/references/debugging-native.md",
-        "skills/gdextension/references/rust-gdext.md"
+        "skills/gdextension/references/2d-native-class.md",
+        "skills/gdextension/references/3d-native-class.md",
+        "skills/gdextension/references/common-debugging-native.md",
+        "skills/gdextension/references/common-rust-gdext.md"
       ],
       "source": "skills/gdextension/SKILL.md"
     },
     {
       "name": "gdscript-advanced",
-      "title": "GDScript Advanced",
+      "title": "GDScript Advanced (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/gdscript-advanced/references/common-metaprogramming-recipes.md",
+          "skills/gdscript-advanced/references/common-profiler-recipes.md",
+          "skills/gdscript-advanced/references/common-tool-script-recipes.md"
+        ],
+        "2d": [
+          "skills/gdscript-advanced/references/2d-tool-preview.md"
+        ],
+        "3d": [
+          "skills/gdscript-advanced/references/3d-tool-preview.md"
+        ]
+      },
       "description": "Use when writing production-grade GDScript — performance idioms, metaprogramming, @tool lifecycle, async pitfalls, signal/Callable trade-offs, profiler-driven idioms, and common pitfalls",
       "relatedSkills": [
         "gdscript-patterns",
@@ -393,15 +707,34 @@
       ],
       "addon": null,
       "references": [
-        "skills/gdscript-advanced/references/metaprogramming-recipes.md",
-        "skills/gdscript-advanced/references/profiler-recipes.md",
-        "skills/gdscript-advanced/references/tool-script-recipes.md"
+        "skills/gdscript-advanced/references/2d-tool-preview.md",
+        "skills/gdscript-advanced/references/3d-tool-preview.md",
+        "skills/gdscript-advanced/references/common-metaprogramming-recipes.md",
+        "skills/gdscript-advanced/references/common-profiler-recipes.md",
+        "skills/gdscript-advanced/references/common-tool-script-recipes.md"
       ],
       "source": "skills/gdscript-advanced/SKILL.md"
     },
     {
       "name": "gdscript-patterns",
-      "title": "GDScript Patterns in Godot 4.3+",
+      "title": "GDScript Patterns in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/gdscript-patterns/references/common-common-idioms.md",
+          "skills/gdscript-patterns/references/common-export-annotations.md",
+          "skills/gdscript-patterns/references/common-super-in-virtual-methods.md",
+          "skills/gdscript-patterns/references/common-variadic-functions.md"
+        ],
+        "2d": [
+          "skills/gdscript-patterns/references/2d-abstract-classes.md",
+          "skills/gdscript-patterns/references/2d-variadic-spawning.md"
+        ],
+        "3d": [
+          "skills/gdscript-patterns/references/3d-abstract-classes.md",
+          "skills/gdscript-patterns/references/3d-variadic-spawning.md"
+        ]
+      },
       "description": "Use when writing GDScript — static typing, await/coroutines, lambdas, match patterns, export annotations, inner classes, and common idioms",
       "relatedSkills": [
         "gdscript-advanced",
@@ -412,17 +745,32 @@
       ],
       "addon": null,
       "references": [
-        "skills/gdscript-patterns/references/abstract-classes.md",
-        "skills/gdscript-patterns/references/common-idioms.md",
-        "skills/gdscript-patterns/references/export-annotations.md",
-        "skills/gdscript-patterns/references/super-in-virtual-methods.md",
-        "skills/gdscript-patterns/references/variadic-functions.md"
+        "skills/gdscript-patterns/references/2d-abstract-classes.md",
+        "skills/gdscript-patterns/references/2d-variadic-spawning.md",
+        "skills/gdscript-patterns/references/3d-abstract-classes.md",
+        "skills/gdscript-patterns/references/3d-variadic-spawning.md",
+        "skills/gdscript-patterns/references/common-common-idioms.md",
+        "skills/gdscript-patterns/references/common-export-annotations.md",
+        "skills/gdscript-patterns/references/common-super-in-virtual-methods.md",
+        "skills/gdscript-patterns/references/common-variadic-functions.md"
       ],
       "source": "skills/gdscript-patterns/SKILL.md"
     },
     {
       "name": "godot-brainstorming",
-      "title": "Godot Brainstorming",
+      "title": "Godot Brainstorming (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/godot-brainstorming/references/common-node-selection.md"
+        ],
+        "2d": [
+          "skills/godot-brainstorming/references/2d-example-chest.md"
+        ],
+        "3d": [
+          "skills/godot-brainstorming/references/3d-example-chest.md"
+        ]
+      },
       "description": "Use when designing a new Godot feature or system — guides scene tree planning, node type selection, and architectural decisions",
       "relatedSkills": [
         "godot-grill",
@@ -432,14 +780,21 @@
       ],
       "addon": null,
       "references": [
-        "skills/godot-brainstorming/references/example-chest.md",
-        "skills/godot-brainstorming/references/node-selection.md"
+        "skills/godot-brainstorming/references/2d-example-chest.md",
+        "skills/godot-brainstorming/references/3d-example-chest.md",
+        "skills/godot-brainstorming/references/common-node-selection.md"
       ],
       "source": "skills/godot-brainstorming/SKILL.md"
     },
     {
       "name": "godot-code-review",
-      "title": "Godot Code Review",
+      "title": "Godot Code Review (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when reviewing GDScript or C# Godot code — checklist of best practices, common anti-patterns, and Godot-specific pitfalls",
       "relatedSkills": [
         "godot-testing",
@@ -452,7 +807,18 @@
     },
     {
       "name": "godot-debugging",
-      "title": "Godot Debugging",
+      "title": "Godot Debugging (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/godot-debugging/references/common-performance-debugging.md",
+          "skills/godot-debugging/references/common-scene-tree-debugging.md",
+          "skills/godot-debugging/references/common-signal-tracing.md",
+          "skills/godot-debugging/references/common-systematic-method.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when debugging Godot projects — remote debugger, print techniques, signal tracing, common error patterns and fixes",
       "relatedSkills": [
         "godot-optimization",
@@ -461,16 +827,22 @@
       ],
       "addon": null,
       "references": [
-        "skills/godot-debugging/references/performance-debugging.md",
-        "skills/godot-debugging/references/scene-tree-debugging.md",
-        "skills/godot-debugging/references/signal-tracing.md",
-        "skills/godot-debugging/references/systematic-method.md"
+        "skills/godot-debugging/references/common-performance-debugging.md",
+        "skills/godot-debugging/references/common-scene-tree-debugging.md",
+        "skills/godot-debugging/references/common-signal-tracing.md",
+        "skills/godot-debugging/references/common-systematic-method.md"
       ],
       "source": "skills/godot-debugging/SKILL.md"
     },
     {
       "name": "godot-grill",
-      "title": "Godot Grill",
+      "title": "Godot Grill (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when a new Godot system or feature has open design decisions — interrogates them in batched rounds, scope first, each question with a recommended answer, and records the answers before any design or code. Triggers on \"grill me\", \"ask me first\", \"question me on the design\", \"what do I need to decide before building\". Not for choosing between nodes or APIs, and not for bug fixes.",
       "relatedSkills": [
         "godot-brainstorming",
@@ -483,7 +855,13 @@
     },
     {
       "name": "godot-mentor",
-      "title": "Godot Mentor Mode",
+      "title": "Godot Mentor Mode (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when the user wants to learn Godot while building — teaching mode that explains the concept, the editor setup, and what to verify, instead of just delivering code. Triggers on \"teach me\", \"explain as we go\", \"I'm learning Godot\", \"guide me\", \"walk me through\", \"help me understand\".",
       "relatedSkills": [
         "godot-brainstorming",
@@ -497,28 +875,55 @@
     },
     {
       "name": "godot-optimization",
-      "title": "Godot Optimization",
+      "title": "Godot Optimization (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/godot-optimization/references/common-cpu-bottlenecks.md",
+          "skills/godot-optimization/references/common-draw-calls.md",
+          "skills/godot-optimization/references/common-memory-management.md",
+          "skills/godot-optimization/references/common-physics-tuning.md"
+        ],
+        "2d": [
+          "skills/godot-optimization/references/2d-pool-placement.md",
+          "skills/godot-optimization/references/2d-rendering.md"
+        ],
+        "3d": [
+          "skills/godot-optimization/references/3d-pool-placement.md",
+          "skills/godot-optimization/references/3d-rendering.md"
+        ]
+      },
       "description": "Use when optimizing Godot games — profiler, draw calls, physics tuning, memory management, and common bottlenecks",
       "relatedSkills": [
         "godot-debugging",
         "godot-code-review",
-        "export-pipeline",
         "physics-system",
         "multithreading",
+        "export-pipeline",
         "mobile-development"
       ],
       "addon": null,
       "references": [
-        "skills/godot-optimization/references/cpu-bottlenecks.md",
-        "skills/godot-optimization/references/draw-calls.md",
-        "skills/godot-optimization/references/memory-management.md",
-        "skills/godot-optimization/references/physics-tuning.md"
+        "skills/godot-optimization/references/2d-pool-placement.md",
+        "skills/godot-optimization/references/2d-rendering.md",
+        "skills/godot-optimization/references/3d-pool-placement.md",
+        "skills/godot-optimization/references/3d-rendering.md",
+        "skills/godot-optimization/references/common-cpu-bottlenecks.md",
+        "skills/godot-optimization/references/common-draw-calls.md",
+        "skills/godot-optimization/references/common-memory-management.md",
+        "skills/godot-optimization/references/common-physics-tuning.md"
       ],
       "source": "skills/godot-optimization/SKILL.md"
     },
     {
       "name": "godot-project-setup",
-      "title": "Godot Project Setup",
+      "title": "Godot Project Setup (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when creating a new Godot 4.x project — scaffolds recommended directory structure, project settings, autoloads, and .gitignore",
       "relatedSkills": [
         "scene-organization",
@@ -531,7 +936,19 @@
     },
     {
       "name": "godot-testing",
-      "title": "Godot Testing",
+      "title": "Godot Testing (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/godot-testing/common-gdunit4-reference.md",
+          "skills/godot-testing/common-gut-reference.md",
+          "skills/godot-testing/references/common-running-tests.md",
+          "skills/godot-testing/references/common-tdd-workflow.md",
+          "skills/godot-testing/references/common-testing-patterns.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when writing tests for Godot projects — TDD workflow with GUT and gdUnit4, covers both GDScript and C#",
       "relatedSkills": [
         "godot-code-review",
@@ -540,15 +957,30 @@
       ],
       "addon": null,
       "references": [
-        "skills/godot-testing/references/running-tests.md",
-        "skills/godot-testing/references/tdd-workflow.md",
-        "skills/godot-testing/references/testing-patterns.md"
+        "skills/godot-testing/common-gdunit4-reference.md",
+        "skills/godot-testing/common-gut-reference.md",
+        "skills/godot-testing/references/common-running-tests.md",
+        "skills/godot-testing/references/common-tdd-workflow.md",
+        "skills/godot-testing/references/common-testing-patterns.md"
       ],
       "source": "skills/godot-testing/SKILL.md"
     },
     {
       "name": "godot-ui",
-      "title": "Godot UI — Control Nodes, Themes & Layout",
+      "title": "Godot UI — Control Nodes, Themes & Layout (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/godot-ui/references/common-anchors-in-code.md",
+          "skills/godot-ui/references/common-focus-and-navigation.md",
+          "skills/godot-ui/references/common-foldable-container.md",
+          "skills/godot-ui/references/common-signals.md",
+          "skills/godot-ui/references/common-theme-system.md",
+          "skills/godot-ui/references/common-ui-patterns.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when building user interfaces — Control nodes, themes, anchors, containers, and layout patterns",
       "relatedSkills": [
         "responsive-ui",
@@ -558,18 +990,36 @@
       ],
       "addon": null,
       "references": [
-        "skills/godot-ui/references/anchors-in-code.md",
-        "skills/godot-ui/references/focus-and-navigation.md",
-        "skills/godot-ui/references/foldable-container.md",
-        "skills/godot-ui/references/signals.md",
-        "skills/godot-ui/references/theme-system.md",
-        "skills/godot-ui/references/ui-patterns.md"
+        "skills/godot-ui/references/common-anchors-in-code.md",
+        "skills/godot-ui/references/common-focus-and-navigation.md",
+        "skills/godot-ui/references/common-foldable-container.md",
+        "skills/godot-ui/references/common-signals.md",
+        "skills/godot-ui/references/common-theme-system.md",
+        "skills/godot-ui/references/common-ui-patterns.md"
       ],
       "source": "skills/godot-ui/SKILL.md"
     },
     {
       "name": "hud-system",
-      "title": "HUD Systems in Godot 4.3+",
+      "title": "HUD Systems in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/hud-system/references/common-damage-numbers.md",
+          "skills/hud-system/references/common-minimap-display.md",
+          "skills/hud-system/references/common-notifications.md"
+        ],
+        "2d": [
+          "skills/hud-system/references/2d-damage-numbers.md",
+          "skills/hud-system/references/2d-interaction-prompts.md",
+          "skills/hud-system/references/2d-minimap.md"
+        ],
+        "3d": [
+          "skills/hud-system/references/3d-damage-numbers.md",
+          "skills/hud-system/references/3d-interaction-prompts.md",
+          "skills/hud-system/references/3d-minimap.md"
+        ]
+      },
       "description": "Use when building in-game HUDs — health bars, score displays, minimap, notifications, and damage numbers",
       "relatedSkills": [
         "godot-ui",
@@ -580,16 +1030,39 @@
       ],
       "addon": null,
       "references": [
-        "skills/hud-system/references/damage-numbers.md",
-        "skills/hud-system/references/interaction-prompts.md",
-        "skills/hud-system/references/minimap.md",
-        "skills/hud-system/references/notifications.md"
+        "skills/hud-system/references/2d-damage-numbers.md",
+        "skills/hud-system/references/2d-interaction-prompts.md",
+        "skills/hud-system/references/2d-minimap.md",
+        "skills/hud-system/references/3d-damage-numbers.md",
+        "skills/hud-system/references/3d-interaction-prompts.md",
+        "skills/hud-system/references/3d-minimap.md",
+        "skills/hud-system/references/common-damage-numbers.md",
+        "skills/hud-system/references/common-minimap-display.md",
+        "skills/hud-system/references/common-notifications.md"
       ],
       "source": "skills/hud-system/SKILL.md"
     },
     {
       "name": "input-handling",
-      "title": "Input Handling in Godot 4.3+",
+      "title": "Input Handling in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/input-handling/references/common-action-rebinding.md",
+          "skills/input-handling/references/common-event-propagation.md",
+          "skills/input-handling/references/common-gamepad.md",
+          "skills/input-handling/references/common-input-buffering.md",
+          "skills/input-handling/references/common-mouse.md",
+          "skills/input-handling/references/common-touch.md"
+        ],
+        "2d": [
+          "skills/input-handling/references/2d-world-input.md"
+        ],
+        "3d": [
+          "skills/input-handling/references/3d-mouse-look.md",
+          "skills/input-handling/references/3d-world-input.md"
+        ]
+      },
       "description": "Use when implementing input — InputEvent system, Input Map actions, controllers/gamepads, mouse/touch, action rebinding, and input architecture",
       "relatedSkills": [
         "player-controller",
@@ -601,18 +1074,32 @@
       ],
       "addon": null,
       "references": [
-        "skills/input-handling/references/action-rebinding.md",
-        "skills/input-handling/references/event-propagation.md",
-        "skills/input-handling/references/gamepad.md",
-        "skills/input-handling/references/input-buffering.md",
-        "skills/input-handling/references/mouse.md",
-        "skills/input-handling/references/touch.md"
+        "skills/input-handling/references/2d-world-input.md",
+        "skills/input-handling/references/3d-mouse-look.md",
+        "skills/input-handling/references/3d-world-input.md",
+        "skills/input-handling/references/common-action-rebinding.md",
+        "skills/input-handling/references/common-event-propagation.md",
+        "skills/input-handling/references/common-gamepad.md",
+        "skills/input-handling/references/common-input-buffering.md",
+        "skills/input-handling/references/common-mouse.md",
+        "skills/input-handling/references/common-touch.md"
       ],
       "source": "skills/input-handling/SKILL.md"
     },
     {
       "name": "inventory-system",
-      "title": "Inventory Systems in Godot 4.3+",
+      "title": "Inventory Systems in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/inventory-system/references/common-core-classes.md",
+          "skills/inventory-system/references/common-equipment.md",
+          "skills/inventory-system/references/common-serialization.md",
+          "skills/inventory-system/references/common-ui-binding.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when building inventory systems — Resource-based items, slot management, stacking, and UI binding",
       "relatedSkills": [
         "resource-pattern",
@@ -623,16 +1110,28 @@
       ],
       "addon": null,
       "references": [
-        "skills/inventory-system/references/core-classes.md",
-        "skills/inventory-system/references/equipment.md",
-        "skills/inventory-system/references/serialization.md",
-        "skills/inventory-system/references/ui-binding.md"
+        "skills/inventory-system/references/common-core-classes.md",
+        "skills/inventory-system/references/common-equipment.md",
+        "skills/inventory-system/references/common-serialization.md",
+        "skills/inventory-system/references/common-ui-binding.md"
       ],
       "source": "skills/inventory-system/SKILL.md"
     },
     {
       "name": "limboai",
-      "title": "LimboAI",
+      "title": "LimboAI (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/limboai/references/common-hsm.md"
+        ],
+        "2d": [
+          "skills/limboai/references/2d-spatial-tasks.md"
+        ],
+        "3d": [
+          "skills/limboai/references/3d-spatial-tasks.md"
+        ]
+      },
       "description": "Use when using the LimboAI addon — behavior trees and hierarchical state machines (C++ GDExtension) with a visual editor, BTTask subclassing, and a blackboard",
       "relatedSkills": [
         "ai-navigation",
@@ -641,13 +1140,26 @@
       ],
       "addon": "LimboAI · version `v1.8.0` · Godot 4.6+ (GDExtension) · MIT · source: https://github.com/limbonaut/limboai · written in C++ (GDExtension; engine-module build also available). GDExtension exposes GDScript; **C# requires the module build** (not GDExtension in v1.8.0), and the v1.8.0 module build targets **Godot 4.7**.",
       "references": [
-        "skills/limboai/references/hsm.md"
+        "skills/limboai/references/2d-spatial-tasks.md",
+        "skills/limboai/references/3d-spatial-tasks.md",
+        "skills/limboai/references/common-hsm.md"
       ],
       "source": "skills/limboai/SKILL.md"
     },
     {
       "name": "localization",
-      "title": "Localization in Godot 4.3+",
+      "title": "Localization in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/localization/references/common-csv-plural-context.md",
+          "skills/localization/references/common-editor-preview.md",
+          "skills/localization/references/common-locale-formatting.md",
+          "skills/localization/references/common-rtl-support.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when implementing localization (i18n/l10n) — TranslationServer, CSV/PO translation files, locale switching, RTL support, and pluralization in Godot 4.3+",
       "relatedSkills": [
         "godot-ui",
@@ -656,16 +1168,31 @@
       ],
       "addon": null,
       "references": [
-        "skills/localization/references/csv-plural-context.md",
-        "skills/localization/references/editor-preview.md",
-        "skills/localization/references/locale-formatting.md",
-        "skills/localization/references/rtl-support.md"
+        "skills/localization/references/common-csv-plural-context.md",
+        "skills/localization/references/common-editor-preview.md",
+        "skills/localization/references/common-locale-formatting.md",
+        "skills/localization/references/common-rtl-support.md"
       ],
       "source": "skills/localization/SKILL.md"
     },
     {
       "name": "math-essentials",
-      "title": "Game Math in Godot 4.3+",
+      "title": "Game Math in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/math-essentials/references/common-curves-and-paths.md",
+          "skills/math-essentials/references/common-random-numbers.md"
+        ],
+        "2d": [
+          "skills/math-essentials/references/2d-game-math-recipes.md",
+          "skills/math-essentials/references/2d-path-following.md"
+        ],
+        "3d": [
+          "skills/math-essentials/references/3d-game-math-recipes.md",
+          "skills/math-essentials/references/3d-path-following.md"
+        ]
+      },
       "description": "Use when implementing game math — vectors, transforms, interpolation, curves, random number generation, and common geometric recipes",
       "relatedSkills": [
         "player-controller",
@@ -676,15 +1203,28 @@
       ],
       "addon": null,
       "references": [
-        "skills/math-essentials/references/curves-and-paths.md",
-        "skills/math-essentials/references/game-math-recipes.md",
-        "skills/math-essentials/references/random-numbers.md"
+        "skills/math-essentials/references/2d-game-math-recipes.md",
+        "skills/math-essentials/references/2d-path-following.md",
+        "skills/math-essentials/references/3d-game-math-recipes.md",
+        "skills/math-essentials/references/3d-path-following.md",
+        "skills/math-essentials/references/common-curves-and-paths.md",
+        "skills/math-essentials/references/common-random-numbers.md"
       ],
       "source": "skills/math-essentials/SKILL.md"
     },
     {
       "name": "mobile-development",
-      "title": "Mobile Development",
+      "title": "Mobile Development (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/mobile-development/references/common-crash-debugging.md",
+          "skills/mobile-development/references/common-iap-and-ads.md",
+          "skills/mobile-development/references/common-plugins.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when targeting Android/iOS — export and signing, permissions, plugins, in-app purchases, ads, app lifecycle, device features, and mobile performance",
       "relatedSkills": [
         "export-pipeline",
@@ -695,29 +1235,70 @@
       ],
       "addon": null,
       "references": [
-        "skills/mobile-development/references/crash-debugging.md",
-        "skills/mobile-development/references/iap-and-ads.md",
-        "skills/mobile-development/references/plugins.md"
+        "skills/mobile-development/references/common-crash-debugging.md",
+        "skills/mobile-development/references/common-iap-and-ads.md",
+        "skills/mobile-development/references/common-plugins.md"
       ],
       "source": "skills/mobile-development/SKILL.md"
     },
     {
       "name": "multiplayer-basics",
-      "title": "Multiplayer Basics in Godot 4.3+",
+      "title": "Multiplayer Basics in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/multiplayer-basics/references/common-disconnect-handling.md",
+          "skills/multiplayer-basics/references/common-enet-setup.md"
+        ],
+        "2d": [
+          "skills/multiplayer-basics/references/2d-authority-movement.md",
+          "skills/multiplayer-basics/references/2d-player-join-flow.md",
+          "skills/multiplayer-basics/references/2d-spawning-networked-objects.md"
+        ],
+        "3d": [
+          "skills/multiplayer-basics/references/3d-authority-movement.md",
+          "skills/multiplayer-basics/references/3d-player-join-flow.md",
+          "skills/multiplayer-basics/references/3d-spawning-networked-objects.md"
+        ]
+      },
       "description": "Use when implementing multiplayer — MultiplayerAPI, ENet/WebSocket peers, RPCs, and authority model",
       "relatedSkills": [],
       "addon": null,
       "references": [
-        "skills/multiplayer-basics/references/disconnect-handling.md",
-        "skills/multiplayer-basics/references/enet-setup.md",
-        "skills/multiplayer-basics/references/player-join-flow.md",
-        "skills/multiplayer-basics/references/spawning-networked-objects.md"
+        "skills/multiplayer-basics/references/2d-authority-movement.md",
+        "skills/multiplayer-basics/references/2d-player-join-flow.md",
+        "skills/multiplayer-basics/references/2d-spawning-networked-objects.md",
+        "skills/multiplayer-basics/references/3d-authority-movement.md",
+        "skills/multiplayer-basics/references/3d-player-join-flow.md",
+        "skills/multiplayer-basics/references/3d-spawning-networked-objects.md",
+        "skills/multiplayer-basics/references/common-disconnect-handling.md",
+        "skills/multiplayer-basics/references/common-enet-setup.md"
       ],
       "source": "skills/multiplayer-basics/SKILL.md"
     },
     {
       "name": "multiplayer-sync",
-      "title": "Multiplayer Synchronization in Godot 4.3+",
+      "title": "Multiplayer Synchronization in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/multiplayer-sync/references/common-bandwidth-optimization.md"
+        ],
+        "2d": [
+          "skills/multiplayer-sync/references/2d-client-prediction.md",
+          "skills/multiplayer-sync/references/2d-interest-management.md",
+          "skills/multiplayer-sync/references/2d-interpolation.md",
+          "skills/multiplayer-sync/references/2d-lag-compensation.md",
+          "skills/multiplayer-sync/references/2d-synced-player.md"
+        ],
+        "3d": [
+          "skills/multiplayer-sync/references/3d-client-prediction.md",
+          "skills/multiplayer-sync/references/3d-interest-management.md",
+          "skills/multiplayer-sync/references/3d-interpolation.md",
+          "skills/multiplayer-sync/references/3d-lag-compensation.md",
+          "skills/multiplayer-sync/references/3d-synced-player.md"
+        ]
+      },
       "description": "Use when synchronizing multiplayer state — MultiplayerSynchronizer, interpolation, prediction, and lag compensation",
       "relatedSkills": [
         "multiplayer-basics",
@@ -726,16 +1307,31 @@
       ],
       "addon": null,
       "references": [
-        "skills/multiplayer-sync/references/bandwidth-optimization.md",
-        "skills/multiplayer-sync/references/client-prediction.md",
-        "skills/multiplayer-sync/references/interpolation.md",
-        "skills/multiplayer-sync/references/lag-compensation.md"
+        "skills/multiplayer-sync/references/2d-client-prediction.md",
+        "skills/multiplayer-sync/references/2d-interest-management.md",
+        "skills/multiplayer-sync/references/2d-interpolation.md",
+        "skills/multiplayer-sync/references/2d-lag-compensation.md",
+        "skills/multiplayer-sync/references/2d-synced-player.md",
+        "skills/multiplayer-sync/references/3d-client-prediction.md",
+        "skills/multiplayer-sync/references/3d-interest-management.md",
+        "skills/multiplayer-sync/references/3d-interpolation.md",
+        "skills/multiplayer-sync/references/3d-lag-compensation.md",
+        "skills/multiplayer-sync/references/3d-synced-player.md",
+        "skills/multiplayer-sync/references/common-bandwidth-optimization.md"
       ],
       "source": "skills/multiplayer-sync/SKILL.md"
     },
     {
       "name": "multithreading",
-      "title": "Multithreading",
+      "title": "Multithreading (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/multithreading/references/common-pitfalls.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when running work off the main thread — WorkerThreadPool, Thread/Mutex/Semaphore, call_deferred, thread-safe scene access, and threaded resource loading",
       "relatedSkills": [
         "godot-optimization",
@@ -745,13 +1341,33 @@
       ],
       "addon": null,
       "references": [
-        "skills/multithreading/references/pitfalls.md"
+        "skills/multithreading/references/common-pitfalls.md"
       ],
       "source": "skills/multithreading/SKILL.md"
     },
     {
       "name": "particles-vfx",
-      "title": "Particle Systems in Godot 4.3+",
+      "title": "Particle Systems in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/particles-vfx/references/common-performance-and-pitfalls.md",
+          "skills/particles-vfx/references/common-process-material-basics.md",
+          "skills/particles-vfx/references/common-subemitters.md"
+        ],
+        "2d": [
+          "skills/particles-vfx/references/2d-collision.md",
+          "skills/particles-vfx/references/2d-flipbook-animation.md",
+          "skills/particles-vfx/references/2d-trails.md",
+          "skills/particles-vfx/references/2d-vfx-recipes.md"
+        ],
+        "3d": [
+          "skills/particles-vfx/references/3d-attractors-and-collision.md",
+          "skills/particles-vfx/references/3d-flipbook-animation.md",
+          "skills/particles-vfx/references/3d-trails.md",
+          "skills/particles-vfx/references/3d-vfx-recipes.md"
+        ]
+      },
       "description": "Use when implementing particle effects — GPUParticles2D/3D, ParticleProcessMaterial, emission shapes, subemitters, trails, attractors, collision, and common VFX recipes",
       "relatedSkills": [
         "shader-basics",
@@ -760,31 +1376,77 @@
       ],
       "addon": null,
       "references": [
-        "skills/particles-vfx/references/attractors-and-collision.md",
-        "skills/particles-vfx/references/flipbook-animation.md",
-        "skills/particles-vfx/references/performance-and-pitfalls.md",
-        "skills/particles-vfx/references/process-material-basics.md",
-        "skills/particles-vfx/references/subemitters.md",
-        "skills/particles-vfx/references/trails.md",
-        "skills/particles-vfx/references/vfx-recipes.md"
+        "skills/particles-vfx/references/2d-collision.md",
+        "skills/particles-vfx/references/2d-flipbook-animation.md",
+        "skills/particles-vfx/references/2d-trails.md",
+        "skills/particles-vfx/references/2d-vfx-recipes.md",
+        "skills/particles-vfx/references/3d-attractors-and-collision.md",
+        "skills/particles-vfx/references/3d-flipbook-animation.md",
+        "skills/particles-vfx/references/3d-trails.md",
+        "skills/particles-vfx/references/3d-vfx-recipes.md",
+        "skills/particles-vfx/references/common-performance-and-pitfalls.md",
+        "skills/particles-vfx/references/common-process-material-basics.md",
+        "skills/particles-vfx/references/common-subemitters.md"
       ],
       "source": "skills/particles-vfx/SKILL.md"
     },
     {
       "name": "phantom-camera",
-      "title": "Phantom Camera",
+      "title": "Phantom Camera (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [
+          "skills/phantom-camera/references/2d-camera-recipes.md"
+        ],
+        "3d": [
+          "skills/phantom-camera/references/3d-camera-recipes.md"
+        ]
+      },
       "description": "Use when using the Phantom Camera addon — PhantomCamera2D/3D with priority-based switching, follow and look-at modes, and tween transitions",
       "relatedSkills": [
         "camera-system",
         "tween-animation"
       ],
       "addon": "Phantom Camera · version `v0.11.0.2` · Godot 4.4+ · MIT · source: https://github.com/ramokz/phantom-camera · nodes are GDScript, plus an official C# wrapper API (`namespace PhantomCamera`) shipped as source `.cs` files in the addon. **Pre-1.0:** minor versions may break API.",
-      "references": [],
+      "references": [
+        "skills/phantom-camera/references/2d-camera-recipes.md",
+        "skills/phantom-camera/references/3d-camera-recipes.md"
+      ],
       "source": "skills/phantom-camera/SKILL.md"
     },
     {
       "name": "physics-system",
-      "title": "Physics System in Godot 4.3+",
+      "title": "Physics System in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/physics-system/references/common-collision-layers.md",
+          "skills/physics-system/references/common-collision-shapes.md",
+          "skills/physics-system/references/common-interpolation-tuning.md",
+          "skills/physics-system/references/common-troubleshooting.md"
+        ],
+        "2d": [
+          "skills/physics-system/references/2d-area-recipes.md",
+          "skills/physics-system/references/2d-collision-shapes.md",
+          "skills/physics-system/references/2d-interpolation-camera.md",
+          "skills/physics-system/references/2d-ragdoll-recipes.md",
+          "skills/physics-system/references/2d-raycasting-recipes.md",
+          "skills/physics-system/references/2d-rigidbody-recipes.md",
+          "skills/physics-system/references/2d-staticbody-recipes.md"
+        ],
+        "3d": [
+          "skills/physics-system/references/3d-area-recipes.md",
+          "skills/physics-system/references/3d-collision-shapes.md",
+          "skills/physics-system/references/3d-interpolation-camera.md",
+          "skills/physics-system/references/3d-jolt-differences.md",
+          "skills/physics-system/references/3d-ragdoll-recipes.md",
+          "skills/physics-system/references/3d-raycasting-recipes.md",
+          "skills/physics-system/references/3d-rigidbody-recipes.md",
+          "skills/physics-system/references/3d-softbody-recipes.md",
+          "skills/physics-system/references/3d-staticbody-recipes.md"
+        ]
+      },
       "description": "Use when working with physics bodies, collision shapes, raycasting, areas, rigid bodies, ragdolls, soft bodies, Jolt physics, and physics interpolation in Godot 4.3+",
       "relatedSkills": [
         "player-controller",
@@ -795,24 +1457,44 @@
       ],
       "addon": null,
       "references": [
-        "skills/physics-system/references/area-recipes.md",
-        "skills/physics-system/references/collision-layers.md",
-        "skills/physics-system/references/collision-shapes.md",
-        "skills/physics-system/references/interpolation-camera.md",
-        "skills/physics-system/references/interpolation-tuning.md",
-        "skills/physics-system/references/jolt-differences.md",
-        "skills/physics-system/references/ragdoll-recipes.md",
-        "skills/physics-system/references/raycasting-recipes.md",
-        "skills/physics-system/references/rigidbody-recipes.md",
-        "skills/physics-system/references/softbody-recipes.md",
-        "skills/physics-system/references/staticbody-recipes.md",
-        "skills/physics-system/references/troubleshooting.md"
+        "skills/physics-system/references/2d-area-recipes.md",
+        "skills/physics-system/references/2d-collision-shapes.md",
+        "skills/physics-system/references/2d-interpolation-camera.md",
+        "skills/physics-system/references/2d-ragdoll-recipes.md",
+        "skills/physics-system/references/2d-raycasting-recipes.md",
+        "skills/physics-system/references/2d-rigidbody-recipes.md",
+        "skills/physics-system/references/2d-staticbody-recipes.md",
+        "skills/physics-system/references/3d-area-recipes.md",
+        "skills/physics-system/references/3d-collision-shapes.md",
+        "skills/physics-system/references/3d-interpolation-camera.md",
+        "skills/physics-system/references/3d-jolt-differences.md",
+        "skills/physics-system/references/3d-ragdoll-recipes.md",
+        "skills/physics-system/references/3d-raycasting-recipes.md",
+        "skills/physics-system/references/3d-rigidbody-recipes.md",
+        "skills/physics-system/references/3d-softbody-recipes.md",
+        "skills/physics-system/references/3d-staticbody-recipes.md",
+        "skills/physics-system/references/common-collision-layers.md",
+        "skills/physics-system/references/common-collision-shapes.md",
+        "skills/physics-system/references/common-interpolation-tuning.md",
+        "skills/physics-system/references/common-troubleshooting.md"
       ],
       "source": "skills/physics-system/SKILL.md"
     },
     {
       "name": "player-controller",
-      "title": "Player Controllers in Godot 4.3+",
+      "title": "Player Controllers in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [
+          "skills/player-controller/references/2d-controllers.md",
+          "skills/player-controller/references/2d-movement-recipes.md"
+        ],
+        "3d": [
+          "skills/player-controller/references/3d-controllers.md",
+          "skills/player-controller/references/3d-movement-recipes.md"
+        ]
+      },
       "description": "Use when implementing player movement — CharacterBody2D/3D patterns, input handling, physics, common movement recipes",
       "relatedSkills": [
         "physics-system",
@@ -825,13 +1507,27 @@
       ],
       "addon": null,
       "references": [
-        "skills/player-controller/references/common-movement-recipes.md"
+        "skills/player-controller/references/2d-controllers.md",
+        "skills/player-controller/references/2d-movement-recipes.md",
+        "skills/player-controller/references/3d-controllers.md",
+        "skills/player-controller/references/3d-movement-recipes.md"
       ],
       "source": "skills/player-controller/SKILL.md"
     },
     {
       "name": "popochiu",
-      "title": "Popochiu",
+      "title": "Popochiu (2D)",
+      "dimension": "2d",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [
+          "skills/popochiu/references/2d-dialogs.md",
+          "skills/popochiu/references/2d-gui.md",
+          "skills/popochiu/references/2d-inventory.md",
+          "skills/popochiu/references/2d-pipeline.md"
+        ],
+        "3d": []
+      },
       "description": "Use when using the Popochiu addon — point-and-click adventure framework with rooms, characters, props/hotspots, inventory, dialog trees, and a command-based GUI",
       "relatedSkills": [
         "dialogue-system",
@@ -840,16 +1536,32 @@
       ],
       "addon": "Popochiu · version `v2.1.1` · Godot 4.6 · MIT · source: https://github.com/carenalgas/popochiu · pure GDScript (no C# API — GDScript-only skill).",
       "references": [
-        "skills/popochiu/references/dialogs.md",
-        "skills/popochiu/references/gui.md",
-        "skills/popochiu/references/inventory.md",
-        "skills/popochiu/references/pipeline.md"
+        "skills/popochiu/references/2d-dialogs.md",
+        "skills/popochiu/references/2d-gui.md",
+        "skills/popochiu/references/2d-inventory.md",
+        "skills/popochiu/references/2d-pipeline.md"
       ],
       "source": "skills/popochiu/SKILL.md"
     },
     {
       "name": "procedural-generation",
-      "title": "Procedural Generation in Godot 4.3+",
+      "title": "Procedural Generation in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/procedural-generation/references/common-wave-function-collapse.md"
+        ],
+        "2d": [
+          "skills/procedural-generation/references/2d-bsp-dungeons.md",
+          "skills/procedural-generation/references/2d-cellular-automata.md",
+          "skills/procedural-generation/references/2d-noise-generation.md"
+        ],
+        "3d": [
+          "skills/procedural-generation/references/3d-bsp-dungeons.md",
+          "skills/procedural-generation/references/3d-cellular-automata.md",
+          "skills/procedural-generation/references/3d-noise-generation.md"
+        ]
+      },
       "description": "Use when implementing procedural generation — noise-based terrain, BSP dungeons, cellular automata caves, wave function collapse, and seeded randomness in Godot 4.3+",
       "relatedSkills": [
         "math-essentials",
@@ -857,16 +1569,31 @@
       ],
       "addon": null,
       "references": [
-        "skills/procedural-generation/references/bsp-dungeons.md",
-        "skills/procedural-generation/references/cellular-automata.md",
-        "skills/procedural-generation/references/noise-generation.md",
-        "skills/procedural-generation/references/wave-function-collapse.md"
+        "skills/procedural-generation/references/2d-bsp-dungeons.md",
+        "skills/procedural-generation/references/2d-cellular-automata.md",
+        "skills/procedural-generation/references/2d-noise-generation.md",
+        "skills/procedural-generation/references/3d-bsp-dungeons.md",
+        "skills/procedural-generation/references/3d-cellular-automata.md",
+        "skills/procedural-generation/references/3d-noise-generation.md",
+        "skills/procedural-generation/references/common-wave-function-collapse.md"
       ],
       "source": "skills/procedural-generation/SKILL.md"
     },
     {
       "name": "resource-pattern",
-      "title": "Resource Pattern in Godot 4.3+",
+      "title": "Resource Pattern in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/resource-pattern/references/common-collections.md",
+          "skills/resource-pattern/references/common-configuration-pattern.md",
+          "skills/resource-pattern/references/common-editor-integration.md",
+          "skills/resource-pattern/references/common-saving-resources.md",
+          "skills/resource-pattern/references/common-sharing-vs-unique.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when creating data containers in Godot — custom Resources for configuration, items, stats, and editor integration",
       "relatedSkills": [
         "inventory-system",
@@ -876,17 +1603,28 @@
       ],
       "addon": null,
       "references": [
-        "skills/resource-pattern/references/collections.md",
-        "skills/resource-pattern/references/configuration-pattern.md",
-        "skills/resource-pattern/references/editor-integration.md",
-        "skills/resource-pattern/references/saving-resources.md",
-        "skills/resource-pattern/references/sharing-vs-unique.md"
+        "skills/resource-pattern/references/common-collections.md",
+        "skills/resource-pattern/references/common-configuration-pattern.md",
+        "skills/resource-pattern/references/common-editor-integration.md",
+        "skills/resource-pattern/references/common-saving-resources.md",
+        "skills/resource-pattern/references/common-sharing-vs-unique.md"
       ],
       "source": "skills/resource-pattern/SKILL.md"
     },
     {
       "name": "responsive-ui",
-      "title": "Responsive UI in Godot 4.3+",
+      "title": "Responsive UI in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/responsive-ui/references/common-adaptive-layouts.md",
+          "skills/responsive-ui/references/common-dpi-scaling.md",
+          "skills/responsive-ui/references/common-mobile.md",
+          "skills/responsive-ui/references/common-pixel-art-setup.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Use when handling multiple resolutions — stretch modes, aspect ratios, DPI scaling, and mobile/desktop adaptation",
       "relatedSkills": [
         "godot-ui",
@@ -898,16 +1636,30 @@
       ],
       "addon": null,
       "references": [
-        "skills/responsive-ui/references/adaptive-layouts.md",
-        "skills/responsive-ui/references/dpi-scaling.md",
-        "skills/responsive-ui/references/mobile.md",
-        "skills/responsive-ui/references/pixel-art-setup.md"
+        "skills/responsive-ui/references/common-adaptive-layouts.md",
+        "skills/responsive-ui/references/common-dpi-scaling.md",
+        "skills/responsive-ui/references/common-mobile.md",
+        "skills/responsive-ui/references/common-pixel-art-setup.md"
       ],
       "source": "skills/responsive-ui/SKILL.md"
     },
     {
       "name": "save-load",
-      "title": "Save / Load Systems in Godot 4.3+",
+      "title": "Save / Load Systems in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/save-load/references/common-configfile.md",
+          "skills/save-load/references/common-save-architecture.md",
+          "skills/save-load/references/common-version-migration.md"
+        ],
+        "2d": [
+          "skills/save-load/references/2d-json-saves.md"
+        ],
+        "3d": [
+          "skills/save-load/references/3d-json-saves.md"
+        ]
+      },
       "description": "Use when implementing save/load systems — ConfigFile, JSON, Resource serialization, save game architecture",
       "relatedSkills": [
         "resource-pattern",
@@ -917,16 +1669,27 @@
       ],
       "addon": null,
       "references": [
-        "skills/save-load/references/configfile.md",
-        "skills/save-load/references/json-saves.md",
-        "skills/save-load/references/save-architecture.md",
-        "skills/save-load/references/version-migration.md"
+        "skills/save-load/references/2d-json-saves.md",
+        "skills/save-load/references/3d-json-saves.md",
+        "skills/save-load/references/common-configfile.md",
+        "skills/save-load/references/common-save-architecture.md",
+        "skills/save-load/references/common-version-migration.md"
       ],
       "source": "skills/save-load/SKILL.md"
     },
     {
       "name": "scene-organization",
-      "title": "Scene Organization",
+      "title": "Scene Organization (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [
+          "skills/scene-organization/references/2d-scene-trees.md"
+        ],
+        "3d": [
+          "skills/scene-organization/references/3d-scene-trees.md"
+        ]
+      },
       "description": "Use when designing scene tree structure — composition vs inheritance, when to split scenes, node hierarchy patterns",
       "relatedSkills": [
         "component-system",
@@ -934,12 +1697,31 @@
         "godot-brainstorming"
       ],
       "addon": null,
-      "references": [],
+      "references": [
+        "skills/scene-organization/references/2d-scene-trees.md",
+        "skills/scene-organization/references/3d-scene-trees.md"
+      ],
       "source": "skills/scene-organization/SKILL.md"
     },
     {
       "name": "shader-basics",
-      "title": "Shaders in Godot 4.3+",
+      "title": "Shaders in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/shader-basics/references/common-post-processing.md",
+          "skills/shader-basics/references/common-shader-baker.md"
+        ],
+        "2d": [
+          "skills/shader-basics/references/2d-masking.md",
+          "skills/shader-basics/references/2d-shader-recipes.md"
+        ],
+        "3d": [
+          "skills/shader-basics/references/3d-compositor-effects.md",
+          "skills/shader-basics/references/3d-shader-recipes.md",
+          "skills/shader-basics/references/3d-stencil-buffer.md"
+        ]
+      },
       "description": "Use when implementing shaders — Godot shader language, visual shaders, common visual recipes, and post-processing effects",
       "relatedSkills": [
         "animation-system",
@@ -950,18 +1732,34 @@
       ],
       "addon": null,
       "references": [
+        "skills/shader-basics/references/2d-masking.md",
         "skills/shader-basics/references/2d-shader-recipes.md",
+        "skills/shader-basics/references/3d-compositor-effects.md",
         "skills/shader-basics/references/3d-shader-recipes.md",
-        "skills/shader-basics/references/compositor-effects.md",
-        "skills/shader-basics/references/post-processing.md",
-        "skills/shader-basics/references/shader-baker.md",
-        "skills/shader-basics/references/stencil-buffer.md"
+        "skills/shader-basics/references/3d-stencil-buffer.md",
+        "skills/shader-basics/references/common-post-processing.md",
+        "skills/shader-basics/references/common-shader-baker.md"
       ],
       "source": "skills/shader-basics/SKILL.md"
     },
     {
       "name": "state-machine",
-      "title": "State Machines in Godot 4.3+",
+      "title": "State Machines in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/state-machine/references/common-hierarchical-and-parallel.md",
+          "skills/state-machine/references/common-node-based-machine.md"
+        ],
+        "2d": [
+          "skills/state-machine/references/2d-character-states.md",
+          "skills/state-machine/references/2d-enum-enemy.md"
+        ],
+        "3d": [
+          "skills/state-machine/references/3d-character-states.md",
+          "skills/state-machine/references/3d-enum-enemy.md"
+        ]
+      },
       "description": "Use when implementing state machines in Godot — enum-based, node-based, and resource-based FSM patterns with trade-offs",
       "relatedSkills": [
         "player-controller",
@@ -975,14 +1773,33 @@
       ],
       "addon": null,
       "references": [
-        "skills/state-machine/references/hierarchical-and-parallel.md",
-        "skills/state-machine/references/node-based-machine.md"
+        "skills/state-machine/references/2d-character-states.md",
+        "skills/state-machine/references/2d-enum-enemy.md",
+        "skills/state-machine/references/3d-character-states.md",
+        "skills/state-machine/references/3d-enum-enemy.md",
+        "skills/state-machine/references/common-hierarchical-and-parallel.md",
+        "skills/state-machine/references/common-node-based-machine.md"
       ],
       "source": "skills/state-machine/SKILL.md"
     },
     {
       "name": "tween-animation",
-      "title": "Tweens in Godot 4.3+",
+      "title": "Tweens in Godot 4.3+ (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/tween-animation/references/common-lifecycle.md",
+          "skills/tween-animation/references/common-looping-and-signals.md",
+          "skills/tween-animation/references/common-property-tweener-modifiers.md",
+          "skills/tween-animation/references/common-recipes.md"
+        ],
+        "2d": [
+          "skills/tween-animation/references/2d-world-motion.md"
+        ],
+        "3d": [
+          "skills/tween-animation/references/3d-world-motion.md"
+        ]
+      },
       "description": "Use when implementing tweens — property animation, method tweening, chaining, parallel sequences, easing, and common UI/gameplay motion recipes",
       "relatedSkills": [
         "animation-system",
@@ -994,16 +1811,30 @@
       ],
       "addon": null,
       "references": [
-        "skills/tween-animation/references/common-recipes.md",
-        "skills/tween-animation/references/lifecycle.md",
-        "skills/tween-animation/references/looping-and-signals.md",
-        "skills/tween-animation/references/property-tweener-modifiers.md"
+        "skills/tween-animation/references/2d-world-motion.md",
+        "skills/tween-animation/references/3d-world-motion.md",
+        "skills/tween-animation/references/common-lifecycle.md",
+        "skills/tween-animation/references/common-looping-and-signals.md",
+        "skills/tween-animation/references/common-property-tweener-modifiers.md",
+        "skills/tween-animation/references/common-recipes.md"
       ],
       "source": "skills/tween-animation/SKILL.md"
     },
     {
       "name": "using-godot-prompter",
-      "title": "Using GodotPrompter",
+      "title": "Using GodotPrompter (Common)",
+      "dimension": "common",
+      "referencesByDimension": {
+        "common": [
+          "skills/using-godot-prompter/references/common-antigravity-tools.md",
+          "skills/using-godot-prompter/references/common-codex-tools.md",
+          "skills/using-godot-prompter/references/common-copilot-tools.md",
+          "skills/using-godot-prompter/references/common-cursor-tools.md",
+          "skills/using-godot-prompter/references/common-gemini-tools.md"
+        ],
+        "2d": [],
+        "3d": []
+      },
       "description": "Bootstrap skill — establishes how to find and use GodotPrompter skills, with platform-specific tool mapping",
       "relatedSkills": [
         "godot-project-setup",
@@ -1014,17 +1845,30 @@
       ],
       "addon": null,
       "references": [
-        "skills/using-godot-prompter/references/antigravity-tools.md",
-        "skills/using-godot-prompter/references/codex-tools.md",
-        "skills/using-godot-prompter/references/copilot-tools.md",
-        "skills/using-godot-prompter/references/cursor-tools.md",
-        "skills/using-godot-prompter/references/gemini-tools.md"
+        "skills/using-godot-prompter/references/common-antigravity-tools.md",
+        "skills/using-godot-prompter/references/common-codex-tools.md",
+        "skills/using-godot-prompter/references/common-copilot-tools.md",
+        "skills/using-godot-prompter/references/common-cursor-tools.md",
+        "skills/using-godot-prompter/references/common-gemini-tools.md"
       ],
       "source": "skills/using-godot-prompter/SKILL.md"
     },
     {
       "name": "xr-development",
-      "title": "XR Development in Godot 4.3+",
+      "title": "XR Development in Godot 4.3+ (3D)",
+      "dimension": "3d",
+      "referencesByDimension": {
+        "common": [],
+        "2d": [],
+        "3d": [
+          "skills/xr-development/references/3d-controllers-and-input.md",
+          "skills/xr-development/references/3d-godot-4-5-features.md",
+          "skills/xr-development/references/3d-grabbing-objects.md",
+          "skills/xr-development/references/3d-hand-tracking.md",
+          "skills/xr-development/references/3d-passthrough.md",
+          "skills/xr-development/references/3d-xr-ui.md"
+        ]
+      },
       "description": "Use when building VR/AR/XR applications — OpenXR setup, XROrigin3D, hand tracking, controllers, passthrough, and Meta Quest deployment in Godot 4.3+",
       "relatedSkills": [
         "physics-system",
@@ -1033,12 +1877,12 @@
       ],
       "addon": null,
       "references": [
-        "skills/xr-development/references/controllers-and-input.md",
-        "skills/xr-development/references/godot-4-5-features.md",
-        "skills/xr-development/references/grabbing-objects.md",
-        "skills/xr-development/references/hand-tracking.md",
-        "skills/xr-development/references/passthrough.md",
-        "skills/xr-development/references/xr-ui.md"
+        "skills/xr-development/references/3d-controllers-and-input.md",
+        "skills/xr-development/references/3d-godot-4-5-features.md",
+        "skills/xr-development/references/3d-grabbing-objects.md",
+        "skills/xr-development/references/3d-hand-tracking.md",
+        "skills/xr-development/references/3d-passthrough.md",
+        "skills/xr-development/references/3d-xr-ui.md"
       ],
       "source": "skills/xr-development/SKILL.md"
     }

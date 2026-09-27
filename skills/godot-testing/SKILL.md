@@ -3,7 +3,7 @@ name: godot-testing
 description: Use when writing tests for Godot projects — TDD workflow with GUT and gdUnit4, covers both GDScript and C#
 ---
 
-# Godot Testing
+# Godot Testing (Common)
 
 This skill covers test-driven development (TDD) for Godot 4.3+ projects using GUT (Godot Unit Testing) and gdUnit4. It includes framework selection, full RED-GREEN-REFACTOR examples, test structure, running tests in CI, and common testing patterns.
 
@@ -31,7 +31,7 @@ This skill covers test-driven development (TDD) for Godot 4.3+ projects using GU
 
 The standard Test-Driven Development cycle: write a failing test (RED), write minimal code to pass (GREEN), then refactor without breaking the test. Each step has its own discipline — don't skip RED (you'll write tests that pass trivially), and don't skip REFACTOR (technical debt compounds).
 
-> See [references/tdd-workflow.md](references/tdd-workflow.md) for a worked GDScript + C# example walking through all three steps on a HealthComponent.
+> See [references/common-tdd-workflow.md](references/common-tdd-workflow.md) for a worked GDScript + C# example walking through all three steps on a HealthComponent.
 
 ---
 
@@ -66,7 +66,7 @@ res://
 
 Both frameworks ship a CLI runner. **GUT:** `addons/gut/gut_cmdln.gd` invoked via `godot --headless --path . -s addons/gut/gut_cmdln.gd`. **gdUnit4 6.2.1:** `godot --headless --path . -s addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode --add res://tests`, or use the editor test dock. Match the addon version to its supported Godot version; these CLI examples were checked with Godot 4.7.2. Headless mode is appropriate for logic tests; use a display for UI interaction tests. CI: tag-triggered or PR-triggered GitHub Action that installs Godot, runs the suite, exits non-zero on failure.
 
-> See [references/running-tests.md](references/running-tests.md) for full GUT and gdUnit4 CLI invocations + a copy-pasteable GitHub Actions workflow.
+> See [references/common-running-tests.md](references/common-running-tests.md) for full GUT and gdUnit4 CLI invocations + a copy-pasteable GitHub Actions workflow.
 
 ---
 
@@ -74,7 +74,7 @@ Both frameworks ship a CLI runner. **GUT:** `addons/gut/gut_cmdln.gd` invoked vi
 
 Four common patterns: **scenes with nodes** (instantiate via `add_child` in `before_each`, free in `after_each`), **signal testing** (assert that emitting works and connect-then-emit fires), **mocking/doubling** (gdUnit4 `Mock<T>` or hand-rolled fakes via `@export` injection), **async** (await yields, signals, frames in tests).
 
-> See [references/testing-patterns.md](references/testing-patterns.md) for full code on each pattern (GDScript + C# where applicable).
+> See [references/common-testing-patterns.md](references/common-testing-patterns.md) for full code on each pattern (GDScript + C# where applicable).
 
 ---
 

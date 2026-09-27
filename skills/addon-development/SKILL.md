@@ -3,7 +3,10 @@ name: addon-development
 description: Use when creating Godot editor plugins — EditorPlugin, @tool scripts, custom inspectors, and dock panels
 ---
 
-# Addon Development in Godot 4.3+
+# Addon Development in Godot 4.3+ (Common)
+
+> **Dimension:** Common editor infrastructure. Use [2D overlays](references/2d-editor-overlay.md) for the canvas editor and [3D gizmos](references/3d-gizmos-deep-dive.md) for the spatial editor.
+
 
 Editor plugins extend the Godot editor itself: custom node types, inspector panels, dock widgets, 3D gizmos, and toolbar buttons. All examples target Godot 4.3+ with no deprecated APIs.
 
@@ -37,70 +40,7 @@ Enable the plugin: **Project → Project Settings → Plugins** → tick the che
 
 `@tool` makes a GDScript (or its C# equivalent) run inside the editor process as well as at runtime. Without it, the script only runs when the game is playing.
 
-### GDScript
-
-```gdscript
-@tool
-extends Sprite2D
-
-# Engine.is_editor_hint() is true when running inside the editor,
-# false during a running game. Use it to guard editor-only logic.
-func _process(delta: float) -> void:
-    if Engine.is_editor_hint():
-        # This block runs in the editor viewport — safe to call editor APIs.
-        update_configuration_warnings()
-    else:
-        # Normal game logic here.
-        pass
-
-
-# _get_configuration_warnings() returns an array of strings shown as
-# yellow warning icons on the node in the Scene panel.
-func _get_configuration_warnings() -> PackedStringArray:
-    var warnings := PackedStringArray()
-    if texture == null:
-        warnings.append("Texture is not set. Assign a Texture2D in the Inspector.")
-    return warnings
-```
-
-### C#
-
-```csharp
-#if TOOLS
-using Godot;
-
-[Tool]
-public partial class MyToolSprite : Sprite2D
-{
-    public override void _Process(double delta)
-    {
-        if (Engine.IsEditorHint())
-        {
-            // Editor-only logic — safe to call editor APIs here.
-            UpdateConfigurationWarnings();
-        }
-        else
-        {
-            // Normal game logic.
-        }
-    }
-
-    public override string[] _GetConfigurationWarnings()
-    {
-        if (Texture == null)
-            return new[] { "Texture is not set. Assign a Texture2D in the Inspector." };
-        return System.Array.Empty<string>();
-    }
-}
-#endif
-```
-
-> Wrap C# tool scripts in `#if TOOLS` / `#endif` to prevent the class from being included in exported builds. GDScript `@tool` scripts are excluded from exports automatically.
-
-**Key rules:**
-- Add `@tool` / `[Tool]` at the top of every script that needs editor access.
-- Always guard runtime-only code with `Engine.is_editor_hint()` to avoid crashing the editor when processing begins before the scene is fully loaded.
-- Call `update_configuration_warnings()` whenever a property changes that might affect the warning state.
+See [2D tool sprites](references/2d-tool-sprite.md) and [3D tool sprites](references/3d-tool-sprite.md). The lifecycle and plugin registration below are shared.
 
 ---
 
@@ -121,7 +61,7 @@ func _enter_tree() -> void:
     # "Add Node" dialog under the chosen base class, with a custom icon.
     add_custom_type(
         "MyNode",                              # name shown in editor
-        "Node2D",                              # base class to extend
+        "Node",                              # base class to extend
         preload("res://addons/my_plugin/my_node.gd"),
         preload("res://addons/my_plugin/icons/my_node.svg")
     )
@@ -153,7 +93,7 @@ public partial class MyPlugin : EditorPlugin
     {
         AddCustomType(
             "MyNode",
-            "Node2D",
+            "Node",
             GD.Load<Script>("res://addons/my_plugin/MyNode.cs"),
             GD.Load<Texture2D>("res://addons/my_plugin/icons/my_node.svg")
         );
@@ -227,9 +167,9 @@ private void RunPreBuildCheck()
 
 When you want a custom widget for an exported property of a specific type, register an `EditorInspectorPlugin` from your main `EditorPlugin`. The inspector plugin overrides `_can_handle` to opt in and `_parse_property` (or `_parse_begin`) to inject custom widgets. Pair with an `EditorProperty` subclass for the actual UI.
 
-> See [references/inspector-plugins.md](references/inspector-plugins.md) for the full GDScript and C# scaffold (custom inspector + EditorProperty + registration boilerplate).
+> See [references/common-inspector-plugins.md](references/common-inspector-plugins.md) for the full GDScript and C# scaffold (custom inspector + EditorProperty + registration boilerplate).
 
-> **Godot 4.7+:** the static `EditorInspector.create_default_inspector(filter_line_edit: LineEdit = null)` returns an inspector with the same configuration as the editor's Inspector dock, ready to embed in plugin UIs — pass a `LineEdit` for live property filtering (see [references/inspector-plugins.md](references/inspector-plugins.md)). `EditorContextMenuPlugin` also gains `CONTEXT_SLOT_INSPECTOR_PROPERTY` in `ContextMenuSlot`, so context-menu plugins can extend the inspector property right-click menu: `_popup_menu()` receives `[object ID, property name]` and the option callback receives the `EditorProperty` directly.
+> **Godot 4.7+:** the static `EditorInspector.create_default_inspector(filter_line_edit: LineEdit = null)` returns an inspector with the same configuration as the editor's Inspector dock, ready to embed in plugin UIs — pass a `LineEdit` for live property filtering (see [references/common-inspector-plugins.md](references/common-inspector-plugins.md)). `EditorContextMenuPlugin` also gains `CONTEXT_SLOT_INSPECTOR_PROPERTY` in `ContextMenuSlot`, so context-menu plugins can extend the inspector property right-click menu: `_popup_menu()` receives `[object ID, property name]` and the option callback receives the `EditorProperty` directly.
 
 ---
 
@@ -237,7 +177,7 @@ When you want a custom widget for an exported property of a specific type, regis
 
 Add a custom dock to the editor by calling `add_control_to_dock(slot, control)` from your `EditorPlugin._enter_tree`. Free the control on `_exit_tree`. Useful for project-wide tooling UIs (level browser, asset summary, build dashboard).
 
-> See [references/dock-panels.md](references/dock-panels.md) for the full GDScript and C# dock scaffold.
+> See [references/common-dock-panels.md](references/common-dock-panels.md) for the full GDScript and C# dock scaffold.
 
 ---
 
@@ -245,7 +185,7 @@ Add a custom dock to the editor by calling `add_control_to_dock(slot, control)` 
 
 `EditorResourcePicker` lets you constrain a property to a specific Resource subclass with a tooltip and base-type filter. `EditorResourcePreviewGenerator` provides custom thumbnails for resources in the FileSystem dock and Inspector.
 
-> See [references/inspector-plugins.md](references/inspector-plugins.md) for the full GDScript and C# `EditorResourcePicker` and `EditorResourcePreviewGenerator` scaffolds.
+> See [references/common-inspector-plugins.md](references/common-inspector-plugins.md) for the full GDScript and C# `EditorResourcePicker` and `EditorResourcePreviewGenerator` scaffolds.
 
 ---
 
@@ -253,7 +193,7 @@ Add a custom dock to the editor by calling `add_control_to_dock(slot, control)` 
 
 `EditorNode3DGizmoPlugin` adds visual handles for 3D nodes in the editor — wireframe shapes, draggable handles, rotation rings. Implement `_init` (materials), `_get_gizmo_name`, `_has_gizmo`, `_redraw` (draw lines/handles), and `_get_handle_value` / `_set_handle` / `_commit_handle` for interactive editing.
 
-> See [references/gizmos-deep-dive.md](references/gizmos-deep-dive.md) for the full GDScript and C# gizmo plugin (with undo/redo wiring for handle commits).
+> See [references/3d-gizmos-deep-dive.md](references/3d-gizmos-deep-dive.md) for the full GDScript and C# gizmo plugin (with undo/redo wiring for handle commits).
 
 > **Godot 4.7+:** override `_can_commit_handle_on_click() -> bool` (returns `false` if not overridden) to commit a handle action even when the final handle position is the same as the initial one — i.e. on a plain click.
 
@@ -263,7 +203,7 @@ Add a custom dock to the editor by calling `add_control_to_dock(slot, control)` 
 
 Toggle the plugin off and on in **Project Settings → Plugins** to reload it; saving a `@tool` script hot-reloads automatically, but new class registrations and dock changes need the full cycle. `print()` / `push_warning()` / `push_error()` go to the Output panel. **C# plugins must recompile first** — `Could not find type "Plugin"` means the assembly failed to build, so check the MSBuild panel before anything else.
 
-Reload recipes (GDScript + C# `PluginReloader`), console launch flags, and the lifecycle-gotcha table (orphaned docks, stale custom types, double-registered inspector plugins): [references/testing-plugins.md](references/testing-plugins.md)
+Reload recipes (GDScript + C# `PluginReloader`), console launch flags, and the lifecycle-gotcha table (orphaned docks, stale custom types, double-registered inspector plugins): [references/common-testing-plugins.md](references/common-testing-plugins.md)
 
 ---
 

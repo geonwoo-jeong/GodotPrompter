@@ -4,13 +4,13 @@ export default [
   {
     name: 'data: inventory replacement and Variant drag/drop',
     async setup({ repoRoot, projectDir }) {
-      const core = 'skills/inventory-system/references/core-classes.md';
+      const core = 'skills/inventory-system/references/common-core-classes.md';
       await writeProject(projectDir, {
         'item_data.gd': await gdscriptBlock(repoRoot, core, '# item_data.gd'),
         'inventory.gd': await gdscriptBlock(repoRoot, core, '# inventory.gd'),
         'inventory_slot.gd': await gdscriptBlock(repoRoot, core, '# inventory_slot.gd'),
-        'registry.gd': await gdscriptBlock(repoRoot, 'skills/inventory-system/references/serialization.md', '# item_registry.gd'),
-        'slot_ui.gd': await gdscriptBlock(repoRoot, 'skills/inventory-system/references/ui-binding.md', '# slot_ui.gd'),
+        'registry.gd': await gdscriptBlock(repoRoot, 'skills/inventory-system/references/common-serialization.md', '# item_registry.gd'),
+        'slot_ui.gd': await gdscriptBlock(repoRoot, 'skills/inventory-system/references/common-ui-binding.md', '# slot_ui.gd'),
         'test.gd': `extends SceneTree
 
 func _initialize() -> void:
@@ -66,7 +66,7 @@ func run() -> void:
   {
     name: 'data: resource discovery through remapped PCK paths',
     async setup({ repoRoot, projectDir }) {
-      const loader = await gdscriptBlock(repoRoot, 'skills/resource-pattern/references/collections.md', 'func load_all_items');
+      const loader = await gdscriptBlock(repoRoot, 'skills/resource-pattern/references/common-collections.md', 'func load_all_items');
       const item = await gdscriptBlock(repoRoot, 'skills/resource-pattern/SKILL.md', '# item_data.gd');
       await writeProject(projectDir, {
         'item_data.gd': item,

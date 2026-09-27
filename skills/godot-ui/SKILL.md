@@ -3,7 +3,9 @@ name: godot-ui
 description: Use when building user interfaces — Control nodes, themes, anchors, containers, and layout patterns
 ---
 
-# Godot UI — Control Nodes, Themes & Layout
+# Godot UI — Control Nodes, Themes & Layout (Common)
+
+> **Scope:** Common to 2D and 3D games. Screen-space `Control` layouts and shared game data do not depend on the world dimension.
 
 All examples target Godot 4.3+ with no deprecated APIs; GDScript first, then C#.
 
@@ -92,7 +94,7 @@ The editor exposes built-in presets:
 
 Anchors resolve as `parent_size * anchor + offset` per edge, so setting them by hand means setting eight properties. `set_anchors_and_offsets_preset(Control.PRESET_*)` does it in one call — use that, then adjust `offset_*` for margins (negative on right/bottom).
 
-The anchor-vs-offset rule (keep offsets at 0 and let anchors do the work) plus full GDScript + C# examples — full-rect fill, top-right HUD with 16 px margins, and a custom half-screen side panel: [references/anchors-in-code.md](references/anchors-in-code.md)
+The anchor-vs-offset rule (keep offsets at 0 and let anchors do the work) plus full GDScript + C# examples — full-rect fill, top-right HUD with 16 px margins, and a custom half-screen side panel: [references/common-anchors-in-code.md](references/common-anchors-in-code.md)
 
 ---
 
@@ -100,7 +102,7 @@ The anchor-vs-offset rule (keep offsets at 0 and let anchors do the work) plus f
 
 A `Theme` resource centralizes fonts, colors, and `StyleBox`es. Apply at the root and let inheritance do the work; use `theme_override_*` only for one-off tweaks. `StyleBoxFlat` covers most flat-design needs (`bg_color`, `border_color`, `corner_radius`, `border_width`); `StyleBoxTexture` for textures.
 
-> See [references/theme-system.md](references/theme-system.md) for the full Theme resource creation walk-through, StyleBoxFlat properties, font overrides, theme inheritance rules, and per-node `theme_override_*` methods.
+> See [references/common-theme-system.md](references/common-theme-system.md) for the full Theme resource creation walk-through, StyleBoxFlat properties, font overrides, theme inheritance rules, and per-node `theme_override_*` methods.
 
 > **Godot 4.7+:** `GradientTexture2D`'s `Fill` enum gains `FILL_CONIC` — colors interpolated in a cone (angular) pattern; radial progress/cooldown indicators without a shader (C#: `FillEnum.Conic`).
 
@@ -110,7 +112,7 @@ A `Theme` resource centralizes fonts, colors, and `StyleBox`es. Apply at the roo
 
 Focus modes (`FOCUS_NONE`, `FOCUS_CLICK`, `FOCUS_ALL`) gate keyboard/gamepad navigation. Wire chains with `focus_neighbor_top` / `_bottom` / `_left` / `_right`, or rely on automatic spatial detection. Call `grab_focus()` on the first interactive element when a menu opens.
 
-> See [references/focus-and-navigation.md](references/focus-and-navigation.md) for focus mode details, `focus_neighbor` chain examples, gamepad/keyboard input handling, and grab_focus patterns.
+> See [references/common-focus-and-navigation.md](references/common-focus-and-navigation.md) for focus mode details, `focus_neighbor` chain examples, gamepad/keyboard input handling, and grab_focus patterns.
 
 ---
 
@@ -118,9 +120,9 @@ Focus modes (`FOCUS_NONE`, `FOCUS_CLICK`, `FOCUS_ALL`) gate keyboard/gamepad nav
 
 Three canonical scenes: a **main menu** (centered VBoxContainer with title + button list), a **settings screen with tabs** (`TabContainer` + child panels per category), and a **pause menu overlay** (full-rect `ColorRect` background + centered options panel, paused via `get_tree().paused = true`).
 
-> See [references/ui-patterns.md](references/ui-patterns.md) for the full scene-tree fragments and GDScript wiring for each pattern.
+> See [references/common-ui-patterns.md](references/common-ui-patterns.md) for the full scene-tree fragments and GDScript wiring for each pattern.
 
-> **Godot 4.7+:** `offset_transform_*` — visual-only UI-juice transform (shake/pulse) that never re-triggers container layout; `_get_cursor_shape(at_position)` — per-position cursor shapes; `PopupMenu` search bar (`search_bar_enabled`, fuzzy by default) plus `set_item_index()` for reordering; `TextureRect` `STRETCH_TILE` now tiles `AtlasTexture`s (only non-zero `margin` unsupported). Code: [references/ui-patterns.md](references/ui-patterns.md#godot-47-additions).
+> **Godot 4.7+:** `offset_transform_*` — visual-only UI-juice transform (shake/pulse) that never re-triggers container layout; `_get_cursor_shape(at_position)` — per-position cursor shapes; `PopupMenu` search bar (`search_bar_enabled`, fuzzy by default) plus `set_item_index()` for reordering; `TextureRect` `STRETCH_TILE` now tiles `AtlasTexture`s (only non-zero `margin` unsupported). Code: [references/common-ui-patterns.md](references/common-ui-patterns.md#godot-47-additions).
 
 > ⚠️ **Changed in Godot 4.7:** `RichTextLabel.add_image()` / `update_image()` sizing was reworked — `width`/`height` are now `float`; `width_in_percent`/`height_in_percent` bools become `width_unit`/`height_unit`, taking the new `ImageUnit` enum (`IMAGE_UNIT_PIXEL`, `IMAGE_UNIT_PERCENT`, `IMAGE_UNIT_EM` — em scales with font size). `ImageUpdateMask.UPDATE_WIDTH_IN_PERCENT` is renamed `UPDATE_WIDTH_UNIT`, breaking GDScript using the old name. See the [4.7 migration guide](https://docs.godotengine.org/en/latest/tutorials/migrating/upgrading_to_godot_4.7.html).
 
@@ -130,7 +132,7 @@ Three canonical scenes: a **main menu** (centered VBoxContainer with title + but
 
 `Button.pressed` for clicks, `Control.gui_input` for raw events on a node, `Control.mouse_entered` / `mouse_exited` for hover. Connect in `_ready()` or via the Inspector's Node panel.
 
-> See [references/signals.md](references/signals.md) for the complete signal catalog and signal-driven UI update patterns.
+> See [references/common-signals.md](references/common-signals.md) for the complete signal catalog and signal-driven UI update patterns.
 
 ---
 
@@ -138,7 +140,7 @@ Three canonical scenes: a **main menu** (centered VBoxContainer with title + but
 
 `FoldableContainer` is a built-in accordion `Container` added in Godot 4.5 — a toggle header plus collapsible children, replacing the old boilerplate of wiring a `Button` to show/hide a `VBoxContainer`. Set `title`, set `folded` for the initial state, add children normally, and listen to `folding_changed(is_folded)`.
 
-Full GDScript + C# construction, the key-properties table, and the toggle signal: [references/foldable-container.md](references/foldable-container.md)
+Full GDScript + C# construction, the key-properties table, and the toggle signal: [references/common-foldable-container.md](references/common-foldable-container.md)
 
 ---
 

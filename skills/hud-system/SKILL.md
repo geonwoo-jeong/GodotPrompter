@@ -3,7 +3,9 @@ name: hud-system
 description: Use when building in-game HUDs — health bars, score displays, minimap, notifications, and damage numbers
 ---
 
-# HUD Systems in Godot 4.3+
+# HUD Systems in Godot 4.3+ (Common)
+
+> **Scope:** Common architecture for 2D and 3D games; choose the dimension-specific reference when world coordinates or spatial nodes are involved.
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -15,15 +17,15 @@ All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first,
 
 ### Why CanvasLayer
 
-A `CanvasLayer` renders its children in a fixed screen-space layer that is completely independent of any `Camera2D` or `Camera3D` transform. Without it, HUD nodes attached to the scene root still move with the camera when you pan or zoom. Wrapping all HUD nodes in a `CanvasLayer` (layer `≥ 1`) ensures the HUD always stays in place regardless of camera movement.
+A default `CanvasLayer` keeps HUD controls in their own screen-space canvas, unaffected by a `Camera2D` canvas transform. It also provides consistent overlay ordering in a 3D game. Keep `follow_viewport_enabled` disabled and the layer transform unchanged for the screen-coordinate recipes below. A `Camera3D` renders the 3D world; it does not itself transform `Control` nodes.
 
 ### Scene Tree
 
 ```
 World (Node2D / Node3D)
-├── TileMapLayer          ← game world
-├── Player (CharacterBody2D)
-│   ├── Camera2D
+├── WorldGeometry        ← 2D tiles/sprites or 3D meshes
+├── Player (CharacterBody2D / CharacterBody3D)
+│   ├── Camera2D / Camera3D
 │   ├── HealthComponent
 │   └── HurtboxComponent
 ├── Enemies
@@ -35,18 +37,18 @@ World (Node2D / Node3D)
     │   │   └── ScoreLabel (Label)
     │   └── BottomBar (HBoxContainer)
     │       └── InteractionPrompt (Label — hidden by default)
-    ├── DamageNumbersLayer (Node2D — world-space spawning point)
+    ├── DamageNumbersLayer (Node — screen-space Label pool)
     ├── MinimapContainer (SubViewportContainer)
     │   └── MinimapViewport (SubViewport)
-    │       ├── MinimapCamera (Camera2D)
-    │       └── MinimapWorld (mirrors or references world nodes)
+    │       ├── MinimapCamera (Camera2D / Camera3D)
+    │       └── (shared World2D / World3D supplied by setup)
     └── NotificationStack (VBoxContainer — anchored top-right)
 ```
 
 **Key rules:**
 - Keep all HUD scenes under a single `CanvasLayer`. Do not mix HUD nodes into the game world tree.
 - Use `layer = 1` for the main HUD. Use higher values (e.g. `10`) for overlays or pause menus that must appear above the HUD.
-- Damage numbers are an exception — they can live in an untransformed `Node2D` child of the HUD `CanvasLayer` and use `get_viewport().get_canvas_transform()` to convert world positions to viewport positions. The example assumes the HUD layer has its default transform.
+- Damage number Labels live beneath an untransformed HUD layer too. Their spawner converts 2D or 3D world coordinates into viewport pixels; choose the adapter matching the world.
 
 ---
 
@@ -289,9 +291,9 @@ EventBus.Instance.EmitSignal(EventBus.SignalName.ScoreChanged, GameState.Score);
 
 ## 4. Damage Numbers
 
-Floating "−25" labels that rise and fade above the hit point. Pooled in a HUD-side spawner; world position converted to screen via `get_viewport().get_canvas_transform()`. Optional crit colorization before spawn.
+Floating damage labels share one rise-and-fade animation and pool lifetime. A 2D adapter converts `Vector2` through the canvas transform; a 3D adapter projects `Vector3` through the gameplay camera and excludes points behind it.
 
-> See [references/damage-numbers.md](references/damage-numbers.md) for the full GDScript and C# DamageNumber scene + pooled spawner.
+> Start with the [common DamageNumber Label](references/common-damage-numbers.md), then choose the [2D spawner](references/2d-damage-numbers.md) or [3D spawner](references/3d-damage-numbers.md). Both include GDScript and C#.
 
 ---
 
@@ -299,23 +301,23 @@ Floating "−25" labels that rise and fade above the hit point. Pooled in a HUD-
 
 Toast / notification stack — a `VBoxContainer` anchored top-right with `max_visible` clamping and queue-driven dismissal. New toasts wait for an old one to expire before showing.
 
-> See [references/notifications.md](references/notifications.md) for the full GDScript and C# stack with auto-dismiss timers.
+> See [references/common-notifications.md](references/common-notifications.md) for the full GDScript and C# stack with auto-dismiss timers.
 
 ---
 
 ## 6. Minimap Concept
 
-Render a top-down view via a dedicated `SubViewport` + `Camera2D` that follows the player. Display it in a `SubViewportContainer` inside the HUD; a `TextureRect` using the viewport's texture is another option. Apply a circular-mask shader to the displaying control if needed. Set `render_target_update_mode = UPDATE_ALWAYS`.
+Render a top-down view in a `SubViewport` sharing the gameplay world. Choose `Camera2D` for a `World2D` or an orthogonal `Camera3D` for a `World3D`. Display scaling and circular clipping are shared Control/shader concerns.
 
-> See [references/minimap.md](references/minimap.md) for the SubViewport setup, MinimapCamera GDScript + C#, and circular-mask shader.
+> See [2D minimap](references/2d-minimap.md), [3D minimap](references/3d-minimap.md), and [common display/masking](references/common-minimap-display.md).
 
 ---
 
 ## 7. Interaction Prompts
 
-Screen-space "Press [E] to interact" prompt — a `Label` inside the HUD that follows an interactable's screen position each frame. Driven by `body_entered` / `body_exited` on the interactable's `Area2D`. Use `InputMap.action_get_events(name)` to display the correct key for the player's current binding.
+A screen-space Label follows the selected interactable each frame. Pair an `Area2D` with canvas projection for a 2D world, or an `Area3D` with camera projection for a 3D world. Both display the configured Input Map key/button binding.
 
-> See [references/interaction-prompts.md](references/interaction-prompts.md) for the full GDScript and C# prompt + Interactable Area2D pair.
+> See [2D interaction prompts](references/2d-interaction-prompts.md) or [3D interaction prompts](references/3d-interaction-prompts.md) for complete prompt and trigger scripts in both languages.
 
 ---
 
@@ -326,12 +328,12 @@ Screen-space "Press [E] to interact" prompt — a `Label` inside the HUD that fo
 - [ ] Health bar binds to `HealthComponent.health_changed` signal — does not poll in `_process`
 - [ ] Tween is killed (`_tween.kill()`) before starting a new one so rapid damage does not stack animations
 - [ ] Score counter uses `tween_method` to interpolate the displayed integer — not a jump cut
-- [ ] Damage number positions are converted from world space to screen space using `get_viewport().get_canvas_transform()`
+- [ ] Damage numbers use the canvas transform for 2D or `Camera3D.unproject_position()` with a behind-camera check for 3D
 - [ ] Pooled damage numbers hide on completion, remain alive, and cancel/reset their previous animation when reused
 - [ ] Notification stack enforces `max_visible` and re-checks the queue after each dismissal
 - [ ] Toast auto-dismiss uses a `Timer` node — not `await get_tree().create_timer()`
 - [ ] `SubViewport` for minimap has `render_target_update_mode = UPDATE_ALWAYS`
-- [ ] Minimap `Camera2D` zoom and the `SubViewport.canvas_cull_mask` select the intended view and visibility layers
+- [ ] Minimap uses `Camera2D` zoom / viewport canvas mask in 2D, or orthogonal `Camera3D` size / camera cull mask in 3D
 - [ ] Interaction prompt converts the interactable's world position each frame — not cached at spawn time
 - [ ] `InputMap.action_get_events()` is used to display the correct key for the player's current binding
 - [ ] HUD nodes that do not need input set `mouse_filter = MOUSE_FILTER_IGNORE` to avoid blocking game clicks

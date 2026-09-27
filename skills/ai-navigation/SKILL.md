@@ -3,11 +3,13 @@ name: ai-navigation
 description: Use when implementing AI movement — NavigationAgent2D/3D, steering behaviors, behavior trees, and patrol patterns
 ---
 
-# AI Navigation in Godot 4.3+
+# AI Navigation in Godot 4.3+ (Common)
 
 Cover NavigationAgent2D/3D, steering behaviors, behavior trees, and patrol patterns. All examples target Godot 4.3+ with no deprecated APIs.
 
 > **Related skills:** **state-machine** for AI state management, **component-system** for modular AI behaviors, **player-controller** for movement physics patterns, **math-essentials** for pathfinding vectors and steering math, **limboai** for BT + HSM with a visual editor, **beehave** for lightweight GDScript behavior trees. For a structured behavior tree (rather than steering/navigation), see the comparison tables in **limboai** and **beehave**.
+
+> **Dimension routing:** Use [2D navigation](references/2d-navigation-agent.md) or [3D ground navigation](references/3d-navigation-agent.md), then the matching steering, patrol and chase references. Behavior-tree structure and layer bitmasks are common.
 
 ---
 
@@ -18,8 +20,8 @@ Cover NavigationAgent2D/3D, steering behaviors, behavior trees, and patrol patte
 ```
 World (Node2D or Node3D)
 └── NavigationRegion2D (or NavigationRegion3D)
-    ├── TileMapLayer / StaticBody2D (geometry)
-    └── Enemy (CharacterBody2D with NavigationAgent2D child)
+    ├── TileMapLayer / StaticBody2D (2D) or MeshInstance3D / StaticBody3D (3D)
+    └── Enemy (matching CharacterBody2D/3D with NavigationAgent2D/3D child)
 ```
 
 ### NavigationRegion2D / NavigationRegion3D
@@ -50,7 +52,7 @@ GetNode<NavigationRegion3D>("NavigationRegion3D").BakeNavigationMesh();
 
 Navigation baking can cause frame drops on large maps. Godot 4.4 supports baking on a background thread: pass `true` to `bake_navigation_polygon(true)` (2D) or `bake_navigation_mesh(true)` (3D) and connect the region's `bake_finished` signal (use `CONNECT_ONE_SHOT`) to know when the mesh is ready.
 
-> See [references/async-baking.md](references/async-baking.md) for the full GDScript and C# background-thread bake examples (2D and 3D).
+> See [references/common-async-baking.md](references/common-async-baking.md) for the full GDScript and C# background-thread bake examples (2D and 3D).
 
 > **When to use async baking:** Procedurally generated levels, destructible terrain, or any scene where the navigation mesh must be rebuilt at runtime. The game continues running while the mesh bakes.
 
@@ -82,224 +84,27 @@ navAgent.NavigationLayers = 1 | 2;   // both (bitwise OR)
 
 ---
 
-## 2. NavigationAgent2D Basic Usage
+## 2. NavigationAgent2D
 
-### GDScript
+Use the [2D navigation mover](references/2d-navigation-agent.md) for XY ground movement. It waits for map synchronization and handles both direct and avoidance movement.
 
-```gdscript
-extends CharacterBody2D
+## 3. NavigationAgent3D
 
-@export var speed: float = 120.0
-
-@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
-
-
-func _ready() -> void:
-	# velocity_computed fires when avoidance calculates a safe velocity
-	nav_agent.velocity_computed.connect(_on_velocity_computed)
-
-
-func _physics_process(delta: float) -> void:
-	if nav_agent.is_navigation_finished():
-		return
-
-	var next_pos: Vector2 = nav_agent.get_next_path_position()
-	var direction: Vector2 = (next_pos - global_position).normalized()
-	var desired_velocity: Vector2 = direction * speed
-
-	if nav_agent.avoidance_enabled:
-		# Hand desired velocity to the avoidance system; wait for the signal
-		nav_agent.velocity = desired_velocity
-	else:
-		velocity = desired_velocity
-		move_and_slide()
-
-
-func _on_velocity_computed(safe_velocity: Vector2) -> void:
-	velocity = safe_velocity
-	move_and_slide()
-
-
-func set_target(target_pos: Vector2) -> void:
-	nav_agent.target_position = target_pos
-```
-
-**Key NavigationAgent2D properties:**
-
-| Property | Purpose |
-|---|---|
-| `target_position` | World-space destination |
-| `path_desired_distance` | How close to each waypoint counts as reached (default 1) |
-| `target_desired_distance` | How close to the final target counts as finished (default 10) |
-| `avoidance_enabled` | Enable RVO obstacle avoidance |
-| `radius` | Agent collision radius for avoidance |
-| `time_horizon_agents` | Seconds of avoidance look-ahead (tune to reduce jitter) |
-
-### C#
-
-```csharp
-using Godot;
-
-public partial class Enemy2D : CharacterBody2D
-{
-    [Export] public float Speed { get; set; } = 120f;
-
-    private NavigationAgent2D _navAgent;
-
-    public override void _Ready()
-    {
-        _navAgent = GetNode<NavigationAgent2D>("NavigationAgent2D");
-        _navAgent.VelocityComputed += OnVelocityComputed;
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        if (_navAgent.IsNavigationFinished()) return;
-
-        Vector2 nextPos = _navAgent.GetNextPathPosition();
-        Vector2 direction = (nextPos - GlobalPosition).Normalized();
-        Vector2 desiredVelocity = direction * Speed;
-
-        if (_navAgent.AvoidanceEnabled)
-            _navAgent.Velocity = desiredVelocity;
-        else
-        {
-            Velocity = desiredVelocity;
-            MoveAndSlide();
-        }
-    }
-
-    private void OnVelocityComputed(Vector2 safeVelocity)
-    {
-        Velocity = safeVelocity;
-        MoveAndSlide();
-    }
-
-    public void SetTarget(Vector2 targetPos) => _navAgent.TargetPosition = targetPos;
-}
-```
-
----
-
-## 3. NavigationAgent3D Basic Usage
-
-### GDScript
-
-```gdscript
-extends CharacterBody3D
-
-@export var speed: float = 4.0
-@export var gravity: float = 9.8
-
-@onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
-
-
-func _ready() -> void:
-	nav_agent.velocity_computed.connect(_on_velocity_computed)
-
-
-func _physics_process(delta: float) -> void:
-	# Apply gravity
-	if not is_on_floor():
-		velocity.y -= gravity * delta
-
-	if nav_agent.is_navigation_finished():
-		move_and_slide()
-		return
-
-	var next_pos: Vector3 = nav_agent.get_next_path_position()
-	var direction: Vector3 = (next_pos - global_position)
-	direction.y = 0.0
-	direction = direction.normalized()
-	var desired_velocity: Vector3 = direction * speed
-	desired_velocity.y = velocity.y  # preserve gravity
-
-	if nav_agent.avoidance_enabled:
-		nav_agent.velocity = desired_velocity
-	else:
-		velocity = desired_velocity
-		move_and_slide()
-
-
-func _on_velocity_computed(safe_velocity: Vector3) -> void:
-	velocity = safe_velocity
-	move_and_slide()
-
-
-func set_target(target_pos: Vector3) -> void:
-	nav_agent.target_position = target_pos
-```
-
-### C#
-
-```csharp
-using Godot;
-
-public partial class Enemy3D : CharacterBody3D
-{
-    [Export] public float Speed   { get; set; } = 4f;
-    [Export] public float Gravity { get; set; } = 9.8f;
-
-    private NavigationAgent3D _navAgent;
-
-    public override void _Ready()
-    {
-        _navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
-        _navAgent.VelocityComputed += OnVelocityComputed;
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        var vel = Velocity;
-        if (!IsOnFloor()) vel.Y -= Gravity * (float)delta;
-
-        if (_navAgent.IsNavigationFinished())
-        {
-            Velocity = vel;
-            MoveAndSlide();
-            return;
-        }
-
-        Vector3 nextPos = _navAgent.GetNextPathPosition();
-        var direction = (nextPos - GlobalPosition) with { Y = 0f };
-        direction = direction.Normalized();
-        vel.X = direction.X * Speed;
-        vel.Z = direction.Z * Speed;
-
-        if (_navAgent.AvoidanceEnabled)
-            _navAgent.Velocity = vel;
-        else
-        {
-            Velocity = vel;
-            MoveAndSlide();
-        }
-    }
-
-    private void OnVelocityComputed(Vector3 safeVelocity)
-    {
-        Velocity = safeVelocity;
-        MoveAndSlide();
-    }
-
-    public void SetTarget(Vector3 targetPos) => _navAgent.TargetPosition = targetPos;
-}
-```
-
----
+Use the [3D navigation mover](references/3d-navigation-agent.md) for XZ ground steering with independent Y gravity. It does not zero vertical velocity when a path finishes.
 
 ## 4. Steering Behaviors
 
 Lightweight per-frame calculations (seek, flee, arrive, wander) that produce natural-looking movement without a navigation mesh. Combine them by summing the returned vectors, or pick one and assign it to `velocity` each `_physics_process` tick.
 
-> See [references/steering-behaviors.md](references/steering-behaviors.md) for the full GDScript and C# implementations of seek, flee, arrive (with deceleration ramp), and wander (with circle-projection jitter).
+> See [references/2d-steering-behaviors.md](references/2d-steering-behaviors.md) and [3D equivalent](references/3d-steering-behaviors.md) for the full GDScript and C# implementations of seek, flee, arrive (with deceleration ramp), and wander (with circle-projection jitter).
 
 ---
 
 ## 5. Patrol Patterns
 
-A `NavigationAgent2D` plus an array of `Marker2D` waypoints and a `Timer` for the pause at each point produces a clean patrol loop. Cycle the index on `wait_timer.timeout`, set `nav_agent.target_position` to the next waypoint, and gate movement on `is_navigation_finished()`.
+A NavigationAgent2D/3D plus matching Marker2D/3D waypoints produces a patrol loop. Accumulate a short wait after each completed path, cycle the waypoint index, and set the next target. The shared movement base owns avoidance and gravity.
 
-> See [references/patrol-patterns.md](references/patrol-patterns.md) for the full GDScript and C# waypoint-chain patrol with wait-timer pauses.
+> See [references/2d-patrol-patterns.md](references/2d-patrol-patterns.md) and [3D equivalent](references/3d-patrol-patterns.md) for the full GDScript and C# waypoint-chain patrol with timed pauses.
 
 ---
 
@@ -315,13 +120,13 @@ A behavior tree (BT) is a tree of nodes evaluated every tick. Three core node ty
 
 Sequences model "do A then B then C". Selectors model "try A, else try B, else try C".
 
-> See [references/behavior-trees.md](references/behavior-trees.md) for the full lightweight BT implementation (BTNode base + Sequence / Selector / Action) and a worked enemy that uses "chase OR patrol", in both GDScript and C#.
+> See [references/common-behavior-trees.md](references/common-behavior-trees.md) for the full lightweight BT implementation (BTNode base + Sequence / Selector / Action) and a worked enemy that uses "chase OR patrol", in both GDScript and C#.
 
 ---
 
 ## 7. Chase + Attack Pattern
 
-Combines NavigationAgent2D with a state machine. See the **state-machine** skill for the full FSM infrastructure.
+Combines NavigationAgent2D/3D with a state machine. See the **state-machine** skill for the full FSM infrastructure.
 
 ### States
 
@@ -331,9 +136,9 @@ Combines NavigationAgent2D with a state machine. See the **state-machine** skill
 | CHASE | player in detect_range | player in attack_range OR player escaped |
 | ATTACK | player in attack_range | player left attack_range |
 
-> See [references/chase-attack.md](references/chase-attack.md) for the full GDScript and C# implementation (PATROL → CHASE → ATTACK transitions, attack cooldown timer, patrol-waypoint advancement, escape-range hand-off back to patrol).
+> See [references/2d-chase-attack.md](references/2d-chase-attack.md) and [3D equivalent](references/3d-chase-attack.md) for the full GDScript and C# implementation (PATROL → CHASE → ATTACK transitions, attack cooldown timer, patrol-waypoint advancement, escape-range hand-off back to patrol).
 
-> For larger projects, extract each state into its own node class using the **state-machine** skill and inject the `NavigationAgent2D` reference from the parent.
+> For larger projects, extract each state into its own node class using the **state-machine** skill and inject the matching NavigationAgent2D/3D reference from the parent.
 
 ---
 
@@ -361,14 +166,14 @@ func get_path_to(target: Vector2) -> PackedVector2Array:
 
 ```csharp
 // No code change needed — NavigationServer2D calls work identically.
-public PackedVector2Array GetPathTo(Vector2 target)
+public Vector2[] GetPathTo(Vector2 target)
 {
-    var map = GetWorld2D().GetNavigationMap();
+    var map = GetWorld2D().NavigationMap;
     return NavigationServer2D.MapGetPath(map, GlobalPosition, target, true);
 }
 ```
 
-> **2D-only projects:** In **Project Settings → Modules**, you can disable the `NavigationServer3D` module to reduce export size. This is only safe if no 3D navigation nodes (`NavigationRegion3D`, `NavigationAgent3D`) are used anywhere in the project.
+> Removing an engine module requires export templates built without that module; project settings do not remove compiled code from an existing export template. Keep 3D navigation available whenever the project uses 3D navigation nodes.
 
 ---
 
@@ -377,11 +182,11 @@ public PackedVector2Array GetPathTo(Vector2 target)
 | Pitfall | Symptom | Fix |
 |---|---|---|
 | **Navigation mesh not baked** | Agent stands still; no path found | Bake the NavigationPolygon/NavigationMesh before running, or call `bake_navigation_polygon()` at runtime after scene loads |
-| **`agent_radius` too large** | Agent can't fit through doorways or narrow corridors | Lower `radius` on NavigationAgent to be slightly less than half the passage width |
+| **`agent_radius` too large** | Agent can't fit through doorways or narrow corridors | Bake with suitable agent clearance; NavigationAgent `radius` only controls avoidance |
 | **Avoidance jitter** | Agent stutters or oscillates when near other agents | Increase `time_horizon_agents` (try 2–4 s) or slightly lower `max_speed` on the agent |
 | **Path recalculation too frequent** | CPU spike each frame; agents lag | Add a `Timer` (0.2–0.5 s) and only set `target_position` when the timer fires, not every physics frame |
 | **Wrong navigation layer** | Agent ignores some regions or finds no path | Confirm `navigation_layers` bitmask matches between the NavigationRegion and the NavigationAgent |
-| **Target set before NavigationServer is ready** | Path is empty on the first frame | Defer `target_position` assignment to `_ready()` or await `NavigationServer2D.map_changed` |
+| **Target set before NavigationServer is ready** | Path is empty on the first frame | Wait for a synchronized map before querying paths; see the map-iteration check in both mover recipes |
 | **Gravity ignored in 3D** | Agent floats or sinks into the floor | Always accumulate `velocity.y` from gravity separately; only zero out X/Z from the nav direction |
 | **Baking causes frame drop** | Synchronous bake on large maps blocks the main thread | Use async baking: `bake_navigation_mesh(true)` (Godot 4.4+); connect `bake_finished` signal |
 
@@ -402,4 +207,6 @@ public PackedVector2Array GetPathTo(Vector2 target)
 - [ ] `agent_radius` small enough to fit through the narrowest passage in the level
 - [ ] Gravity applied independently of horizontal nav velocity (3D only)
 - [ ] Large or dynamic maps use async baking (`bake_navigation_mesh(true)`) to avoid frame drops (Godot 4.4+)
-- [ ] 2D-only projects on Godot 4.5+ can disable `NavigationServer3D` in Project Settings to reduce export size
+- [ ] Custom export templates retain the navigation modules used by the project
+
+Spatial references: [2d-behavior-tree-actor](references/2d-behavior-tree-actor.md) · [3d-behavior-tree-actor](references/3d-behavior-tree-actor.md).

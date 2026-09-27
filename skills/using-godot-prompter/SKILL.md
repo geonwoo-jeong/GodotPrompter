@@ -3,11 +3,17 @@ name: using-godot-prompter
 description: Bootstrap skill — establishes how to find and use GodotPrompter skills, with platform-specific tool mapping
 ---
 
-# Using GodotPrompter
+# Using GodotPrompter (Common)
 
 > **Related skills:** **godot-project-setup** for scaffolding a new project, **godot-grill** for settling open design decisions first, **godot-brainstorming** for design exploration, **godot-code-review** for reviewing finished code, **godot-debugging** for diagnosing runtime issues.
 
 GodotPrompter provides Godot 4.x domain-specific skills for AI coding agents. Skills cover project setup, architecture patterns, gameplay systems, UI, multiplayer, testing, and deployment — for both GDScript and C#.
+
+## Choose the dimension
+
+Use the project’s actual scene root and camera to select `2d-` or `3d-` references. `common-` covers shared data, lifecycle, UI and transport. For hybrid games, select per system; a Control HUD stays common over either world. Never transfer spatial snippets by class-name substitution alone.
+
+See the [dimension guide](../../docs/dimensions.md) and [complete catalog](../../docs/dimension-catalog.md). The skill IDs and required `SKILL.md` entry names are unchanged.
 
 ## How to Access Skills
 
@@ -19,7 +25,7 @@ GodotPrompter provides Godot 4.x domain-specific skills for AI coding agents. Sk
 
 **In Cursor:** Skills are loaded via custom instructions / rules system.
 
-**In Codex:** Skills load natively via the AGENTS.md re-export. Follow skill instructions directly; see `references/codex-tools.md` for tool mapping.
+**In Codex:** Skills load natively via the AGENTS.md re-export. Follow skill instructions directly; see `references/common-codex-tools.md` for tool mapping.
 
 **In OpenCode:** Skills are discovered from the installed plugin. Use the `/skills` command to browse or invoke skills directly. See `.opencode/INSTALL.md` for setup.
 
@@ -58,7 +64,7 @@ ln -s /path/to/GodotPrompter/skills/* ~/.gemini/config/skills/
 
 > **Nesting caveat:** Prefer `ln -s skills/*` over cloning the repo directly into the skills dir, so each skill is an immediate child (`<skills-dir>/<skill-name>/SKILL.md`). Confirm nested discovery works before relying on the clone approach.
 
-See `references/antigravity-tools.md` for the full tool mapping and SKILL.md frontmatter details.
+See `references/common-antigravity-tools.md` for the full tool mapping and SKILL.md frontmatter details.
 
 ## Coexistence with Other Plugins (e.g., Superpowers)
 
@@ -151,11 +157,11 @@ GodotPrompter has no plans folder of its own. Save implementation plans where th
 
 Skills use Claude Code tool names as the canonical reference. Non-Claude platforms: see the appropriate tool mapping file in `references/` for your platform's equivalents:
 
-- [`references/copilot-tools.md`](references/copilot-tools.md) — GitHub Copilot CLI
-- [`references/codex-tools.md`](references/codex-tools.md) — Codex
-- [`references/cursor-tools.md`](references/cursor-tools.md) — Cursor
-- [`references/gemini-tools.md`](references/gemini-tools.md) — Legacy Gemini CLI (deprecated)
-- [`references/antigravity-tools.md`](references/antigravity-tools.md) — Antigravity (2.0 desktop, IDE, CLI)
+- [`references/common-copilot-tools.md`](references/common-copilot-tools.md) — GitHub Copilot CLI
+- [`references/common-codex-tools.md`](references/common-codex-tools.md) — Codex
+- [`references/common-cursor-tools.md`](references/common-cursor-tools.md) — Cursor
+- [`references/common-gemini-tools.md`](references/common-gemini-tools.md) — Legacy Gemini CLI (deprecated)
+- [`references/common-antigravity-tools.md`](references/common-antigravity-tools.md) — Antigravity (2.0 desktop, IDE, CLI)
 
 ## Available Skill Categories
 

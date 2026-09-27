@@ -3,7 +3,7 @@ name: xr-development
 description: Use when building VR/AR/XR applications — OpenXR setup, XROrigin3D, hand tracking, controllers, passthrough, and Meta Quest deployment in Godot 4.3+
 ---
 
-# XR Development in Godot 4.3+
+# XR Development in Godot 4.3+ (3D)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -71,7 +71,7 @@ public partial class XRMain : Node3D
 
 `XRController3D` nodes (one per hand, child of `XROrigin3D`) expose buttons via the OpenXR action map. Common buttons: trigger (`select_button`), grip (`grip_button`), thumbstick (`primary_axis` Vector2). Apply thumbstick locomotion velocity to `XROrigin3D` (not the camera).
 
-> See [references/controllers-and-input.md](references/controllers-and-input.md) for full XRController3D wiring, OpenXR button reference, and thumbstick locomotion recipe.
+> See [references/3d-controllers-and-input.md](references/3d-controllers-and-input.md) for full XRController3D wiring, OpenXR button reference, and thumbstick locomotion recipe.
 
 ---
 
@@ -79,7 +79,7 @@ public partial class XRMain : Node3D
 
 When the headset supports hand tracking (Quest 2+, Vision Pro), `XRController3D` nodes can be configured to track hand joints. Sample finger positions for gesture detection, or bind to standard select / grip events when the user pinches.
 
-> See [references/hand-tracking.md](references/hand-tracking.md) for hand-tracking node setup, joint sampling, and gesture-driven interactions.
+> See [references/3d-hand-tracking.md](references/3d-hand-tracking.md) for hand-tracking node setup, joint sampling, and gesture-driven interactions.
 
 ---
 
@@ -87,7 +87,7 @@ When the headset supports hand tracking (Quest 2+, Vision Pro), `XRController3D`
 
 Standard pattern: an `Area3D` on the controller detects nearby `RigidBody3D` objects; on grip-press, parent the body to the controller and freeze it; on grip-release, restore the parent and apply the controller's velocity to launch.
 
-> See [references/grabbing-objects.md](references/grabbing-objects.md) for the full physics-based grabbing implementation (GDScript + C#).
+> See [references/3d-grabbing-objects.md](references/3d-grabbing-objects.md) for the full physics-based grabbing implementation (GDScript + C#).
 
 ---
 
@@ -95,7 +95,7 @@ Standard pattern: an `Area3D` on the controller detects nearby `RigidBody3D` obj
 
 For UI in VR, render a `Control` tree to a `SubViewport`, map its texture onto a `Quad` mesh placed in 3D space. Pointer: a `RayCast3D` from the controller hits the quad, the hit position is converted back to 2D viewport coords, an `InputEventMouseMotion` is forwarded into the SubViewport.
 
-> See [references/xr-ui.md](references/xr-ui.md) for the SubViewport-on-quad recipe and pointer/ray interaction.
+> See [references/3d-xr-ui.md](references/3d-xr-ui.md) for the SubViewport-on-quad recipe and pointer/ray interaction.
 
 ---
 
@@ -103,7 +103,7 @@ For UI in VR, render a `Control` tree to a `SubViewport`, map its texture onto a
 
 For headsets that support it (Quest 2+, Vision Pro), set `OpenXRInterface.environment_blend_mode = XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND` and clear the `WorldEnvironment` background to transparent. The user sees the real world with virtual content composited on top.
 
-> See [references/passthrough.md](references/passthrough.md) for the full enabling steps and Quest-specific notes.
+> See [references/3d-passthrough.md](references/3d-passthrough.md) for the full enabling steps and Quest-specific notes.
 
 ---
 
@@ -140,7 +140,7 @@ For headsets that support it (Quest 2+, Vision Pro), set `OpenXRInterface.enviro
 
 Godot 4.5 adds a D3D12 OpenXR backend on Windows (Quest Link / SteamVR alternative to Vulkan), foveated rendering on the Mobile Vulkan renderer, Application SpaceWarp frame synthesis for Quest/Pico, OpenXR Render Models for platform-native controller meshes, and native visionOS export via the Apple Embedded preset. All are enabled through Project Settings or the Godot OpenXR Vendors plugin — no engine-level code changes.
 
-> See [references/godot-4-5-features.md](references/godot-4-5-features.md) for enabling steps, GDScript + C# render-model snippets, and per-feature caveats.
+> See [references/3d-godot-4-5-features.md](references/3d-godot-4-5-features.md) for enabling steps, GDScript + C# render-model snippets, and per-feature caveats.
 
 ---
 

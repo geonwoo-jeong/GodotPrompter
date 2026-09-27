@@ -3,13 +3,23 @@ name: procedural-generation
 description: Use when implementing procedural generation — noise-based terrain, BSP dungeons, cellular automata caves, wave function collapse, and seeded randomness in Godot 4.3+
 ---
 
-# Procedural Generation in Godot 4.3+
+# Procedural Generation in Godot 4.3+ (Common)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
 > **Related skills:** **2d-essentials** for TileMapLayer usage, **3d-essentials** for 3D terrain meshes, **math-essentials** for vectors and transforms, **godot-optimization** for chunk loading and performance.
 
 ---
+
+## Dimension Routing
+
+| Topic | 2D | 3D |
+|---|---|---|
+| Noise terrain | [TileMapLayer](references/2d-noise-generation.md) | [GridMap height + volumetric density](references/3d-noise-generation.md) |
+| BSP rooms and corridors | [TileMapLayer](references/2d-bsp-dungeons.md) | [GridMap on XZ](references/3d-bsp-dungeons.md) |
+| Cellular cave layout | [TileMapLayer](references/2d-cellular-automata.md) | [GridMap on XZ](references/3d-cellular-automata.md) |
+
+Seeded randomness and the [planar WFC solver](references/common-wave-function-collapse.md) are common data algorithms. A logical two-coordinate floor plan can drive a 3D level; it is not a volumetric generator. Three-axis terrain density is documented separately rather than pretending a type rename adds vertical connectivity.
 
 ## 1. Seeded Randomness
 
@@ -57,7 +67,7 @@ public void GenerateLevel(ulong levelSeed)
 
 `FastNoiseLite` for height maps, biome distribution, 2D terrain. Key params: `noise_type` (Perlin / Simplex / Cellular / Value), `frequency` (lower = larger features), `seed`. For terrain, sample noise at each tile coord, threshold the value to pick a tile.
 
-> See [references/noise-generation.md](references/noise-generation.md) for the basic noise-map recipe, noise-type reference table, and 2D terrain + TileMapLayer walkthrough.
+> See [references/2d-noise-generation.md](references/2d-noise-generation.md) for the basic noise-map recipe, noise-type reference table, and 2D terrain + TileMapLayer walkthrough.
 
 ---
 
@@ -65,15 +75,15 @@ public void GenerateLevel(ulong levelSeed)
 
 Binary Space Partitioning recursively splits a rectangle into smaller rectangles, carves a room inside each leaf, connects siblings with corridors. Produces grid-aligned room-based dungeons (think roguelike).
 
-> See [references/bsp-dungeons.md](references/bsp-dungeons.md) for the full recursive partition + room placement + corridor connection algorithm in GDScript + C#.
+> See [references/2d-bsp-dungeons.md](references/2d-bsp-dungeons.md) for the full recursive partition + room placement + corridor connection algorithm in GDScript + C#.
 
 ---
 
 ## 4. Cellular Automata (Cave Generation)
 
-Fill a grid with random walls/floors at ~45% density, then iterate "a cell becomes a wall if ≥ 5 of 8 neighbors are walls" 4-5 times. The result is organic cave shapes — no straight corridors.
+Fill a grid with random walls/floors at ~45% density, then iterate "a cell becomes a wall if ≥ 5 of the 9 cells (self plus 8 neighbors) are walls" 4-5 times. The result is organic cave shapes — no straight corridors.
 
-> See [references/cellular-automata.md](references/cellular-automata.md) for the full GDScript + C# implementation with TileMapLayer integration.
+> See [references/2d-cellular-automata.md](references/2d-cellular-automata.md) for the full GDScript + C# implementation with TileMapLayer integration.
 
 ---
 
@@ -81,7 +91,7 @@ Fill a grid with random walls/floors at ~45% density, then iterate "a cell becom
 
 WFC is a constraint solver: given a tile set with adjacency rules, pick the lowest-entropy cell, collapse it to a valid tile, propagate constraints, repeat. Produces tile-rule-respecting output but is non-trivial to implement.
 
-> See [references/wave-function-collapse.md](references/wave-function-collapse.md) for concept overview and a simplified GDScript + C# implementation.
+> See [references/common-wave-function-collapse.md](references/common-wave-function-collapse.md) for concept overview and a simplified GDScript + C# implementation.
 
 ---
 
@@ -90,7 +100,7 @@ WFC is a constraint solver: given a tile set with adjacency rules, pick the lowe
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | Same level every time | Not seeding the RNG | Set `rng.seed` before generation |
-| Different results on different platforms | Using global `randf()` / `randi()` | Use a dedicated `RandomNumberGenerator` instance |
+| Same seed gives a different layout after engine/code changes | RNG algorithm or call order changed | Store generator/version information or generated layout when long-term reproducibility matters |
 | Noise looks blocky | Frequency too high | Lower `frequency` (try 0.01–0.05) |
 | Caves are all wall or all floor | `fill_chance` too extreme or too few iterations | Use fill_chance 0.40–0.50 and 4–6 iterations |
 | BSP rooms overlap | Split position too close to edge | Ensure `min_room_size` buffer in split calculation |

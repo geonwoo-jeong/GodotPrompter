@@ -3,7 +3,7 @@ name: tween-animation
 description: Use when implementing tweens — property animation, method tweening, chaining, parallel sequences, easing, and common UI/gameplay motion recipes
 ---
 
-# Tweens in Godot 4.3+
+# Tweens in Godot 4.3+ (Common)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -12,6 +12,8 @@ All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first,
 ---
 
 ## 1. Core Concepts
+
+Tween sequencing, easing, and lifecycle are common. Read [2D world motion](references/2d-world-motion.md) or [3D world motion](references/3d-world-motion.md) for typed transform targets. Inline Vector2/`modulate` examples below assume a CanvasItem such as Node2D or Control; they do not imply that Node3D has those properties. UI animation works in both kinds of game.
 
 ### Tween vs AnimationPlayer
 
@@ -258,7 +260,7 @@ tween.TweenProperty(this, "position:y", 0.0f, 0.5f)
 
 Each `tween_property()` call returns a `PropertyTweener` you can chain modifiers on: `.from(value)` for a custom start, `.from_current()` to capture current value, `.as_relative()` to add (not replace), `.set_delay(seconds)` to delay this tweener's start.
 
-> See [references/property-tweener-modifiers.md](references/property-tweener-modifiers.md) for full code examples of each modifier.
+> See [references/common-property-tweener-modifiers.md](references/common-property-tweener-modifiers.md) for full code examples of each modifier.
 
 ---
 
@@ -266,7 +268,7 @@ Each `tween_property()` call returns a `PropertyTweener` you can chain modifiers
 
 `tween.set_loops(N)` repeats N times (`0` = infinite). Signals: `finished` (whole tween done), `step_finished(idx)` (one step done), `loop_finished(loop_count)` (one full cycle done).
 
-> See [references/looping-and-signals.md](references/looping-and-signals.md) for loop-count semantics and signal wiring.
+> See [references/common-looping-and-signals.md](references/common-looping-and-signals.md) for loop-count semantics and signal wiring.
 
 ---
 
@@ -274,7 +276,7 @@ Each `tween_property()` call returns a `PropertyTweener` you can chain modifiers
 
 Tweens are owned by their host SceneTree. Kill running tweens with `tween.kill()` before starting a new one to avoid stacking. Use `set_pause_mode`, `set_speed_scale`, `set_ignore_time_scale` for runtime control.
 
-> See [references/lifecycle.md](references/lifecycle.md) for kill/replace patterns, pause modes, speed scale, ignore-time-scale.
+> See [references/common-lifecycle.md](references/common-lifecycle.md) for kill/replace patterns, pause modes, speed scale, ignore-time-scale.
 
 ### has_tweeners() (Godot 4.7+)
 

@@ -3,7 +3,7 @@ name: 3d-essentials
 description: Use when working with 3D-specific systems — materials, lighting, shadows, environment, global illumination, fog, LOD, occlusion culling, and decals in Godot 4.3+
 ---
 
-# 3D Essentials in Godot 4.3+
+# 3D Essentials in Godot 4.3+ (3D)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -12,6 +12,10 @@ All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first,
 ---
 
 ## 1. 3D Coordinate System & Core Nodes
+
+Start with [GridMap level building](references/3d-gridmap.md) for the TileMap counterpart and [custom geometry](references/3d-custom-geometry.md) for the CanvasItem drawing counterpart. [3D particle recipes](../particles-vfx/references/3d-vfx-recipes.md) pair with the 2D particle guide. See [2D essentials](../2d-essentials/SKILL.md) for sprite lighting, drawing, and surface stamps.
+
+Perspective provides depth-dependent parallax naturally in a 3D scene; a Sky background represents an infinitely distant environment. Parallax2D scrolling is a separate canvas technique. Volumetric fog, mesh LOD, 3D GI, and projected Decal nodes have no suffix-swapped 2D API.
 
 ### Coordinate System
 
@@ -41,7 +45,7 @@ Godot uses a **right-handed** coordinate system with metric units (1 unit = 1 me
 | `CSGBox3D` etc. | Constructive Solid Geometry — prototyping |
 | `GridMap` | 3D tile-based level building |
 
-> **Godot 4.7+:** `GridMap` exposes its internal octants for spatial queries (`cell_octant_size`, `get_used_octants()`, `get_octants_in_bounds()` and friends) so you can scope work to a region instead of walking every cell. `CSGShape3D` gains `autosmooth` / `smoothing_angle` for automatic face smoothing. Full method table and semantics: [references/godot-4.7-additions.md](references/godot-4.7-additions.md)
+> **Godot 4.7+:** `GridMap` exposes its internal octants for spatial queries (`cell_octant_size`, `get_used_octants()`, `get_octants_in_bounds()` and friends) so you can scope work to a region instead of walking every cell. `CSGShape3D` gains `autosmooth` / `smoothing_angle` for automatic face smoothing. Full method table and semantics: [references/3d-godot-4.7-additions.md](references/3d-godot-4.7-additions.md)
 
 ### Minimal 3D Scene
 
@@ -74,13 +78,13 @@ The PBR core: `albedo_color` / `albedo_texture` (base color), `metallic` (0 diel
 
 Prefer Alpha Scissor (fast, shadowed cutouts) or Alpha Hash (dithered — hair) over plain Alpha (slow, no shadows); Depth Pre-Pass suits mostly-opaque meshes with transparent edges.
 
-> See [references/materials-and-lighting-recipes.md](references/materials-and-lighting-recipes.md#transparency-modes) for the comparison table.
+> See [references/3d-materials-and-lighting-recipes.md](references/3d-materials-and-lighting-recipes.md#transparency-modes) for the comparison table.
 
 ### Setting Materials from Code & Material Instancing
 
 Create a `StandardMaterial3D` at runtime, assign to `mesh.material_override`, and drive emissive flashes via Tween. Use `.duplicate()` to make per-instance copies so changing one mesh's material doesn't affect others.
 
-> See [references/materials-and-lighting-recipes.md](references/materials-and-lighting-recipes.md) for the full GDScript and C# recipes (basic material setup, emissive flash, per-instance duplicate, dynamic OmniLight3D explosion).
+> See [references/3d-materials-and-lighting-recipes.md](references/3d-materials-and-lighting-recipes.md) for the full GDScript and C# recipes (basic material setup, emissive flash, per-instance duplicate, dynamic OmniLight3D explosion).
 
 ---
 
@@ -101,25 +105,25 @@ Create a `StandardMaterial3D` at runtime, assign to `mesh.material_override`, an
 
 Key knobs: `light_color`, `light_energy` (HDR — values >1 are valid), `shadow_enabled` (big perf hit), `directional_shadow_mode`, `directional_shadow_max_distance` (lower = sharper shadows).
 
-> See [references/materials-and-lighting-recipes.md](references/materials-and-lighting-recipes.md#light-properties) for the properties table and the GDScript + C# sun setup snippet.
+> See [references/3d-materials-and-lighting-recipes.md](references/3d-materials-and-lighting-recipes.md#light-properties) for the properties table and the GDScript + C# sun setup snippet.
 
 ### AreaLight3D (Godot 4.7+)
 
 `AreaLight3D` emits light from a rectangle along the node's **-Z** — neon tubes, screens, softbox panels — with PCSS soft shadows driven by `light_size`. Key properties: `area_size = Vector2(1, 1)` (meters), `area_range = 5.0`, `area_attenuation = 1.0` (`2.0` = physically accurate inverse square), `area_normalize_energy = true` (resizing keeps total output stable), optional `area_texture` for textured emission (Forward+/Mobile only). Mobile support is limited and Compatibility cannot cast area-light shadows; in Forward+, a single visible area light adds clustered-lighting cost to *all* rendered objects — reserve for cinematics or high-end targets.
 
-> See [references/materials-and-lighting-recipes.md](references/materials-and-lighting-recipes.md#arealight3d-godot-47) for the full property table and the GDScript + C# setup recipe.
+> See [references/3d-materials-and-lighting-recipes.md](references/3d-materials-and-lighting-recipes.md#arealight3d-godot-47) for the full property table and the GDScript + C# setup recipe.
 
 ### Dynamic Point Light
 
 Spawn an `OmniLight3D` at runtime, drive its energy with a tween, queue-free on completion. Common for explosions, muzzle flashes, magic effects.
 
-> See [references/materials-and-lighting-recipes.md](references/materials-and-lighting-recipes.md#dynamic-point-light) for the full GDScript and C# recipe.
+> See [references/3d-materials-and-lighting-recipes.md](references/3d-materials-and-lighting-recipes.md#dynamic-point-light) for the full GDScript and C# recipe.
 
 ### Shadow Configuration & Bake Modes
 
 Prefer `shadow_normal_bias` over `shadow_bias` against acne; keep `directional_shadow_max_distance` at the minimum needed (50–100 m typical). Bake modes: Disabled (fully real-time, default), Static (fully baked, no runtime cost), Dynamic (indirect baked, direct real-time).
 
-> See [references/materials-and-lighting-recipes.md](references/materials-and-lighting-recipes.md#shadow-configuration-tips) for the shadow-tuning table and the bake-modes table.
+> See [references/3d-materials-and-lighting-recipes.md](references/3d-materials-and-lighting-recipes.md#shadow-configuration-tips) for the shadow-tuning table and the bake-modes table.
 
 ---
 
@@ -127,7 +131,7 @@ Prefer `shadow_normal_bias` over `shadow_bias` against acne; keep `directional_s
 
 Configure global rendering — sky background, tonemapping, glow, SSR, SSAO/SSIL/SDFGI, depth-of-field — through a `WorldEnvironment` node holding an `Environment` resource. Pick a tonemap (`Linear`, `Reinhard`, `Filmic`, `ACES`, or `AgX`) on the Environment resource. Forward+ enables SSAO, SSIL, SSR, and SDFGI; mobile/compatibility renderers omit these.
 
-> See [references/environment-and-post.md](references/environment-and-post.md) for the full setup recipes (sky options, tonemap modes, all post-processing effects, the 4.6+ glow-before-tonemapping pipeline change, AgX `tonemap_white` / `tonemap_contrast` controls, and the 4.6+ SSR quality upgrade).
+> See [references/3d-environment-and-post.md](references/3d-environment-and-post.md) for the full setup recipes (sky options, tonemap modes, all post-processing effects, the 4.6+ glow-before-tonemapping pipeline change, AgX `tonemap_white` / `tonemap_contrast` controls, and the 4.6+ SSR quality upgrade).
 
 > **Godot 4.7+:** `display/window/hdr/request_hdr_output` (default `false`, promoted to a basic project setting) requests HDR display output for the main window and editor where supported, auto-switching between HDR and SDR as screens or system settings change; it forces `Viewport.use_hdr_2d` on for the main viewport (other `SubViewport`s must enable it themselves). Read only at startup — toggle `Window.hdr_output_requested` at runtime.
 
@@ -137,7 +141,7 @@ Configure global rendering — sky background, tonemapping, glow, SSR, SSAO/SSIL
 
 Five GI options trade quality for cost: none (ambient only) → ReflectionProbe (localized) → LightmapGI (best quality, baked) → VoxelGI (small/medium dynamic) → SDFGI (large open-world). VoxelGI/SDFGI/LightmapGI require Forward+. The 4.5+ subsections below (Specular Occlusion, Bent Normal Maps) stay inline because they apply across GI methods.
 
-> See [references/global-illumination.md](references/global-illumination.md) for the methods comparison table, ReflectionProbe scene + code recipe, LightmapGI bake workflow, and SDFGI configuration.
+> See [references/3d-global-illumination.md](references/3d-global-illumination.md) for the methods comparison table, ReflectionProbe scene + code recipe, LightmapGI bake workflow, and SDFGI configuration.
 
 ### Specular Occlusion from Ambient Light (Godot 4.5+)
 
@@ -151,7 +155,7 @@ Bent normal maps encode the mean unoccluded direction from each texel — the av
 
 > **Most visible on:** materials that combine low roughness or high metallic values with baked GI (LightmapGI / VoxelGI / SDFGI). On fully rough dielectric surfaces the benefit is subtler. Use on hero assets; skip on background geometry.
 
-> See [references/materials-and-lighting-recipes.md](references/materials-and-lighting-recipes.md) for the runtime-assignment GDScript + C# code path (the Inspector setup above is the typical case).
+> See [references/3d-materials-and-lighting-recipes.md](references/3d-materials-and-lighting-recipes.md) for the runtime-assignment GDScript + C# code path (the Inspector setup above is the typical case).
 
 ---
 
@@ -159,7 +163,7 @@ Bent normal maps encode the mean unoccluded direction from each texel — the av
 
 Three layers: depth/height fog set on `WorldEnvironment.environment` (cheap, all renderers), volumetric fog (Forward+ only — godrays through depth), and `FogVolume` nodes for localized fog effects (interior rooms, pits, atmospheric volumes).
 
-> See [references/fog-recipes.md](references/fog-recipes.md) for the full GDScript and C# recipes — depth/height fog setup, volumetric fog parameters and performance notes, and FogVolume placement.
+> See [references/3d-fog-recipes.md](references/3d-fog-recipes.md) for the full GDScript and C# recipes — depth/height fog setup, volumetric fog parameters and performance notes, and FogVolume placement.
 
 > ⚠️ **Changed in Godot 4.7:** Volumetric fog is now blended using transmittance instead of opacity, so existing volumetric fog can look different after upgrading. Enable the project setting `rendering/environment/fog/use_legacy_blending` (default `false`) to restore the previous behavior. See [GH-119414](https://github.com/godotengine/godot/pull/119414).
 
@@ -167,7 +171,7 @@ Three layers: depth/height fog set on `WorldEnvironment.environment` (cheap, all
 
 `Decal` nodes project a texture onto whatever surfaces fall within their bounding box — bullet holes, blood splatter, ground details, signage. All renderers support decals; performance scales with overdraw and decal count.
 
-> See [references/decals.md](references/decals.md) for the scene setup, runtime spawning recipe (GDScript + C#), and the per-renderer decal limits.
+> See [references/3d-decals.md](references/3d-decals.md) for the scene setup, runtime spawning recipe (GDScript + C#), and the per-renderer decal limits.
 
 ---
 
@@ -175,13 +179,13 @@ Three layers: depth/height fog set on `WorldEnvironment.environment` (cheap, all
 
 Four tools: automatic mesh LOD (set on import or per `MeshInstance3D`), manual `VisibilityRange` for staged swaps, occlusion culling via `OccluderInstance3D`, and `MultiMeshInstance3D` for thousands of identical meshes in one draw call.
 
-> See [references/lod-and-culling.md](references/lod-and-culling.md) for setup recipes for each tool plus the MultiMesh runtime population example.
+> See [references/3d-lod-and-culling.md](references/3d-lod-and-culling.md) for setup recipes for each tool plus the MultiMesh runtime population example.
 
 ## 9. Renderer Comparison
 
 Pick the renderer before you build the look: **Forward+** (desktop default) is the only one with SDFGI and volumetric fog, **Mobile** trades those for performance on tile-based GPUs, and **Compatibility** (GLES3-class) drops most advanced lighting entirely. Advice that assumes SDFGI silently fails on the other two.
 
-Full feature-by-renderer table and selection guidance: [references/renderer-comparison.md](references/renderer-comparison.md)
+Full feature-by-renderer table and selection guidance: [references/3d-renderer-comparison.md](references/3d-renderer-comparison.md)
 
 ---
 
@@ -189,7 +193,7 @@ Full feature-by-renderer table and selection guidance: [references/renderer-comp
 
 Quick symptom → cause → fix table covering black scenes, dark objects without ambient light, shadow acne and peter-panning, popping shadows, flat materials, invisible decals, transparency sorting artifacts, SDFGI light leaking, missing volumetric fog, and invisible MultiMesh instances.
 
-> See [references/common-pitfalls.md](references/common-pitfalls.md) for the full table.
+> See [references/3d-common-pitfalls.md](references/3d-common-pitfalls.md) for the full table.
 
 ---
 

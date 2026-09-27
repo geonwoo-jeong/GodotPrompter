@@ -3,7 +3,7 @@ name: gdextension
 description: Use when building native extensions for Godot — godot-cpp (C++) or gdext (Rust), binding classes, building, and GDScript/C# interop
 ---
 
-# GDExtension
+# GDExtension (Common)
 
 Run native C++ (or Rust) in Godot as a shared library **without recompiling the engine**. Use it for performance-critical code, wrapping existing C/C++ libraries, or language bindings.
 
@@ -56,49 +56,7 @@ Build with `scons platform=<platform>` (omit the platform to target the current 
 
 ## 3. Binding a class (C++)
 
-Header (`gdexample.h`):
-
-```cpp
-#pragma once
-#include <godot_cpp/classes/sprite2d.hpp>
-
-namespace godot {
-class GDExample : public Sprite2D {
-    GDCLASS(GDExample, Sprite2D)
-private:
-    double time_passed = 0.0;
-    double amplitude = 10.0;
-    double speed = 1.0;
-protected:
-    static void _bind_methods();
-public:
-    void _process(double delta) override;
-    void set_amplitude(double p_amplitude);
-    double get_amplitude() const;
-    void set_speed(double p_speed);
-    double get_speed() const;
-};
-}
-```
-
-Bindings (`gdexample.cpp` — `_bind_methods`):
-
-```cpp
-void GDExample::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("get_amplitude"), &GDExample::get_amplitude);
-    ClassDB::bind_method(D_METHOD("set_amplitude", "p_amplitude"), &GDExample::set_amplitude);
-    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "amplitude"), "set_amplitude", "get_amplitude");
-
-    ClassDB::bind_method(D_METHOD("get_speed"), &GDExample::get_speed);
-    ClassDB::bind_method(D_METHOD("set_speed", "p_speed"), &GDExample::set_speed);
-    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "speed", PROPERTY_HINT_RANGE, "0,20,0.01"),
-                 "set_speed", "get_speed");
-
-    ADD_SIGNAL(MethodInfo("position_changed",
-               PropertyInfo(Variant::OBJECT, "node"),
-               PropertyInfo(Variant::VECTOR2, "new_pos")));
-}
-```
+The spatial declarations live in [2D native classes](references/2d-native-class.md) and [3D native classes](references/3d-native-class.md). Build files, registration and ownership below are common.
 
 The patterns:
 
@@ -215,7 +173,7 @@ public partial class Demo : Node
 
 To get a strongly-typed C# wrapper you can ship a C# glue class, but the extension is fully usable via the dynamic `Set` / `Connect` / `Call` API shown above.
 
-> **Other languages & debugging:** [Rust (gdext)](references/rust-gdext.md) · [Debugging native code](references/debugging-native.md)
+> **Other languages & debugging:** [Rust (gdext)](references/common-rust-gdext.md) · [Debugging native code](references/common-debugging-native.md)
 
 ---
 

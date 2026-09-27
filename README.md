@@ -18,6 +18,10 @@ GodotPrompter is a plugin that provides **skills** — structured domain knowled
 
 **v1.9.0 adds native power and mobile shipping** — the new **`gdextension`** (godot-cpp / Rust native extensions), **`multithreading`** (WorkerThreadPool, threads, threaded loading), and **`mobile-development`** (Android/iOS export, lifecycle, plugins, IAP) skills.
 
+## Common, 2D and 3D
+
+Choose the matching spatial implementation from each skill. Shared data, UI and workflow stay common; movement, physics, camera, networking and rendering recipes provide dimension-specific references. Start with the [organization guide](docs/dimensions.md) or the [complete dimension catalog](docs/dimension-catalog.md). Skill IDs remain compatible with existing installations.
+
 ## Quick Start
 
 ### Claude Code (recommended)
@@ -367,7 +371,7 @@ Produces a per-skill / per-agent table (bytes, KB, estimated tokens, Claude / GP
 
 CI gate: `.github/workflows/release.yml` runs the version-consistency check, `node scripts/validate-skills.mjs`, the hook tests, the validator tests, the metadata tests, and the broken-fixture self-test on every `v*.*.*` push. The release is blocked if any of those fail or any of `package.json` / `.claude-plugin/plugin.json` / `.claude-plugin/marketplace.json` / `.cursor-plugin/plugin.json` / `plugin.json` drifts from the tag.
 
-**Current baseline:** 0 errors, 53 warnings on `node scripts/validate-skills.mjs` in this repository state. Most are intentional `csharp-parity-accepted` warnings for GDScript-only content; two are outstanding `csharp-parity-missing-reference` warnings in `skills/mobile-development/references/plugins.md`. Every `SKILL.md` is **under** the 16 KB budget — since v1.12.0 that is a validator **error**, not a warning, so an over-budget skill fails the release.
+**Current baseline:** 0 errors, 53 warnings on `node scripts/validate-skills.mjs` in this repository state. Most are intentional `csharp-parity-accepted` warnings for GDScript-only content; two are outstanding `csharp-parity-missing-reference` warnings in `skills/mobile-development/references/common-plugins.md`. Every `SKILL.md` is **under** the 16 KB budget — since v1.12.0 that is a validator **error**, not a warning, so an over-budget skill fails the release.
 
 A manual agent-integration test plan covering full workflows (skill discovery, cross-reference navigation, end-to-end feature implementation) lives in [`tests/agent-integration/TEST_PLAN.md`](tests/agent-integration/TEST_PLAN.md) for spot-checks against new agent versions or platforms. Cross-host release smoke coverage is tracked in [`tests/agent-integration/host-smoke-matrix.json`](tests/agent-integration/host-smoke-matrix.json).
 

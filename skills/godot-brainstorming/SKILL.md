@@ -3,7 +3,10 @@ name: godot-brainstorming
 description: Use when designing a new Godot feature or system — guides scene tree planning, node type selection, and architectural decisions
 ---
 
-# Godot Brainstorming
+# Godot Brainstorming (Common)
+
+> **Dimension:** Common. [2D chest design](references/2d-example-chest.md) · [3D chest design](references/3d-example-chest.md) · [node selection](references/common-node-selection.md).
+
 
 A structured design process for Godot 4.3+ features and systems — from blank slate to a clear scene tree, signal map, and data flow before you write a single line of implementation code.
 
@@ -78,7 +81,7 @@ Sketch the scene tree on paper (or in a comment block) before opening the Godot 
 
 **Step 1 — Name and root type**
 
-A `Chest` is a world object the player walks up to and opens. It is not a physics body; it does not move. Root: `StaticBody2D` or `Node2D`.
+A `Chest` is a world object the player walks up to and opens. It is not a physics body; it does not move. Root: `StaticBody2D` or `Node2D` in the 2D walkthrough below; use the linked 3D walkthrough for `StaticBody3D`, `MeshInstance3D`, and `Label3D`.
 
 **Step 2 — Responsibility groups**
 
@@ -97,7 +100,7 @@ Chest (StaticBody2D)
 ├── CollisionShape2D          # physical body shape (blocks player)
 ├── InteractionArea (Area2D)  # detect when player is close enough
 │   └── CollisionShape2D      # slightly larger than body shape
-├── PromptLabel (Label3D or Label) # "Press F to open"
+├── PromptLabel (Label) # "Press F to open"
 └── LootTable (Node)          # holds @export var items: Array[ItemData]
 ```
 
@@ -114,7 +117,7 @@ Chest (StaticBody2D)
 
 `LootTable` is likely reused by barrels, enemies, and shop crates — extract it as a separate `.tscn` component.
 
-For the resulting GDScript and C# `Chest` sketches, plus the four-part design entry (Scene Tree, Node Responsibilities, Signal Map, Data Flow) used to document this design, see [references/example-chest.md](references/example-chest.md).
+For the resulting GDScript and C# `Chest` sketches, plus the four-part design entry (Scene Tree, Node Responsibilities, Signal Map, Data Flow) used to document this design, see [references/2d-example-chest.md](references/2d-example-chest.md).
 
 ---
 
@@ -127,7 +130,7 @@ Two lookups belong here but are pure recall — load them only when the answer i
 
 Two Godot 4.3+ specifics are easy to get wrong and worth stating up front: tile-based levels use **`TileMapLayer`** (one layer per node — `TileMap` is deprecated), and blend-tree locomotion needs an **`AnimationTree`** paired with an `AnimationPlayer`, not an `AnimationPlayer` alone.
 
-> Full need-to-node table, the 2D/3D decision criteria, and 2.5D hybrid techniques: [references/node-selection.md](references/node-selection.md)
+> Full need-to-node table, the 2D/3D decision criteria, and 2.5D hybrid techniques: [references/common-node-selection.md](references/common-node-selection.md)
 
 ---
 
@@ -168,7 +171,7 @@ Work through this checklist before creating your first node.
 
 Capture your design in a comment block at the top of the root script, or in a `DESIGN.md` file next to the scene. A complete design entry has four parts: a **scene tree ASCII diagram**, a **node responsibilities table**, a **signal map** (signal → source → consumer → payload), and a **data flow** trace showing how a triggering event propagates through the tree.
 
-See [references/example-chest.md](references/example-chest.md) for a fully worked four-part entry built around the `Chest` interactable.
+See [references/2d-example-chest.md](references/2d-example-chest.md) for a fully worked four-part entry built around the `Chest` interactable.
 
 ---
 

@@ -3,7 +3,10 @@ name: dependency-injection
 description: Use when managing dependencies between systems — autoloads, service locators, @export injection, and scene injection patterns
 ---
 
-# Dependency Injection in Godot 4.3+
+# Dependency Injection in Godot 4.3+ (Common)
+
+> **Dimension:** Common. [2D scene injection](references/2d-scene-injection.md) · [3D scene injection](references/3d-scene-injection.md). Constructor, export and service patterns are shared.
+
 
 Patterns for wiring dependencies between systems so nodes stay loosely coupled, swappable, and testable. All examples target Godot 4.3+ with no deprecated APIs.
 
@@ -84,7 +87,7 @@ public partial class Enemy : CharacterBody3D
 
 Register a script in **Project Settings → Autoload** for global access (`AudioManager.play_sfx(...)`, `GameState.score = 100`). Best for cross-cutting concerns: audio, save state, event bus, settings. Resist autoloading domain-specific systems (those should be scene-injected).
 
-> See [references/autoloads.md](references/autoloads.md) for the full AudioManager example (SFX + crossfade music) in GDScript + C#.
+> See [references/common-autoloads.md](references/common-autoloads.md) for the full AudioManager example (SFX + crossfade music) in GDScript + C#.
 
 ---
 
@@ -92,7 +95,7 @@ Register a script in **Project Settings → Autoload** for global access (`Audio
 
 Expose collaborator nodes as `@export var health_component: HealthComponent`, then wire in the Inspector or via parent scene. Lifecycle: `@export` properties are assigned BEFORE `_ready()`.
 
-> See [references/export-injection.md](references/export-injection.md) for full `@export` patterns (GDScript + C#) and lifecycle notes.
+> See [references/common-export-injection.md](references/common-export-injection.md) for full `@export` patterns (GDScript + C#) and lifecycle notes.
 
 ---
 
@@ -100,7 +103,7 @@ Expose collaborator nodes as `@export var health_component: HealthComponent`, th
 
 A central registry autoload mapping `String` keys to service instances. Services register themselves at `_ready()`, deregister at `_exit_tree()`, consumers call `ServiceLocator.get(name)`. Useful when you want flexible runtime swap of implementations (testing, mods, A/B variants).
 
-> See [references/service-locator.md](references/service-locator.md) for the full Service Locator (GDScript + C#) with typed helper methods.
+> See [references/common-service-locator.md](references/common-service-locator.md) for the full Service Locator (GDScript + C#) with typed helper methods.
 
 ---
 
@@ -108,7 +111,7 @@ A central registry autoload mapping `String` keys to service instances. Services
 
 Parent scene loads its children, then in `_ready()` walks the tree assigning dependencies (`enemy.player = $Player`). Children declare `@export` properties but the parent — not the Inspector — sets them. Best for game-specific dependencies that change per level.
 
-> See [references/scene-injection.md](references/scene-injection.md) for the parent-injects-children pattern (GDScript + C#).
+> See [references/2d-scene-injection.md](references/2d-scene-injection.md) for the parent-injects-children pattern (GDScript + C#).
 
 ---
 
@@ -116,7 +119,7 @@ Parent scene loads its children, then in `_ready()` walks the tree assigning dep
 
 Injecting fakes / test doubles is what makes nodes testable. For autoloads: mock-replace before the test scene loads. For `@export` injection: swap the export to a test double. For Service Locator: register a fake under the same key.
 
-> See [references/testing-with-di.md](references/testing-with-di.md) for GUT-based test patterns showing each injection technique.
+> See [references/common-testing-with-di.md](references/common-testing-with-di.md) for GUT-based test patterns showing each injection technique.
 
 ---
 

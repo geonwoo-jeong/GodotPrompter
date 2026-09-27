@@ -3,7 +3,9 @@ name: inventory-system
 description: Use when building inventory systems — Resource-based items, slot management, stacking, and UI binding
 ---
 
-# Inventory Systems in Godot 4.3+
+# Inventory Systems in Godot 4.3+ (Common)
+
+> **Scope:** Common to 2D and 3D games. Screen-space `Control` layouts and shared game data do not depend on the world dimension.
 
 All examples target Godot 4.3+ with no deprecated APIs. This skill carries the decisions; the implementations live in `references/` (GDScript first, then C#) — load the one you need.
 
@@ -84,7 +86,7 @@ If your game needs something else — a weight-based bag with no slots, a grid i
 | `item_added(item, quantity)` | signal | Carries the amount actually added |
 | `item_removed(item, quantity)` | signal | Carries the amount actually removed |
 
-> Full `ItemData`, `Inventory`, and `InventorySlot` implementations in GDScript and C#: [references/core-classes.md](references/core-classes.md)
+> Full `ItemData`, `Inventory`, and `InventorySlot` implementations in GDScript and C#: [references/common-core-classes.md](references/common-core-classes.md)
 
 ---
 
@@ -92,7 +94,7 @@ If your game needs something else — a weight-based bag with no slots, a grid i
 
 Add equipment slots (`HEAD`, `CHEST`, `WEAPON`, etc.) by extending the `Inventory` class with a typed slot map. Stat aggregation runs by summing `ItemData.stats` across equipped items; signal `equipment_changed` when slots change.
 
-> See [references/equipment.md](references/equipment.md) for the full GDScript and C# `Equipment` class with `EquipmentSlotType` enum, equip / unequip API, and stat aggregation.
+> See [references/common-equipment.md](references/common-equipment.md) for the full GDScript and C# `Equipment` class with `EquipmentSlotType` enum, equip / unequip API, and stat aggregation.
 
 ---
 
@@ -100,7 +102,7 @@ Add equipment slots (`HEAD`, `CHEST`, `WEAPON`, etc.) by extending the `Inventor
 
 Slot-grid UI: a `GridContainer` of `Panel` slot widgets, each rendering one `InventorySlot`. Drag-and-drop uses `_get_drag_data` / `_drop_data` / `_can_drop_data` on the slot widget. The Inventory emits `inventory_changed`; the UI re-renders affected slots.
 
-> See [references/ui-binding.md](references/ui-binding.md) for the full GDScript and C# slot widget (drag/drop, hover preview), inventory grid layout, and tooltip wiring.
+> See [references/common-ui-binding.md](references/common-ui-binding.md) for the full GDScript and C# slot widget (drag/drop, hover preview), inventory grid layout, and tooltip wiring.
 
 ---
 
@@ -108,7 +110,7 @@ Slot-grid UI: a `GridContainer` of `Panel` slot widgets, each rendering one `Inv
 
 Persist each slot as an `id + quantity` pair (or `null` for an empty slot). Resolve stable item IDs through `ItemRegistry` when loading; do not persist resource paths. Keep the save format version in the surrounding save document and apply migrations before restoring slots.
 
-> See [references/serialization.md](references/serialization.md) for the GDScript and C# serialization helpers to call from a versioned JSON or ConfigFile save system.
+> See [references/common-serialization.md](references/common-serialization.md) for the GDScript and C# serialization helpers to call from a versioned JSON or ConfigFile save system.
 
 ---
 

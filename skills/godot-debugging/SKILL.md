@@ -3,7 +3,7 @@ name: godot-debugging
 description: Use when debugging Godot projects — remote debugger, print techniques, signal tracing, common error patterns and fixes
 ---
 
-# Godot Debugging
+# Godot Debugging (Common)
 
 This skill covers systematic debugging for Godot 4.3+ projects in both GDScript and C#. It covers print techniques, breakpoints, signal tracing, the built-in profiler, scene tree inspection, common error patterns, and a step-by-step debugging checklist.
 
@@ -180,7 +180,7 @@ Click any monitor name to open its graph. Use the **Add** button to build custom
 
 Inspect at runtime via `node.get_signal_connection_list("signal_name")` (returns Array of Dictionary with `callable`, `flags`, `signal`). The most common signal bugs: connecting twice (handler fires twice), forgetting to disconnect on free (warnings + dangling refs), wrong handler signature (silent miss).
 
-> See [references/signal-tracing.md](references/signal-tracing.md) for the full GDScript and C# inspection helpers and the common-signal-issues catalog (double connect, deferred-free races, lambda capture lifecycle, signal-vs-Callable choice).
+> See [references/common-signal-tracing.md](references/common-signal-tracing.md) for the full GDScript and C# inspection helpers and the common-signal-issues catalog (double connect, deferred-free races, lambda capture lifecycle, signal-vs-Callable choice).
 
 ---
 
@@ -205,7 +205,7 @@ Inspect at runtime via `node.get_signal_connection_list("signal_name")` (returns
 
 The Profiler (Debugger → Profiler) shows per-function self-time and call counts. The Monitors tab tracks frame time, FPS, draw-call count, physics tick budget, memory. Open both during the most demanding gameplay scenario; sort the Profiler by **Self time** to find culprits. For draw-call bottlenecks, watch `Visible/Per frame` in the Monitors tab.
 
-> See [references/performance-debugging.md](references/performance-debugging.md) for Profiler workflow, Monitors tab usage, draw-call bottleneck identification, physics-tick monitoring patterns. See also **godot-optimization** for fixes once a bottleneck is identified.
+> See [references/common-performance-debugging.md](references/common-performance-debugging.md) for Profiler workflow, Monitors tab usage, draw-call bottleneck identification, physics-tick monitoring patterns. See also **godot-optimization** for fixes once a bottleneck is identified.
 
 ---
 
@@ -213,7 +213,7 @@ The Profiler (Debugger → Profiler) shows per-function self-time and call count
 
 `print_tree_pretty()` dumps the current scene tree to stdout — the fastest way to confirm a node lives where you think. The **Remote** tab in the editor shows the live scene tree while the game runs. For `@tool` nodes, implement `_get_configuration_warnings()` to surface configuration errors in the editor SceneTree dock.
 
-> See [references/scene-tree-debugging.md](references/scene-tree-debugging.md) for full examples (print_tree_pretty patterns, node-group debug helpers, _get_configuration_warnings GDScript + C#).
+> See [references/common-scene-tree-debugging.md](references/common-scene-tree-debugging.md) for full examples (print_tree_pretty patterns, node-group debug helpers, _get_configuration_warnings GDScript + C#).
 
 ---
 
@@ -221,7 +221,7 @@ The Profiler (Debugger → Profiler) shows per-function self-time and call count
 
 When prints, breakpoints, and remote inspection don't immediately reveal the bug, fall back to a deliberate process: **Reproduce → Isolate → Hypothesis → Trace → Fix → Verify → Add a Test.** Each step gates the next; skipping ahead wastes time.
 
-> See [references/systematic-method.md](references/systematic-method.md) for the full 7-step method with concrete techniques per step (binary search, minimal repro, regression-test patterns).
+> See [references/common-systematic-method.md](references/common-systematic-method.md) for the full 7-step method with concrete techniques per step (binary search, minimal repro, regression-test patterns).
 
 ---
 

@@ -14,7 +14,7 @@ func finish() -> void:
 
 export default [
   {
-    name: 'network: basic RPC example has a spatial base and updates position',
+    name: 'network: common chat RPC executes on a non-spatial Node',
     async setup({ repoRoot, projectDir }) {
       await writeProject(projectDir, {
         'chat.gd': await gdscriptBlock(repoRoot, 'skills/multiplayer-basics/SKILL.md', '# chat.gd'),
@@ -24,8 +24,8 @@ func _initialize() -> void: run.call_deferred()
 func run() -> void:
     var chat = load("res://chat.gd").new()
     root.add_child(chat)
-    chat.sync_position(Vector2(25, 30))
-    check(chat is Node2D and chat.global_position == Vector2(25, 30), "RPC position example must compile and target a spatial node")
+    chat._broadcast_chat(7, "dimension-independent chat")
+    check(chat is Node and not chat is Node2D and not chat is Node3D, "Chat must not require a spatial base")
     chat.free()
     finish()
 `,
@@ -37,7 +37,7 @@ func run() -> void:
     name: 'network: custom spawn assigns authority on both real loopback peers before ready',
     async setup({ repoRoot, projectDir }) {
       await writeProject(projectDir, {
-        'world.gd': await gdscriptBlock(repoRoot, 'skills/multiplayer-basics/references/spawning-networked-objects.md', '# world.gd'),
+        'world.gd': await gdscriptBlock(repoRoot, 'skills/multiplayer-basics/references/2d-spawning-networked-objects.md', '# world.gd'),
         'player.gd': `extends Node2D
 var authority_at_ready := -1
 func _ready() -> void:
@@ -124,14 +124,14 @@ func run() -> void:
     name: 'network: synchronizer child delivers snapshots and interpolation follows network time',
     async setup({ repoRoot, projectDir }) {
       await writeProject(projectDir, {
-        'display.gd': await gdscriptBlock(repoRoot, 'skills/multiplayer-sync/references/interpolation.md', '# remote_player_display.gd'),
+        'display.gd': await gdscriptBlock(repoRoot, 'skills/multiplayer-sync/references/2d-interpolation.md', '# remote_player_display.gd'),
         // Override only the clock to exercise the actual documented _process implementation deterministically.
         'test_display.gd': `extends "res://display.gd"
 var test_time: float = 1.0
 func _now_seconds() -> float:
     return test_time
 `,
-        'synced_player.gd': await gdscriptBlock(repoRoot, 'skills/multiplayer-sync/SKILL.md', '# synced_player.gd'),
+        'synced_player.gd': await gdscriptBlock(repoRoot, 'skills/multiplayer-sync/references/2d-synced-player.md', '# synced_player.gd'),
         'test.gd': `extends SceneTree
 ${checks}
 func _initialize() -> void: run.call_deferred()
@@ -179,7 +179,7 @@ func run() -> void:
   {
     name: 'network: server config applies defaults then file then environment then CLI',
     async setup({ repoRoot, projectDir }) {
-      const config = await gdscriptBlock(repoRoot, 'skills/dedicated-server/references/server-config.md', '# server_config.gd');
+      const config = await gdscriptBlock(repoRoot, 'skills/dedicated-server/references/common-server-config.md', '# server_config.gd');
       await writeProject(projectDir, {
         // Relocate only the fixture path so this test never touches user application data.
         'server_config.gd': config.replace('"user://server.cfg"', '"res://server.cfg"'),

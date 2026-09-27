@@ -3,7 +3,7 @@ name: gdscript-advanced
 description: Use when writing production-grade GDScript — performance idioms, metaprogramming, @tool lifecycle, async pitfalls, signal/Callable trade-offs, profiler-driven idioms, and common pitfalls
 ---
 
-# GDScript Advanced
+# GDScript Advanced (Common)
 
 Production-grade GDScript depth — for shipping games, not for learning the language. Pair with **gdscript-patterns** for fundamentals.
 
@@ -103,7 +103,7 @@ if user_method in ALLOWED_RPCS and obj.has_method(user_method):
     obj.call(user_method, args)
 ```
 
-> See [references/metaprogramming-recipes.md](references/metaprogramming-recipes.md) for full Callable patterns and the modding security model.
+> See [references/common-metaprogramming-recipes.md](references/common-metaprogramming-recipes.md) for full Callable patterns and the modding security model.
 
 ## 4. `@tool` lifecycle
 
@@ -134,7 +134,7 @@ func _notification(what: int) -> void:
 
 > Common pitfall: a `@tool` script that calls `get_tree().create_timer()` at editor time. Editor has no main loop in some contexts — guard with `is_editor_hint()`.
 
-> See [references/tool-script-recipes.md](references/tool-script-recipes.md) for full `@tool` patterns including editor preview, baking, and procedural mesh generation.
+> See [references/common-tool-script-recipes.md](references/common-tool-script-recipes.md) for full `@tool` patterns including editor preview, baking, and procedural mesh generation.
 
 ## 5. Async pitfalls
 
@@ -220,7 +220,7 @@ Open the **Debugger → Profiler** panel. The patterns that show up most often:
 | `CharacterBody.move_and_slide` self-time | Many character bodies on one frame | Scale by distance from camera; use Area for cheap detection |
 | GDScript GC spikes | Allocator churn from temp Arrays/Strings | Pool the arrays; pre-allocate at startup |
 
-> See [references/profiler-recipes.md](references/profiler-recipes.md) for before/after annotated examples for each row.
+> See [references/common-profiler-recipes.md](references/common-profiler-recipes.md) for before/after annotated examples for each row.
 
 ## 8. Common pitfalls
 
@@ -280,3 +280,5 @@ func move_point() -> void:
 - [ ] Pick signal vs Callable per the trade-off table; disconnect lambdas in `_exit_tree`
 - [ ] Profile before optimizing; match the hot-spot to the table in section 7
 - [ ] Audit lambdas that assign captured locals (the change never escapes the lambda), `@onready` ordering, static var lifecycle, Resource sharing, and packed-array property setters (Godot 4.7) for the listed pitfalls
+
+Spatial references: [2d-tool-preview](references/2d-tool-preview.md) · [3d-tool-preview](references/3d-tool-preview.md).

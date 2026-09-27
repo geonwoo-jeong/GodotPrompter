@@ -3,7 +3,10 @@ name: beehave
 description: Use when using the Beehave addon — pure-GDScript behavior trees with composites, decorators, leaves, a blackboard, and a visual runtime debugger
 ---
 
-# Beehave
+# Beehave (Common)
+
+> **Dimension:** Common framework. [2D recipes](references/2d-spatial-leaves.md) · [3D recipes](references/3d-spatial-leaves.md).
+
 
 > **Related skills:** **ai-navigation** for the movement leaves drive, **state-machine** for core-engine FSM, **limboai** for a heavier C++ BT+HSM alternative, **godot-brainstorming** for choosing an AI approach.
 
@@ -109,22 +112,7 @@ func _ready() -> void:
 
 Leaves hold your game logic. Subclass `ActionLeaf` for multi-tick work or `ConditionLeaf` for single-frame checks, then override `tick(actor, blackboard)`.
 
-```gdscript
-# IsInRangeCondition.gd
-class_name IsInRangeCondition
-extends ConditionLeaf
-
-@export var detection_range: float = 150.0
-
-func tick(actor: Node, blackboard: Blackboard) -> int:
-    # Beehave types `actor` as Node; cast to your concrete type for 2D members.
-    var body := actor as Node2D
-    var target: Node2D = blackboard.get_value("target")
-    if body == null or not is_instance_valid(target):
-        return FAILURE
-    var in_range := body.global_position.distance_to(target.global_position) <= detection_range
-    return SUCCESS if in_range else FAILURE
-```
+See [Spatial Leaves (2D)](references/2d-spatial-leaves.md) for this spatial example.
 
 ```gdscript
 # AttackAction.gd
@@ -207,7 +195,7 @@ Beehave ships an `EditorDebuggerPlugin` that adds a **🐝 Beehave** tab to the 
 
 To track per-tree CPU cost in the **Performance** panel, set `custom_monitor = true` on the `BeehaveTree` node. This registers `beehave [microseconds]/process_time_<actor_name>-<id>` as a Performance monitor.
 
-For a walkthrough of writing custom decorators and conditions, see [references/custom-nodes.md](references/custom-nodes.md).
+For a walkthrough of writing custom decorators and conditions, see [references/common-custom-nodes.md](references/common-custom-nodes.md).
 
 ---
 

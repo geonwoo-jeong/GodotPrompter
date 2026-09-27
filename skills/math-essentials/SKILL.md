@@ -3,11 +3,13 @@ name: math-essentials
 description: Use when implementing game math — vectors, transforms, interpolation, curves, random number generation, and common geometric recipes
 ---
 
-# Game Math in Godot 4.3+
+# Game Math in Godot 4.3+ (Common)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
 > **Related skills:** **player-controller** for movement physics, **ai-navigation** for pathfinding math, **camera-system** for camera interpolation, **tween-animation** for easing curves, **physics-system** for collision math.
+
+> **Dimension routing:** Scalar interpolation, randomness and `Curve` resources are common. Use [2D spatial recipes](references/2d-game-math-recipes.md) and [3D recipes](references/3d-game-math-recipes.md) / [3D spatial recipes](references/3d-game-math-recipes.md) and [2D paths](references/2d-path-following.md) / [3D paths](references/3d-path-following.md).
 
 ---
 
@@ -280,7 +282,7 @@ var point: Vector2 = p1.cubic_interpolate(p2, p0, p3, t)
 
 `Curve` resource for value-over-time (e.g., damage falloff curves). `Path2D` / `Path3D` for spatial paths sampled by `PathFollow2D` / `PathFollow3D` — use for moving platforms, missile guidance, camera rails.
 
-> See [references/curves-and-paths.md](references/curves-and-paths.md) for `Curve` setup, Path nodes, PathFollow properties.
+> See [references/common-curves-and-paths.md](references/common-curves-and-paths.md) for `Curve` setup, Path nodes, PathFollow properties.
 
 ---
 
@@ -288,15 +290,15 @@ var point: Vector2 = p1.cubic_interpolate(p2, p0, p3, t)
 
 Global functions (`randf()`, `randi() % N`, `randf_range(a, b)`) for one-shot randomness. `RandomNumberGenerator` for seeded, reproducible randomness (procgen, replay, save-state). Weighted selection via cumulative-sum or alias method.
 
-> See [references/random-numbers.md](references/random-numbers.md) for full GDScript on each pattern, plus `FastNoiseLite` for procedural generation noise.
+> See [references/common-random-numbers.md](references/common-random-numbers.md) for full GDScript on each pattern, plus `FastNoiseLite` for procedural generation noise.
 
 ---
 
 ## 6. Common Game Math Recipes
 
-Five recipes: **look at target** (2D `Vector2.angle_to_point`), **orbit around a point** (polar coordinates), **sine-wave bob** (floating UI elements, treasure), **angle wrapping** (-PI..PI canonicalization), **clamped approach with deadzone** (analog input + small-input ignore).
+Paired 2D/3D recipes cover target facing, planar orbit, vertical bob, front/behind checks, and a clamped approach that stops at the deadzone boundary. Scalar angle wrapping stays in the common curve/path reference.
 
-> See [references/game-math-recipes.md](references/game-math-recipes.md) for ready-to-use code on each recipe.
+> See [references/2d-game-math-recipes.md](references/2d-game-math-recipes.md) and [3D recipes](references/3d-game-math-recipes.md) for ready-to-use code on each recipe.
 
 ---
 
@@ -308,7 +310,7 @@ Five recipes: **look at target** (2D `Vector2.angle_to_point`), **orbit around a
 | Rotation jumps at 180°               | Using `lerp` instead of `lerp_angle`         | Always use `lerp_angle()` for angle interpolation                |
 | Object faces wrong direction (3D)    | Forgot Godot uses -Z as forward              | Forward direction is `-global_transform.basis.z`                 |
 | Distance check too slow              | Calling `distance_to` on many objects        | Use `distance_squared_to` and compare against `range * range`    |
-| Normalized zero vector crashes       | Calling `normalized()` on `Vector2.ZERO`     | Check `length() > 0` first, or use `direction_to()`             |
+| Zero direction has no heading | Normalizing a zero vector returns zero | Handle coincident positions before choosing a look rotation |
 | Transform interpolation looks wrong  | Lerping euler angles instead of quaternions  | Use `Quaternion.slerp()` or `Transform3D.interpolate_with()`    |
 | Random results repeat after restart  | Using `RandomNumberGenerator` with fixed seed | Godot 4.x auto-seeds global RNG; for `RandomNumberGenerator` use `randomize()` or set `seed` |
 | Noise values are all ~0              | `frequency` too low                          | Increase `FastNoiseLite.frequency` (try 0.01–0.1)               |

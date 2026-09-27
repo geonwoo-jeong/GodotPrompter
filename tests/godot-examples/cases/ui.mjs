@@ -55,8 +55,8 @@ export default [
   {
     name: 'ui: damage pool survives completion and cancels recycled tweens',
     async setup({ repoRoot, projectDir }) {
-      const source = 'skills/hud-system/references/damage-numbers.md';
-      const number = await gdscriptBlock(repoRoot, source, 'class_name DamageNumber');
+      const source = 'skills/hud-system/references/2d-damage-numbers.md';
+      const number = await gdscriptBlock(repoRoot, 'skills/hud-system/references/common-damage-numbers.md', 'class_name DamageNumber');
       const spawner = await gdscriptBlock(repoRoot, source, 'const POOL_SIZE');
       await writeProject(projectDir, {
         'damage_number.gd': number,
@@ -112,7 +112,7 @@ export default [
   {
     name: 'ui: anchor examples preserve size and margins on resize',
     async setup({ repoRoot, projectDir }) {
-      const anchors = await gdscriptBlock(repoRoot, 'skills/godot-ui/references/anchors-in-code.md', '# Fill parent completely');
+      const anchors = await gdscriptBlock(repoRoot, 'skills/godot-ui/references/common-anchors-in-code.md', '# Fill parent completely');
       await writeProject(projectDir, {
         'layout.gd': `extends Control\nfunc configure() -> void:\n${indent(anchors)}\n`,
         'test.gd': harness(`    var layout = load("res://layout.gd").new()
@@ -137,8 +137,8 @@ export default [
   {
     name: 'ui: minimap shares the world and configures viewport visibility',
     async setup({ repoRoot, projectDir }) {
-      const setup = await gdscriptBlock(repoRoot, 'skills/hud-system/references/minimap.md', 'extends CanvasLayer');
-      const camera = await gdscriptBlock(repoRoot, 'skills/hud-system/references/minimap.md', 'extends Camera2D');
+      const setup = await gdscriptBlock(repoRoot, 'skills/hud-system/references/2d-minimap.md', 'extends CanvasLayer');
+      const camera = await gdscriptBlock(repoRoot, 'skills/hud-system/references/2d-minimap.md', 'extends Camera2D');
       await writeProject(projectDir, {
         'minimap.gd': setup,
         'minimap_camera.gd': camera,

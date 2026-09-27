@@ -1,4 +1,4 @@
-# 2D Particle Systems
+# 2D Particle Systems (2D)
 
 Reference for `skills/2d-essentials/SKILL.md` — GPUParticles2D vs CPUParticles2D, basic setup, time properties, full ParticleProcessMaterial 2D properties, emission shapes from textures, flipbook animation, visibility rect, common 2D particle recipes.
 

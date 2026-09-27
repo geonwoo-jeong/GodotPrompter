@@ -1,4 +1,4 @@
-# Common Pitfalls
+# Common Pitfalls (Common)
 
 Reference for `skills/animation-system/SKILL.md` — the full symptom → cause → fix table.
 

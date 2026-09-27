@@ -3,7 +3,7 @@ name: godot-mentor
 description: Use when the user wants to learn Godot while building — teaching mode that explains the concept, the editor setup, and what to verify, instead of just delivering code. Triggers on "teach me", "explain as we go", "I'm learning Godot", "guide me", "walk me through", "help me understand".
 ---
 
-# Godot Mentor Mode
+# Godot Mentor Mode (Common)
 
 > **Related skills:** **godot-brainstorming** for design exploration before building, **godot-project-setup** for scaffolding, **godot-code-review** for reviewing finished work, **godot-debugging** for diagnosing runtime issues.
 

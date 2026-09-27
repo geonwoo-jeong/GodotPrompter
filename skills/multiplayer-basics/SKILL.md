@@ -3,13 +3,15 @@ name: multiplayer-basics
 description: Use when implementing multiplayer — MultiplayerAPI, ENet/WebSocket peers, RPCs, and authority model
 ---
 
-# Multiplayer Basics in Godot 4.3+
+# Multiplayer Basics in Godot 4.3+ (Common)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, C# follows.
 
 **Related skills:** See **multiplayer-sync** for state synchronization and interpolation. See **dedicated-server** for headless export and server deployment.
 
 ---
+
+**Dimension routing:** ENet, RPCs, and ownership are common. Use [2D spawning](references/2d-spawning-networked-objects.md), [3D spawning](references/3d-spawning-networked-objects.md), [2D joins](references/2d-player-join-flow.md), or [3D joins](references/3d-player-join-flow.md) for spatial scenes.
 
 ## 1. Multiplayer Architecture
 
@@ -20,7 +22,7 @@ Godot uses a **client-server model** built on top of `MultiplayerAPI`. One peer 
 | `1` | The server (always) |
 | `2`+ | Connected clients — randomly generated unique IDs, **not** sequential |
 
-**Multiplayer authority** is the concept of ownership over a node. Only the authoritative peer should read input and drive that node's state. By default the server (peer `1`) is the authority for every node. Call `set_multiplayer_authority(peer_id)` to transfer ownership to a client.
+**Multiplayer authority** is the concept of ownership over a node. Only the authoritative peer writes that node's canonical replicated state. In client-authoritative movement, that owner also reads input. In server-authoritative prediction, clients read local input and send it for server validation. By default the server (peer `1`) is the authority for every node. Call `set_multiplayer_authority(peer_id)` to transfer ownership to a client.
 
 ```
 Server (peer 1)
@@ -40,7 +42,7 @@ Both sides use the same three steps: create an `ENetMultiplayerPeer`, call `crea
 
 The server is always peer ID `1`; clients receive randomly generated unique IDs, so never assume they are sequential.
 
-Full server and client implementations with every signal handler, in GDScript and C#: [references/enet-setup.md](references/enet-setup.md)
+Full server and client implementations with every signal handler, in GDScript and C#: [references/common-enet-setup.md](references/common-enet-setup.md)
 
 ---
 
@@ -66,8 +68,8 @@ Full server and client implementations with every signal handler, in GDScript an
 ### GDScript
 
 ```gdscript
-# chat.gd — Node2D because this example also synchronizes a 2D position.
-extends Node2D
+# chat.gd — chat has no spatial dependency.
+extends Node
 
 # Any peer can call; server validates then broadcasts to all peers.
 @rpc("any_peer", "reliable")
@@ -84,24 +86,6 @@ func _broadcast_chat(sender_id: int, text: String) -> void:
 	print("[%d]: %s" % [sender_id, text])
 
 
-# Client → server: request to spawn an object.
-@rpc("any_peer", "reliable")
-func request_spawn(scene_path: String, spawn_position: Vector2) -> void:
-	if not multiplayer.is_server():
-		return
-	# Server validates and performs the actual spawn.
-	var scene: PackedScene = load(scene_path)
-	if scene == null:
-		return
-	var instance := scene.instantiate()
-	instance.global_position = spawn_position
-	get_tree().root.add_child(instance)
-
-
-# High-frequency sync; unreliable_ordered + a channel keeps this off other RPC traffic.
-@rpc("authority", "unreliable_ordered", "call_local", 1)
-func sync_position(pos: Vector2) -> void:
-	global_position = pos
 ```
 
 **Sending to specific peers:**
@@ -120,7 +104,7 @@ send_chat_message.rpc_id(target_peer_id, "Hello!")
 // Chat.cs
 using Godot;
 
-public partial class Chat : Node2D
+public partial class Chat : Node
 {
     // Any peer can call; executes on the server only.
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -138,25 +122,7 @@ public partial class Chat : Node2D
     private void BroadcastChat(int senderId, string text)
         => GD.Print($"[{senderId}]: {text}");
 
-    // Client → server: request a spawn.
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void RequestSpawn(string scenePath, Vector2 spawnPosition)
-    {
-        if (!Multiplayer.IsServer()) return;
-        var scene = GD.Load<PackedScene>(scenePath);
-        if (scene == null) return;
-        var instance = scene.Instantiate<Node2D>();
-        instance.GlobalPosition = spawnPosition;
-        GetTree().Root.AddChild(instance);
-    }
 
-    // High-frequency position sync.
-    [Rpc(MultiplayerApi.RpcMode.Authority,
-         CallLocal = true,
-         TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered,
-         TransferChannel = 1)]
-    public void SyncPosition(Vector2 pos)
-        => GlobalPosition = pos;
 }
 ```
 
@@ -176,72 +142,7 @@ RpcId(targetPeerId, MethodName.SendChatMessage, "Hello!");
 
 Every node has exactly one authoritative peer — the peer that is permitted to send state updates for that node. Other peers should treat incoming state as read-only.
 
-### GDScript
-
-```gdscript
-# player.gd
-extends CharacterBody2D
-
-func _ready() -> void:
-	# multiplayer.get_unique_id() = this peer's ID; server assigns authority during spawn (see Section 6).
-	pass
-
-
-func _physics_process(delta: float) -> void:
-	# Guard: authority-only input and movement.
-	if not is_multiplayer_authority():
-		return
-
-	var direction := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	velocity = direction * 200.0
-	move_and_slide()
-
-	sync_position.rpc(global_position)
-
-
-@rpc("authority", "unreliable_ordered", "call_local", 1)
-func sync_position(pos: Vector2) -> void:
-	if not is_multiplayer_authority():
-		global_position = pos
-
-
-func print_authority_info() -> void:
-	print("My peer ID : %d" % multiplayer.get_unique_id())
-	print("Authority  : %d" % get_multiplayer_authority())
-	print("Am I auth? : %s" % str(is_multiplayer_authority()))
-```
-
-### C#
-
-```csharp
-// Player.cs
-using Godot;
-
-public partial class Player : CharacterBody2D
-{
-    public override void _PhysicsProcess(double delta)
-    {
-        // Guard: authority-only input.
-        if (!IsMultiplayerAuthority()) return;
-
-        var direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-        Velocity = direction * 200f;
-        MoveAndSlide();
-
-        Rpc(MethodName.SyncPosition, GlobalPosition);
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.Authority,
-         CallLocal = true,
-         TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered,
-         TransferChannel = 1)]
-    private void SyncPosition(Vector2 pos)
-    {
-        if (!IsMultiplayerAuthority())
-            GlobalPosition = pos;
-    }
-}
-```
+Choose [2D client authority movement](references/2d-authority-movement.md) or [3D client authority movement](references/3d-authority-movement.md). The authority API and ownership rules are common; body type, vectors, and speed units differ.
 
 **API summary:**
 
@@ -258,7 +159,7 @@ public partial class Player : CharacterBody2D
 
 Use `MultiplayerSpawner` to replicate scene instances across peers. The server adds a child to the spawned node's parent, the spawner mirrors it on every peer with synchronized state. For automatic scene replication, register scenes with `add_spawnable_scene()` and add their instances under `spawn_path` on the authority. For custom spawn data, use `spawn_function` and `spawn(data)`.
 
-> See [references/spawning-networked-objects.md](references/spawning-networked-objects.md) for `MultiplayerSpawner` scene setup and the spawn-on-server flow (GDScript + C#).
+> See [2D spawning](references/2d-spawning-networked-objects.md) or [3D spawning](references/3d-spawning-networked-objects.md) for `MultiplayerSpawner` scene setup and the spawn-on-server flow (GDScript + C#).
 
 ---
 
@@ -266,7 +167,7 @@ Use `MultiplayerSpawner` to replicate scene instances across peers. The server a
 
 The full lobby-join lifecycle: peer connects → server allocates a slot → load lobby scene → spawn player node → broadcast peer-list to all clients → on "start match" RPC, transition all peers to gameplay scene.
 
-> See [references/player-join-flow.md](references/player-join-flow.md) for the full GDScript and C# implementation (peer-connected handler, slot allocation, lobby state, gameplay transition).
+> See [2D join flow](references/2d-player-join-flow.md) or [3D join flow](references/3d-player-join-flow.md) for the full GDScript and C# implementation (peer-connected handler, slot allocation, lobby state, gameplay transition).
 
 ---
 
@@ -274,7 +175,7 @@ The full lobby-join lifecycle: peer connects → server allocates a slot → loa
 
 Listen for `peer_disconnected(id)` on the `multiplayer` API. On the server: free the disconnected peer's player node and broadcast the updated peer-list. On clients: detect a server-disconnect and route to a reconnect / main-menu screen.
 
-> See [references/disconnect-handling.md](references/disconnect-handling.md) for the timeout detection settings, server-side cleanup, and client-side reconnect flow (GDScript + C#).
+> See [references/common-disconnect-handling.md](references/common-disconnect-handling.md) for the timeout detection settings, server-side cleanup, and client-side reconnect flow (GDScript + C#).
 
 ---
 
@@ -284,7 +185,7 @@ Listen for `peer_disconnected(id)` on the `multiplayer` API. On the server: free
 |---------|---------|-----|
 | Calling an RPC on the wrong authority | `rpc_id` silently ignored; method never runs | Check `is_multiplayer_authority()` before sending; use `"any_peer"` only where intentional |
 | Desync from unordered RPCs | Positions jitter or snap | Use `"unreliable_ordered"` for streams; use `"reliable"` for critical state changes |
-| Reading input in `_process` vs `_physics_process` | Movement desyncs on different frame rates | Always move `CharacterBody2D` in `_physics_process`; send sync RPCs from there too |
+| Reading input in `_process` vs `_physics_process` | Movement desyncs on different frame rates | Always move `CharacterBody2D` / `CharacterBody3D` in `_physics_process`; send sync RPCs from there too |
 | Not checking `is_multiplayer_authority()` before input | Every peer controls every player | Add an `if not is_multiplayer_authority(): return` guard at the top of input handling |
 | Spawning without `MultiplayerSpawner` | Object appears on server, missing on clients | Use registered spawnable scenes under `spawn_path`, or custom `spawn_function` with `spawn(data)` |
 | Forgetting `call_local` on authority RPCs | Server state diverges from its own node | Add `"call_local"` when the sender also needs to execute the RPC locally |

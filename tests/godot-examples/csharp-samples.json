@@ -1,20 +1,20 @@
 [
   {
-    "source": "skills/3d-essentials/references/lod-and-culling.md",
+    "source": "skills/3d-essentials/references/3d-lod-and-culling.md",
     "block": 1,
     "className": "GrassSpawner",
     "wrap": "members",
     "contains": "public void SpawnGrass"
   },
   {
-    "source": "skills/localization/references/csv-plural-context.md",
+    "source": "skills/localization/references/common-csv-plural-context.md",
     "block": 0,
     "className": "TranslationContext",
     "wrap": "body",
     "contains": "Tr(\"ITEM_FILE\", \"noun\")"
   },
   {
-    "source": "skills/localization/references/csv-plural-context.md",
+    "source": "skills/localization/references/common-csv-plural-context.md",
     "block": 1,
     "className": "PluralTranslation",
     "wrap": "body",
@@ -29,43 +29,43 @@
     "contains": "Tr(\"PLAYER_HEALTH\")"
   },
   {
-    "source": "skills/resource-pattern/references/collections.md",
+    "source": "skills/resource-pattern/references/common-collections.md",
     "block": 0,
     "className": "ItemDatabase"
   },
   {
-    "source": "skills/animation-system/references/bone-constraints.md",
+    "source": "skills/animation-system/references/3d-bone-constraints.md",
     "block": 0,
     "className": "AimSetup",
     "wrap": "members",
     "contains": "new AimModifier3D()"
   },
   {
-    "source": "skills/animation-system/references/bone-constraints.md",
+    "source": "skills/animation-system/references/3d-bone-constraints.md",
     "block": 1,
     "className": "CopySetup",
     "wrap": "body",
     "contains": "new CopyTransformModifier3D()"
   },
   {
-    "source": "skills/animation-system/references/ik-recipes.md",
+    "source": "skills/animation-system/references/3d-ik-recipes.md",
     "block": 0,
     "className": "ArmIKController"
   },
   {
-    "source": "skills/animation-system/references/ik-recipes.md",
+    "source": "skills/animation-system/references/3d-ik-recipes.md",
     "block": 1,
     "className": "FootIK"
   },
   {
-    "source": "skills/animation-system/references/ik-recipes.md",
+    "source": "skills/animation-system/references/3d-ik-recipes.md",
     "block": 2,
     "className": "FabrikSetup",
     "wrap": "members",
     "contains": "new Fabrik3D()"
   },
   {
-    "source": "skills/animation-system/references/skeleton-modifiers.md",
+    "source": "skills/animation-system/references/3d-skeleton-modifiers.md",
     "block": 0,
     "className": "LookAtSetup",
     "wrap": "body",
@@ -79,108 +79,108 @@
   },
   {
     "source": "skills/state-machine/SKILL.md",
-    "block": 1,
+    "block": 0,
     "className": "State"
   },
   {
-    "source": "skills/state-machine/references/node-based-machine.md",
+    "source": "skills/state-machine/references/common-node-based-machine.md",
     "block": 0,
     "className": "StateMachine"
   },
   {
-    "source": "skills/state-machine/references/hierarchical-and-parallel.md",
+    "source": "skills/state-machine/references/common-hierarchical-and-parallel.md",
     "block": 0,
     "className": "HierarchicalState"
   },
   {
-    "source": "skills/state-machine/references/hierarchical-and-parallel.md",
+    "source": "skills/state-machine/references/common-hierarchical-and-parallel.md",
     "block": 1,
     "className": "ParallelPlayer"
   },
   {
-    "source": "skills/input-handling/references/action-rebinding.md",
+    "source": "skills/input-handling/references/common-action-rebinding.md",
     "block": 1,
     "className": "RebindButton"
   },
   {
-    "source": "skills/input-handling/references/action-rebinding.md",
+    "source": "skills/input-handling/references/common-action-rebinding.md",
     "block": 2,
     "className": "BindingPersistence",
     "wrap": "members",
     "contains": "public void SaveBindings()"
   },
   {
-    "source": "skills/hud-system/references/damage-numbers.md",
+    "source": "skills/hud-system/references/common-damage-numbers.md",
     "block": 0,
     "className": "DamageNumber"
   },
   {
-    "source": "skills/hud-system/references/damage-numbers.md",
-    "block": 1,
+    "source": "skills/hud-system/references/2d-damage-numbers.md",
+    "block": 0,
     "className": "DamageNumberSpawner"
   },
   {
-    "source": "skills/multiplayer-sync/SKILL.md",
-    "block": 1,
+    "source": "skills/multiplayer-sync/references/2d-synced-player.md",
+    "block": 0,
     "className": "SyncedPlayer"
   },
   {
-    "source": "skills/multiplayer-sync/references/interpolation.md",
+    "source": "skills/multiplayer-sync/references/2d-interpolation.md",
     "block": 0,
     "className": "RemotePlayerDisplay"
   },
   {
-    "source": "skills/multiplayer-basics/references/spawning-networked-objects.md",
+    "source": "skills/multiplayer-basics/references/2d-spawning-networked-objects.md",
     "block": 0,
     "className": "World"
   },
   {
-    "source": "skills/dedicated-server/references/server-config.md",
+    "source": "skills/dedicated-server/references/common-server-config.md",
     "block": 0,
     "className": "ServerConfig"
   },
   {
-    "source": "skills/inventory-system/references/core-classes.md",
+    "source": "skills/inventory-system/references/common-core-classes.md",
     "block": 0,
     "className": "ItemData"
   },
   {
-    "source": "skills/inventory-system/references/core-classes.md",
+    "source": "skills/inventory-system/references/common-core-classes.md",
     "block": 1,
     "className": "Inventory"
   },
   {
-    "source": "skills/inventory-system/references/core-classes.md",
+    "source": "skills/inventory-system/references/common-core-classes.md",
     "block": 2,
     "className": "InventorySlot"
   },
   {
-    "source": "skills/inventory-system/references/serialization.md",
+    "source": "skills/inventory-system/references/common-serialization.md",
     "block": 0,
     "className": "ItemRegistry"
   },
   {
-    "source": "skills/resource-pattern/references/configuration-pattern.md",
+    "source": "skills/resource-pattern/references/common-configuration-pattern.md",
     "block": 0,
     "className": "EnemyStats"
   },
   {
-    "source": "skills/resource-pattern/references/configuration-pattern.md",
+    "source": "skills/resource-pattern/references/common-configuration-pattern.md",
     "block": 1,
     "className": "Enemy"
   },
   {
-    "source": "skills/inventory-system/references/ui-binding.md",
+    "source": "skills/inventory-system/references/common-ui-binding.md",
     "block": 0,
     "className": "InventoryUI"
   },
   {
-    "source": "skills/inventory-system/references/ui-binding.md",
+    "source": "skills/inventory-system/references/common-ui-binding.md",
     "block": 1,
     "className": "SlotUI"
   },
   {
-    "source": "skills/resource-pattern/references/sharing-vs-unique.md",
+    "source": "skills/resource-pattern/references/common-sharing-vs-unique.md",
     "inline": "DuplicateDeep(Resource.DeepDuplicateMode.All)",
     "className": "ExplicitDeepDuplicate",
     "wrap": "body",
@@ -198,17 +198,17 @@
     "className": "HealthBar"
   },
   {
-    "source": "skills/hud-system/references/minimap.md",
+    "source": "skills/hud-system/references/2d-minimap.md",
     "block": 0,
     "className": "MinimapSetup"
   },
   {
-    "source": "skills/hud-system/references/minimap.md",
+    "source": "skills/hud-system/references/2d-minimap.md",
     "block": 1,
     "className": "MinimapCamera"
   },
   {
-    "source": "skills/godot-ui/references/anchors-in-code.md",
+    "source": "skills/godot-ui/references/common-anchors-in-code.md",
     "block": 0,
     "className": "AnchorsSetup",
     "wrap": "body",
@@ -233,5 +233,699 @@
     "source": "skills/multiplayer-basics/SKILL.md",
     "block": 0,
     "className": "Chat"
+  },
+  {
+    "source": "skills/multiplayer-basics/references/2d-authority-movement.md",
+    "block": 0,
+    "className": "NetworkPlayer2D"
+  },
+  {
+    "source": "skills/multiplayer-basics/references/2d-player-join-flow.md",
+    "block": 0,
+    "className": "GameServer"
+  },
+  {
+    "source": "skills/multiplayer-sync/references/2d-client-prediction.md",
+    "block": 0,
+    "className": "Prediction2D"
+  },
+  {
+    "source": "skills/multiplayer-sync/references/2d-lag-compensation.md",
+    "block": 0,
+    "className": "LagHistory2D"
+  },
+  {
+    "source": "skills/multiplayer-sync/references/2d-interest-management.md",
+    "block": 0,
+    "className": "Interest2D"
+  },
+  {
+    "source": "skills/multiplayer-basics/references/3d-authority-movement.md",
+    "block": 0,
+    "className": "NetworkPlayer3D"
+  },
+  {
+    "source": "skills/multiplayer-basics/references/3d-player-join-flow.md",
+    "block": 0,
+    "className": "GameServer3D"
+  },
+  {
+    "source": "skills/multiplayer-sync/references/3d-client-prediction.md",
+    "block": 0,
+    "className": "Prediction3D"
+  },
+  {
+    "source": "skills/multiplayer-sync/references/3d-lag-compensation.md",
+    "block": 0,
+    "className": "LagHistory3D"
+  },
+  {
+    "source": "skills/multiplayer-sync/references/3d-interest-management.md",
+    "block": 0,
+    "className": "Interest3D"
+  },
+  {
+    "source": "skills/multiplayer-basics/references/3d-spawning-networked-objects.md",
+    "block": 0,
+    "className": "NetworkWorld3D"
+  },
+  {
+    "source": "skills/multiplayer-sync/references/3d-synced-player.md",
+    "block": 0,
+    "className": "SyncedPlayer3D"
+  },
+  {
+    "source": "skills/multiplayer-sync/references/3d-interpolation.md",
+    "block": 0,
+    "className": "RemotePlayerDisplay3D"
+  },
+  {
+    "source": "skills/hud-system/references/3d-damage-numbers.md",
+    "block": 0,
+    "className": "DamageNumberSpawner3D"
+  },
+  {
+    "source": "skills/hud-system/references/3d-minimap.md",
+    "block": 0,
+    "className": "MinimapSetup3D"
+  },
+  {
+    "source": "skills/hud-system/references/3d-minimap.md",
+    "block": 1,
+    "className": "MinimapCamera3D"
+  },
+  {
+    "source": "skills/hud-system/references/2d-interaction-prompts.md",
+    "block": 0,
+    "className": "InteractionPrompt2D"
+  },
+  {
+    "source": "skills/hud-system/references/2d-interaction-prompts.md",
+    "block": 1,
+    "className": "Interactable2D"
+  },
+  {
+    "source": "skills/audio-system/references/2d-sfx-pooling.md",
+    "block": 0,
+    "className": "SfxPool2D"
+  },
+  {
+    "source": "skills/audio-system/references/2d-spatial-audio.md",
+    "block": 0,
+    "className": "Footsteps2D"
+  },
+  {
+    "source": "skills/audio-system/references/2d-spatial-audio.md",
+    "block": 1,
+    "className": "PlayerAudioListener2D"
+  },
+  {
+    "source": "skills/component-system/references/2d-hitboxes.md",
+    "block": 0,
+    "className": "HitboxComponent"
+  },
+  {
+    "source": "skills/component-system/references/2d-hitboxes.md",
+    "block": 1,
+    "className": "HurtboxComponent"
+  },
+  {
+    "source": "skills/hud-system/references/3d-interaction-prompts.md",
+    "block": 0,
+    "className": "InteractionPrompt3D"
+  },
+  {
+    "source": "skills/hud-system/references/3d-interaction-prompts.md",
+    "block": 1,
+    "className": "Interactable3D"
+  },
+  {
+    "source": "skills/audio-system/references/3d-sfx-pooling.md",
+    "block": 0,
+    "className": "SfxPool3D"
+  },
+  {
+    "source": "skills/audio-system/references/3d-spatial-audio.md",
+    "block": 0,
+    "className": "Footsteps3D"
+  },
+  {
+    "source": "skills/audio-system/references/3d-spatial-audio.md",
+    "block": 1,
+    "className": "PlayerAudioListener3D"
+  },
+  {
+    "source": "skills/component-system/references/3d-hitboxes.md",
+    "block": 0,
+    "className": "HitboxComponent3D"
+  },
+  {
+    "source": "skills/component-system/references/3d-hitboxes.md",
+    "block": 1,
+    "className": "HurtboxComponent3D"
+  },
+  {
+    "source": "skills/animation-system/references/3d-sprite-animation.md",
+    "block": 0,
+    "className": "BillboardCharacter3D"
+  },
+  {
+    "source": "skills/animation-system/references/3d-state-machine-examples.md",
+    "block": 0,
+    "className": "AnimatedCharacter3D"
+  },
+  {
+    "source": "skills/animation-system/references/3d-hit-flash.md",
+    "block": 0,
+    "className": "MeshHitFlash3D"
+  },
+  {
+    "source": "skills/animation-system/references/2d-skeleton-animation.md",
+    "block": 0,
+    "className": "CutoutSkeleton2D"
+  },
+  {
+    "source": "skills/particles-vfx/references/2d-vfx-recipes.md",
+    "block": 0,
+    "className": "ParticleRecipes2D"
+  },
+  {
+    "source": "skills/particles-vfx/references/3d-vfx-recipes.md",
+    "block": 0,
+    "className": "ParticleRecipes3D"
+  },
+  {
+    "source": "skills/particles-vfx/references/common-subemitters.md",
+    "block": 0,
+    "className": "SubEmitter2D"
+  },
+  {
+    "source": "skills/particles-vfx/references/common-subemitters.md",
+    "block": 1,
+    "className": "SubEmitter3D"
+  },
+  {
+    "source": "skills/particles-vfx/references/3d-flipbook-animation.md",
+    "block": 0,
+    "className": "FlipbookParticles3D"
+  },
+  {
+    "source": "skills/particles-vfx/references/2d-trails.md",
+    "block": 0,
+    "className": "ParticleTrails2D"
+  },
+  {
+    "source": "skills/particles-vfx/references/2d-collision.md",
+    "block": 0,
+    "className": "ParticleCollision2D"
+  },
+  {
+    "source": "skills/tween-animation/references/2d-world-motion.md",
+    "block": 0,
+    "className": "WorldMotion2D"
+  },
+  {
+    "source": "skills/tween-animation/references/3d-world-motion.md",
+    "block": 0,
+    "className": "WorldMotion3D"
+  },
+  {
+    "source": "skills/3d-essentials/references/3d-gridmap.md",
+    "block": 0,
+    "className": "GridFloor3D"
+  },
+  {
+    "source": "skills/3d-essentials/references/3d-custom-geometry.md",
+    "block": 0,
+    "className": "DebugSegment3D"
+  },
+  {
+    "source": "skills/2d-essentials/references/2d-surface-stamps.md",
+    "block": 0,
+    "className": "SurfaceStampBuilder2D",
+    "wrap": "members",
+    "contains": "public Sprite2D AddStamp"
+  },
+  {
+    "source": "skills/shader-basics/references/3d-shader-recipes.md",
+    "block": 0,
+    "className": "MeshDissolve3D",
+    "wrap": "members",
+    "contains": "public void DissolveMesh"
+  },
+  {
+    "source": "skills/physics-system/references/2d-area-recipes.md",
+    "block": 0,
+    "className": "OverlapZone2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-area-recipes.md",
+    "block": 1,
+    "className": "GravityZone2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-collision-shapes.md",
+    "block": 0,
+    "className": "SizedBody2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-interpolation-camera.md",
+    "block": 0,
+    "className": "PhysicsFollowCamera2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-ragdoll-recipes.md",
+    "block": 0,
+    "className": "Ragdoll2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-raycasting-recipes.md",
+    "block": 0,
+    "className": "RaySensor2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-raycasting-recipes.md",
+    "block": 1,
+    "className": "GroundProbe2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-raycasting-recipes.md",
+    "block": 2,
+    "className": "MousePicker2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-rigidbody-recipes.md",
+    "block": 0,
+    "className": "PhysicsShip2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-rigidbody-recipes.md",
+    "block": 1,
+    "className": "PhysicsCrate2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-rigidbody-recipes.md",
+    "block": 2,
+    "className": "HomingBody2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-staticbody-recipes.md",
+    "block": 0,
+    "className": "Conveyor2D"
+  },
+  {
+    "source": "skills/physics-system/references/2d-staticbody-recipes.md",
+    "block": 1,
+    "className": "MovingPlatform2D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-area-recipes.md",
+    "block": 0,
+    "className": "OverlapZone3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-area-recipes.md",
+    "block": 1,
+    "className": "GravityZone3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-collision-shapes.md",
+    "block": 0,
+    "className": "SizedBody3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-interpolation-camera.md",
+    "block": 0,
+    "className": "PhysicsFollowCamera3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-raycasting-recipes.md",
+    "block": 0,
+    "className": "RaySensor3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-raycasting-recipes.md",
+    "block": 1,
+    "className": "GroundProbe3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-raycasting-recipes.md",
+    "block": 2,
+    "className": "MousePicker3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-rigidbody-recipes.md",
+    "block": 0,
+    "className": "PhysicsShip3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-rigidbody-recipes.md",
+    "block": 1,
+    "className": "PhysicsCrate3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-rigidbody-recipes.md",
+    "block": 2,
+    "className": "HomingBody3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-staticbody-recipes.md",
+    "block": 0,
+    "className": "Conveyor3D"
+  },
+  {
+    "source": "skills/physics-system/references/3d-staticbody-recipes.md",
+    "block": 1,
+    "className": "MovingPlatform3D"
+  },
+  {
+    "source": "skills/procedural-generation/references/2d-bsp-dungeons.md",
+    "block": 0,
+    "className": "BSPDungeon"
+  },
+  {
+    "source": "skills/procedural-generation/references/2d-cellular-automata.md",
+    "block": 0,
+    "className": "CaveGenerator"
+  },
+  {
+    "source": "skills/procedural-generation/references/2d-noise-generation.md",
+    "block": 1,
+    "className": "TerrainGenerator"
+  },
+  {
+    "source": "skills/procedural-generation/references/3d-bsp-dungeons.md",
+    "block": 0,
+    "className": "BSPDungeon3D"
+  },
+  {
+    "source": "skills/procedural-generation/references/3d-cellular-automata.md",
+    "block": 0,
+    "className": "CaveGenerator3D"
+  },
+  {
+    "source": "skills/procedural-generation/references/3d-noise-generation.md",
+    "block": 0,
+    "className": "NoiseTerrain3D"
+  },
+  {
+    "source": "skills/procedural-generation/references/3d-noise-generation.md",
+    "block": 1,
+    "className": "VolumeDensity3D"
+  },
+  {
+    "source": "skills/godot-optimization/references/2d-pool-placement.md",
+    "block": 0,
+    "className": "PooledEffectSpawner2D"
+  },
+  {
+    "source": "skills/godot-optimization/references/2d-rendering.md",
+    "block": 0,
+    "className": "CulledEffect2D"
+  },
+  {
+    "source": "skills/godot-optimization/references/2d-rendering.md",
+    "block": 1,
+    "className": "InstancedGeometry2D"
+  },
+  {
+    "source": "skills/godot-optimization/references/3d-pool-placement.md",
+    "block": 0,
+    "className": "PooledEffectSpawner3D"
+  },
+  {
+    "source": "skills/godot-optimization/references/3d-rendering.md",
+    "block": 0,
+    "className": "CulledEffect3D"
+  },
+  {
+    "source": "skills/godot-optimization/references/3d-rendering.md",
+    "block": 1,
+    "className": "InstancedGeometry3D"
+  },
+  {
+    "source": "skills/godot-optimization/references/common-memory-management.md",
+    "block": 1,
+    "className": "ReusableNodePool"
+  },
+  {
+    "source": "skills/save-load/references/2d-json-saves.md",
+    "block": 0,
+    "className": "SaveManager",
+    "namespace": "Core2D"
+  },
+  {
+    "source": "skills/dependency-injection/references/2d-scene-injection.md",
+    "block": 0,
+    "className": "Enemy",
+    "namespace": "Core2D"
+  },
+  {
+    "source": "skills/dependency-injection/references/2d-scene-injection.md",
+    "block": 1,
+    "className": "Level",
+    "namespace": "Core2D"
+  },
+  {
+    "source": "skills/addon-development/references/2d-tool-sprite.md",
+    "block": 0,
+    "className": "MyToolSprite",
+    "namespace": "Core2D"
+  },
+  {
+    "source": "skills/assets-pipeline/references/2d-runtime-scene-loading.md",
+    "block": 0,
+    "className": "RuntimeLoader",
+    "namespace": "Core2D",
+    "wrap": "members",
+    "contains": "public Node"
+  },
+  {
+    "source": "skills/save-load/references/3d-json-saves.md",
+    "block": 0,
+    "className": "SaveManager",
+    "namespace": "Core3D"
+  },
+  {
+    "source": "skills/dependency-injection/references/3d-scene-injection.md",
+    "block": 0,
+    "className": "Enemy",
+    "namespace": "Core3D"
+  },
+  {
+    "source": "skills/dependency-injection/references/3d-scene-injection.md",
+    "block": 1,
+    "className": "Level",
+    "namespace": "Core3D"
+  },
+  {
+    "source": "skills/addon-development/references/3d-tool-sprite.md",
+    "block": 0,
+    "className": "MyToolSprite3D",
+    "namespace": "Core3D"
+  },
+  {
+    "source": "skills/assets-pipeline/references/3d-runtime-scene-loading.md",
+    "block": 0,
+    "className": "RuntimeLoader",
+    "namespace": "Core3D",
+    "wrap": "members",
+    "contains": "public Node"
+  },
+  {
+    "source": "skills/player-controller/references/3d-controllers.md",
+    "block": 0,
+    "className": "FPSController"
+  },
+  {
+    "source": "skills/player-controller/references/3d-controllers.md",
+    "block": 1,
+    "className": "GroundPlayer3D"
+  },
+  {
+    "source": "skills/player-controller/references/3d-movement-recipes.md",
+    "block": 0,
+    "className": "DashPlayer3D"
+  },
+  {
+    "source": "skills/player-controller/references/3d-movement-recipes.md",
+    "block": 1,
+    "className": "WallJumpPlayer3D"
+  },
+  {
+    "source": "skills/player-controller/references/2d-controllers.md",
+    "block": 0,
+    "className": "TopDownPlayer"
+  },
+  {
+    "source": "skills/player-controller/references/2d-controllers.md",
+    "block": 1,
+    "className": "PlatformerPlayer"
+  },
+  {
+    "source": "skills/state-machine/references/2d-character-states.md",
+    "block": 0,
+    "className": "CharacterState2D"
+  },
+  {
+    "source": "skills/state-machine/references/2d-character-states.md",
+    "block": 1,
+    "className": "IdleState2D"
+  },
+  {
+    "source": "skills/state-machine/references/3d-character-states.md",
+    "block": 0,
+    "className": "CharacterState3D"
+  },
+  {
+    "source": "skills/state-machine/references/3d-character-states.md",
+    "block": 1,
+    "className": "IdleState3D"
+  },
+  {
+    "source": "skills/state-machine/references/3d-enum-enemy.md",
+    "block": 0,
+    "className": "SimpleEnemy3D"
+  },
+  {
+    "source": "skills/state-machine/references/2d-enum-enemy.md",
+    "block": 0,
+    "className": "SimpleEnemy"
+  },
+  {
+    "source": "skills/ai-navigation/references/2d-navigation-agent.md",
+    "block": 0,
+    "className": "NavigationMover2D"
+  },
+  {
+    "source": "skills/ai-navigation/references/3d-navigation-agent.md",
+    "block": 0,
+    "className": "NavigationMover3D"
+  },
+  {
+    "source": "skills/ai-navigation/references/2d-patrol-patterns.md",
+    "block": 0,
+    "className": "PatrolEnemy2D"
+  },
+  {
+    "source": "skills/ai-navigation/references/3d-patrol-patterns.md",
+    "block": 0,
+    "className": "PatrolEnemy3D"
+  },
+  {
+    "source": "skills/ai-navigation/references/2d-chase-attack.md",
+    "block": 0,
+    "className": "ChaseAttackEnemy2D"
+  },
+  {
+    "source": "skills/ai-navigation/references/3d-chase-attack.md",
+    "block": 0,
+    "className": "ChaseAttackEnemy3D"
+  },
+  {
+    "source": "skills/ai-navigation/references/3d-steering-behaviors.md",
+    "block": 0,
+    "className": "SteeringEnemy3D"
+  },
+  {
+    "source": "skills/ai-navigation/references/common-async-baking.md",
+    "block": 0,
+    "className": "BakeRegion2D"
+  },
+  {
+    "source": "skills/ai-navigation/references/common-async-baking.md",
+    "block": 1,
+    "className": "BakeRegion3D"
+  },
+  {
+    "source": "skills/ai-navigation/references/common-behavior-trees.md",
+    "block": 1,
+    "className": "BTSequence"
+  },
+  {
+    "source": "skills/ai-navigation/references/common-behavior-trees.md",
+    "block": 2,
+    "className": "BTSelector"
+  },
+  {
+    "source": "skills/ai-navigation/references/common-behavior-trees.md",
+    "block": 3,
+    "className": "BTAction"
+  },
+  {
+    "source": "skills/ai-navigation/references/2d-behavior-tree-actor.md",
+    "block": 0,
+    "className": "BTEnemy"
+  },
+  {
+    "source": "skills/ai-navigation/references/3d-behavior-tree-actor.md",
+    "block": 0,
+    "className": "BTEnemy3D"
+  },
+  {
+    "source": "skills/camera-system/references/3d-screen-shake.md",
+    "block": 0,
+    "className": "ShakeCamera3D"
+  },
+  {
+    "source": "skills/camera-system/references/3d-camera-zones.md",
+    "block": 0,
+    "className": "CameraZone3D"
+  },
+  {
+    "source": "skills/camera-system/references/2d-split-screen.md",
+    "block": 0,
+    "className": "SharedViews2D"
+  },
+  {
+    "source": "skills/camera-system/references/3d-split-screen.md",
+    "block": 0,
+    "className": "SharedViews3D"
+  },
+  {
+    "source": "skills/math-essentials/references/2d-game-math-recipes.md",
+    "block": 0,
+    "className": "SpatialMath2D"
+  },
+  {
+    "source": "skills/math-essentials/references/3d-game-math-recipes.md",
+    "block": 0,
+    "className": "SpatialMath3D"
+  },
+  {
+    "source": "skills/math-essentials/references/2d-path-following.md",
+    "block": 0,
+    "className": "PathFollower2D"
+  },
+  {
+    "source": "skills/math-essentials/references/3d-path-following.md",
+    "block": 0,
+    "className": "PathFollower3D"
+  },
+  {
+    "source": "skills/math-essentials/references/common-curves-and-paths.md",
+    "block": 0,
+    "className": "PulseCurveFactory"
+  },
+  {
+    "source": "skills/input-handling/references/2d-world-input.md",
+    "block": 0,
+    "className": "WorldInput2D"
+  },
+  {
+    "source": "skills/input-handling/references/3d-world-input.md",
+    "block": 0,
+    "className": "WorldInput3D"
+  },
+  {
+    "source": "skills/ai-navigation/references/common-behavior-trees.md",
+    "block": 0,
+    "className": "BTNode",
+    "contains": "public abstract class BTNode"
+  },
+  {
+    "source": "skills/input-handling/references/common-input-buffering.md",
+    "block": 0,
+    "className": "ActionBuffer"
   }
 ]
