@@ -66,8 +66,8 @@ Full server and client implementations with every signal handler, in GDScript an
 ### GDScript
 
 ```gdscript
-# chat.gd
-extends Node
+# chat.gd — Node2D because this example also synchronizes a 2D position.
+extends Node2D
 
 # Any peer can call; server validates then broadcasts to all peers.
 @rpc("any_peer", "reliable")
@@ -120,7 +120,7 @@ send_chat_message.rpc_id(target_peer_id, "Hello!")
 // Chat.cs
 using Godot;
 
-public partial class Chat : Node
+public partial class Chat : Node2D
 {
     // Any peer can call; executes on the server only.
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -250,13 +250,13 @@ public partial class Player : CharacterBody2D
 | `multiplayer.get_unique_id()` | `int` | This peer's ID |
 | `get_multiplayer_authority()` | `int` | ID of the peer that owns this node |
 | `is_multiplayer_authority()` | `bool` | True if this peer owns this node |
-| `set_multiplayer_authority(id)` | `void` | Transfer ownership; call on the server |
+| `set_multiplayer_authority(id)` | `void` | Set locally on every peer, e.g. in the custom spawn callback; not automatically replicated |
 
 ---
 
 ## 5. Spawning Networked Objects
 
-Use `MultiplayerSpawner` to replicate scene instances across peers. The server adds a child to the spawned node's parent, the spawner mirrors it on every peer with synchronized state. For dynamic spawn paths, configure `_spawnable_scenes` and call `add_child(scene.instantiate())` only on the server.
+Use `MultiplayerSpawner` to replicate scene instances across peers. The server adds a child to the spawned node's parent, the spawner mirrors it on every peer with synchronized state. For automatic scene replication, register scenes with `add_spawnable_scene()` and add their instances under `spawn_path` on the authority. For custom spawn data, use `spawn_function` and `spawn(data)`.
 
 > See [references/spawning-networked-objects.md](references/spawning-networked-objects.md) for `MultiplayerSpawner` scene setup and the spawn-on-server flow (GDScript + C#).
 
@@ -286,7 +286,7 @@ Listen for `peer_disconnected(id)` on the `multiplayer` API. On the server: free
 | Desync from unordered RPCs | Positions jitter or snap | Use `"unreliable_ordered"` for streams; use `"reliable"` for critical state changes |
 | Reading input in `_process` vs `_physics_process` | Movement desyncs on different frame rates | Always move `CharacterBody2D` in `_physics_process`; send sync RPCs from there too |
 | Not checking `is_multiplayer_authority()` before input | Every peer controls every player | Add an `if not is_multiplayer_authority(): return` guard at the top of input handling |
-| Spawning without `MultiplayerSpawner` | Object appears on server, missing on clients | Every runtime `add_child` on the server that should be replicated must go through `MultiplayerSpawner.spawn()` |
+| Spawning without `MultiplayerSpawner` | Object appears on server, missing on clients | Use registered spawnable scenes under `spawn_path`, or custom `spawn_function` with `spawn(data)` |
 | Forgetting `call_local` on authority RPCs | Server state diverges from its own node | Add `"call_local"` when the sender also needs to execute the RPC locally |
 | Using `rpc()` before the peer is assigned | Crash or silent failure | Assign `multiplayer.multiplayer_peer` before calling any RPC |
 | Not stripping `res://` scenes from exported builds | Clients can read server-only scripts | Use `export_exclude` or PCK encryption for sensitive server code |
@@ -302,7 +302,7 @@ Listen for `peer_disconnected(id)` on the `multiplayer` API. On the server: free
 - [ ] RPC modes chosen deliberately: `"any_peer"` only for client → server calls; `"authority"` for server → client
 - [ ] Unreliable RPCs used only for high-frequency updates (position, rotation); reliable for events (spawn, damage, chat)
 - [ ] `MultiplayerSpawner` configured with all spawnable scenes before the first player joins
-- [ ] `set_multiplayer_authority(peer_id)` called on the server after each player node is spawned
+- [ ] `set_multiplayer_authority(peer_id)` set consistently on every peer inside the custom spawn callback before the node enters the tree
 - [ ] `peer_disconnected` handler frees the player node and removes it from tracking collections
 - [ ] `server_disconnected` handler on clients returns to main menu and nulls `multiplayer.multiplayer_peer`
 - [ ] `is_instance_valid()` checked before dereferencing any stored node reference in disconnect callbacks

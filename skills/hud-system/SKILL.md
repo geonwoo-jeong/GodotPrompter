@@ -46,7 +46,7 @@ World (Node2D / Node3D)
 **Key rules:**
 - Keep all HUD scenes under a single `CanvasLayer`. Do not mix HUD nodes into the game world tree.
 - Use `layer = 1` for the main HUD. Use higher values (e.g. `10`) for overlays or pause menus that must appear above the HUD.
-- Damage numbers are an exception — they can live in a `Node2D` child of the `CanvasLayer` and use `get_viewport().get_screen_transform()` to convert world positions to screen positions.
+- Damage numbers are an exception — they can live in an untransformed `Node2D` child of the HUD `CanvasLayer` and use `get_viewport().get_canvas_transform()` to convert world positions to viewport positions. The example assumes the HUD layer has its default transform.
 
 ---
 
@@ -61,12 +61,16 @@ World (Node2D / Node3D)
 
 Both expose `min_value`, `max_value`, and `value`. Set `step = 0` so tweening produces a smooth animation rather than snapping to integer steps.
 
+They are separate subclasses of `Range`; a script extending `Range` can attach to either node.
+
+The `HealthComponent` in **scene-organization** emits `(old_value, new_value)` after updating its state. Treat the two-argument signal as a change notification and read `current_health` / `max_health` from the component, so a project using `(current, maximum)` payloads also works without swapping their meanings.
+
 ### GDScript
 
 ```gdscript
 ## health_bar.gd — attach to a ProgressBar or TextureProgressBar
 class_name HealthBar
-extends ProgressBar
+extends Range
 
 ## Reference to the HealthComponent this bar tracks.
 ## Assign in the Inspector or connect programmatically from the HUD root.
@@ -99,9 +103,9 @@ func _connect_component(component: HealthComponent) -> void:
     component.health_changed.connect(_on_health_changed)
 
 
-func _on_health_changed(current: int, maximum: int) -> void:
-    max_value = maximum
-    _animate_to(current)
+func _on_health_changed(_first: int, _second: int) -> void:
+    max_value = health_component.max_health
+    _animate_to(health_component.current_health)
 
 
 func _animate_to(target_value: float) -> void:
@@ -119,7 +123,7 @@ func _animate_to(target_value: float) -> void:
 // HealthBar.cs — attach to a ProgressBar or TextureProgressBar
 using Godot;
 
-public partial class HealthBar : ProgressBar
+public partial class HealthBar : Godot.Range
 {
     [Export] public HealthComponent HealthComponent { get; set; }
     [Export] public float TweenDuration { get; set; } = 0.25f;
@@ -149,10 +153,10 @@ public partial class HealthBar : ProgressBar
         component.HealthChanged += OnHealthChanged;
     }
 
-    private void OnHealthChanged(int current, int maximum)
+    private void OnHealthChanged(int first, int second)
     {
-        MaxValue = maximum;
-        AnimateTo(current);
+        MaxValue = HealthComponent.MaxHealth;
+        AnimateTo(HealthComponent.CurrentHealth);
     }
 
     private void AnimateTo(float targetValue)
@@ -301,7 +305,7 @@ Toast / notification stack — a `VBoxContainer` anchored top-right with `max_vi
 
 ## 6. Minimap Concept
 
-Render a top-down view via a dedicated `SubViewport` + `Camera2D` that follows the player. Display the SubViewport texture in a `TextureRect` inside the HUD. Optional circular mask via `ColorRect` shader. Set `render_target_update_mode = UPDATE_ALWAYS`.
+Render a top-down view via a dedicated `SubViewport` + `Camera2D` that follows the player. Display it in a `SubViewportContainer` inside the HUD; a `TextureRect` using the viewport's texture is another option. Apply a circular-mask shader to the displaying control if needed. Set `render_target_update_mode = UPDATE_ALWAYS`.
 
 > See [references/minimap.md](references/minimap.md) for the SubViewport setup, MinimapCamera GDScript + C#, and circular-mask shader.
 
@@ -323,11 +327,11 @@ Screen-space "Press [E] to interact" prompt — a `Label` inside the HUD that fo
 - [ ] Tween is killed (`_tween.kill()`) before starting a new one so rapid damage does not stack animations
 - [ ] Score counter uses `tween_method` to interpolate the displayed integer — not a jump cut
 - [ ] Damage number positions are converted from world space to screen space using `get_viewport().get_canvas_transform()`
-- [ ] Damage number pool size is large enough that labels are not recycled before their tween completes
+- [ ] Pooled damage numbers hide on completion, remain alive, and cancel/reset their previous animation when reused
 - [ ] Notification stack enforces `max_visible` and re-checks the queue after each dismissal
 - [ ] Toast auto-dismiss uses a `Timer` node — not `await get_tree().create_timer()`
 - [ ] `SubViewport` for minimap has `render_target_update_mode = UPDATE_ALWAYS`
-- [ ] Minimap `Camera2D` zoom and cull mask are configured so only the intended layers are visible
+- [ ] Minimap `Camera2D` zoom and the `SubViewport.canvas_cull_mask` select the intended view and visibility layers
 - [ ] Interaction prompt converts the interactable's world position each frame — not cached at spawn time
 - [ ] `InputMap.action_get_events()` is used to display the correct key for the player's current binding
 - [ ] HUD nodes that do not need input set `mouse_filter = MOUSE_FILTER_IGNORE` to avoid blocking game clicks

@@ -156,16 +156,19 @@ tween.TweenProperty(this, "rotation", Mathf.Pi, 0.5f);
 tween.TweenProperty(this, "modulate:a", 0.5f, 0.5f);
 ```
 
-#### Option 2: `chain()` — Switch back to sequential mid-tween
+#### Option 2: `chain()` — Start a new step after a parallel group
+
+`chain()` starts a new step for the next tweener; it does not change the default set by `set_parallel(true)`. Chain the callback too so it waits for the fade. To make every subsequent tweener sequential, call `set_parallel(false)` instead.
 
 ```gdscript
 var tween := create_tween().set_parallel(true)
 # These two run at the same time
 tween.tween_property(self, "position", Vector2(300, 200), 0.5)
 tween.tween_property(self, "scale", Vector2(2, 2), 0.5)
-# Switch back to sequential for the next step
+# Wait for movement and scale, then fade
 tween.chain().tween_property(self, "modulate:a", 0.0, 0.3)
-tween.tween_callback(queue_free)
+# Wait for the fade before freeing the node
+tween.chain().tween_callback(queue_free)
 ```
 
 ```csharp
@@ -173,7 +176,7 @@ var tween = CreateTween().SetParallel(true);
 tween.TweenProperty(this, "position", new Vector2(300, 200), 0.5f);
 tween.TweenProperty(this, "scale", new Vector2(2, 2), 0.5f);
 tween.Chain().TweenProperty(this, "modulate:a", 0.0f, 0.3f);
-tween.TweenCallback(Callable.From(QueueFree));
+tween.Chain().TweenCallback(Callable.From(QueueFree));
 ```
 
 #### Option 3: `parallel()` — Make the next tweener parallel with the previous
@@ -311,7 +314,7 @@ The patterns most projects need: fade in/out, UI panel slide in/out, button pres
 | `from()` value ignored              | Called after `set_parallel()` changed ordering    | Call `from()` directly on the PropertyTweener, not on the Tween    |
 | Tween doesn't loop smoothly         | End value doesn't match start for seamless loop   | Use `as_relative()` for rotation, or match start/end values        |
 | Relative tween drifts over loops    | `as_relative()` accumulates each loop             | Use absolute values for looping; relative for one-shot moves       |
-| Callback fires at wrong time        | Callback added to parallel section                | Use `chain()` to switch back to sequential before the callback     |
+| Callback fires at wrong time        | Callback shares a step with a parallel tweener    | Use `chain().tween_callback(...)` to put the callback in its own next step |
 | Tween property path not found       | Typo or wrong path format                         | Use `"property:component"` — e.g., `"position:x"`, `"modulate:a"` |
 | Tween faster/slower than expected   | `Engine.time_scale` affects tween                 | Use `set_ignore_time_scale()` for UI tweens during slow-mo         |
 
@@ -323,7 +326,7 @@ The patterns most projects need: fade in/out, UI panel slide in/out, button pres
 - [ ] Tween references are stored in variables when they need to be killed later
 - [ ] Easing is set (`TRANS_CUBIC` + `EASE_OUT` for natural motion, not default `TRANS_LINEAR`)
 - [ ] `set_parallel(true)` is used when multiple properties should animate simultaneously
-- [ ] `chain()` is used to switch back to sequential after parallel sections
+- [ ] `chain()` starts each new step after a parallel group; `set_parallel(false)` changes the default for later tweeners
 - [ ] `from()` or `from_current()` is used when the start value matters (not just the end value)
 - [ ] `as_relative()` is used for incremental movement instead of computing absolute targets
 - [ ] Looping tweens use `set_loops()` — not manual recreation

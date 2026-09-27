@@ -1,96 +1,145 @@
 # Interpolation
 
-Reference for `skills/multiplayer-sync/SKILL.md` — visual interpolation between snapshots in `_process`. GDScript + C#.
+Reference for `skills/multiplayer-sync/SKILL.md` — visual interpolation between timestamped network snapshots in `_process`. GDScript + C#.
 
 > ← Back to [SKILL.md](../SKILL.md)
 
 ---
 ## 3. Interpolation
 
-Network updates arrive in discrete ticks (e.g. every 50 ms at 20 Hz). Without interpolation, remote players visibly stutter from position to position. Interpolation smooths this by blending between the previous received state and the current received state over time.
+Network snapshots arrive at their own rate (for example 20 Hz), independently of the 60 Hz physics clock. Render slightly behind the received stream, retaining snapshots on each side of that render time. The bounded buffer below timestamps arrivals with the local monotonic clock; it is a simple starting point, not a clock-synchronized server-time protocol.
 
 ### Why `_process`, Not `_physics_process`
 
-- `_physics_process` runs at a fixed physics rate (default 60 Hz) and is coupled to simulation.
-- `_process` runs every rendered frame and has access to the render sub-tick fraction via `Engine.get_physics_interpolation_fraction()`.
-- Visual smoothing belongs in `_process` because it does not affect gameplay state — it only affects what the player sees.
+- Visual interpolation belongs in `_process`; it does not change the authoritative physics body.
+- Do not use `Engine.get_physics_interpolation_fraction()` between network snapshots: it resets each physics tick even when no new network snapshot has arrived.
+- `synchronized` belongs to the child `MultiplayerSynchronizer`, not the parent `SyncedPlayer`. The parent holds the received properties.
+- Configure `synced_position` as `REPLICATION_MODE_ALWAYS`. If your snapshots instead use ON_CHANGE, connect `delta_synchronized` as appropriate.
 
 ### Interpolation (GDScript)
 
 ```gdscript
-# remote_player_display.gd — attached to a non-authority instance
+# remote_player_display.gd — separate visual sibling of SyncedPlayer; remote peers only
 extends Node2D
 
-var _prev_pos: Vector2 = Vector2.ZERO
-var _curr_pos: Vector2 = Vector2.ZERO
-var _prev_health: int = 100
-var _curr_health: int = 100
+@export_range(0.0, 0.5, 0.01) var interpolation_delay: float = 0.1
+const MAX_SNAPSHOTS := 32
+var _snapshots: Array[Dictionary] = []
 
-@onready var _sync_source: Node = $"../SyncedPlayer"  # the node with MultiplayerSynchronizer
+@onready var _sync_source: Node = $"../SyncedPlayer"
+@onready var _sync: MultiplayerSynchronizer = $"../SyncedPlayer/MultiplayerSynchronizer"
 
 
 func _ready() -> void:
-    # Disable physics on remote display nodes — authority drives state.
     set_physics_process(false)
-    # Listen for each sync tick to capture before/after state.
-    _sync_source.connect("synchronized", _on_synchronized)
+    global_position = _sync_source.synced_position
+    _record_snapshot(_now_seconds(), global_position)
+    _sync.synchronized.connect(_on_synchronized)
+
+
+func _now_seconds() -> float:
+    return Time.get_ticks_usec() / 1_000_000.0
 
 
 func _on_synchronized() -> void:
-    # Called by MultiplayerSynchronizer after each replication tick.
-    _prev_pos    = _curr_pos
-    _curr_pos    = _sync_source.synced_position
-    _prev_health = _curr_health
-    _curr_health = _sync_source.synced_health
+    _record_snapshot(_now_seconds(), _sync_source.synced_position)
+    # Discrete values such as health should update directly, not be interpolated.
+
+
+func _record_snapshot(time: float, pos: Vector2) -> void:
+    if not _snapshots.is_empty() and time <= float(_snapshots[-1]["time"]):
+        # Multiple notifications in the same clock instant replace the latest value.
+        _snapshots[-1]["position"] = pos
+        return
+    _snapshots.append({"time": time, "position": pos})
+    if _snapshots.size() > MAX_SNAPSHOTS:
+        _snapshots.pop_front()
+
+
+func _sample_position(render_time: float) -> Vector2:
+    if _snapshots.is_empty():
+        return global_position
+    while _snapshots.size() > 2 and float(_snapshots[1]["time"]) <= render_time:
+        _snapshots.pop_front()
+    if _snapshots.size() == 1 or render_time <= float(_snapshots[0]["time"]):
+        return _snapshots[0]["position"]
+    var a: Dictionary = _snapshots[0]
+    var b: Dictionary = _snapshots[1]
+    var span: float = float(b["time"]) - float(a["time"])
+    var weight: float = clampf((render_time - float(a["time"])) / span, 0.0, 1.0)
+    var start: Vector2 = a["position"]
+    return start.lerp(b["position"], weight)
 
 
 func _process(_delta: float) -> void:
-    # interpolation_fraction is 0.0..1.0 between the last and next physics tick.
-    var f: float = Engine.get_physics_interpolation_fraction()
-    global_position = _prev_pos.lerp(_curr_pos, f)
-    # Health and other discrete values are not lerped — snap on change.
+    global_position = _sample_position(_now_seconds() - interpolation_delay)
 ```
 
 ### Interpolation (C#)
 
 ```csharp
-// RemotePlayerDisplay.cs — attached to a non-authority instance
+// RemotePlayerDisplay.cs — separate visual sibling of SyncedPlayer; remote peers only
 using Godot;
+using System;
+using System.Collections.Generic;
 
 public partial class RemotePlayerDisplay : Node2D
 {
-    private Vector2 _prevPos = Vector2.Zero;
-    private Vector2 _currPos = Vector2.Zero;
-    private int _prevHealth;
-    private int _currHealth;
-
+    [Export(PropertyHint.Range, "0,0.5,0.01")]
+    public double InterpolationDelay { get; set; } = 0.1;
+    private const int MaxSnapshots = 32;
+    private readonly List<(double Time, Vector2 Position)> _snapshots = new();
     private SyncedPlayer _syncSource = null!;
+    private MultiplayerSynchronizer _sync = null!;
 
     public override void _Ready()
     {
         SetPhysicsProcess(false);
         _syncSource = GetNode<SyncedPlayer>("../SyncedPlayer");
-        _syncSource.Connect(
-            MultiplayerSynchronizer.SignalName.Synchronized,
-            Callable.From(OnSynchronized));
+        _sync = _syncSource.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+        GlobalPosition = _syncSource.SyncedPosition;
+        RecordSnapshot(NowSeconds(), GlobalPosition);
+        _sync.Synchronized += OnSynchronized;
     }
+
+    private static double NowSeconds() => Time.GetTicksUsec() / 1_000_000.0;
 
     private void OnSynchronized()
     {
-        _prevPos    = _currPos;
-        _currPos    = _syncSource.SyncedPosition;
-        _prevHealth = _currHealth;
-        _currHealth = _syncSource.SyncedHealth;
+        RecordSnapshot(NowSeconds(), _syncSource.SyncedPosition);
+        // Discrete values such as health update directly.
+    }
+
+    private void RecordSnapshot(double time, Vector2 position)
+    {
+        if (_snapshots.Count > 0 && time <= _snapshots[^1].Time)
+        {
+            _snapshots[^1] = (_snapshots[^1].Time, position);
+            return;
+        }
+        _snapshots.Add((time, position));
+        if (_snapshots.Count > MaxSnapshots)
+            _snapshots.RemoveAt(0);
+    }
+
+    private Vector2 SamplePosition(double renderTime)
+    {
+        if (_snapshots.Count == 0) return GlobalPosition;
+        while (_snapshots.Count > 2 && _snapshots[1].Time <= renderTime)
+            _snapshots.RemoveAt(0);
+        if (_snapshots.Count == 1 || renderTime <= _snapshots[0].Time)
+            return _snapshots[0].Position;
+        var a = _snapshots[0];
+        var b = _snapshots[1];
+        float weight = (float)Math.Clamp((renderTime - a.Time) / (b.Time - a.Time), 0.0, 1.0);
+        return a.Position.Lerp(b.Position, weight);
     }
 
     public override void _Process(double delta)
-    {
-        float f = (float)Engine.GetPhysicsInterpolationFraction();
-        GlobalPosition = _prevPos.Lerp(_currPos, f);
-        // Discrete values like health snap immediately — no lerp.
-    }
+        => GlobalPosition = SamplePosition(NowSeconds() - InterpolationDelay);
 }
 ```
 
----
+If the buffer underruns, this example holds the newest position rather than extrapolating. Tune the delay to the update interval and observed jitter. For competitive games, add server tick/sequence numbers, clock synchronization, and stale-packet rejection; local arrival timestamps alone cannot remove network jitter. Test the display with a network update rate different from the physics rate, bursts, and packet gaps.
 
+Godot API: [MultiplayerSynchronizer signals](https://docs.godotengine.org/en/4.7/classes/class_multiplayersynchronizer.html#signals), [physics interpolation fraction](https://docs.godotengine.org/en/4.7/classes/class_engine.html#class-engine-method-get-physics-interpolation-fraction).

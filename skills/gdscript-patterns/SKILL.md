@@ -225,8 +225,9 @@ var numbers: Array[int] = [1, 2, 3, 4, 5, 6, 7, 8]
 var evens: Array[int] = numbers.filter(func(n: int) -> bool: return n % 2 == 0)
 # [2, 4, 6, 8]
 
-# Map — transform each element
-var doubled: Array[int] = numbers.map(func(n: int) -> int: return n * 2)
+# Map returns an untyped Array; assign() copies into the typed destination.
+var doubled: Array[int] = []
+doubled.assign(numbers.map(func(n: int) -> int: return n * 2))
 # [2, 4, 6, 8, 10, 12, 14, 16]
 
 # Reduce — accumulate into single value

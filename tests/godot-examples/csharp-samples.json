@@ -1,0 +1,237 @@
+[
+  {
+    "source": "skills/3d-essentials/references/lod-and-culling.md",
+    "block": 1,
+    "className": "GrassSpawner",
+    "wrap": "members",
+    "contains": "public void SpawnGrass"
+  },
+  {
+    "source": "skills/localization/references/csv-plural-context.md",
+    "block": 0,
+    "className": "TranslationContext",
+    "wrap": "body",
+    "contains": "Tr(\"ITEM_FILE\", \"noun\")"
+  },
+  {
+    "source": "skills/localization/references/csv-plural-context.md",
+    "block": 1,
+    "className": "PluralTranslation",
+    "wrap": "body",
+    "contains": "TrN(\"ENEMY_COUNT\""
+  },
+  {
+    "source": "skills/localization/SKILL.md",
+    "block": 2,
+    "className": "TranslationFormatting",
+    "wrap": "body",
+    "members": "private int currentHealth = 100;\nprivate int count = 3;",
+    "contains": "Tr(\"PLAYER_HEALTH\")"
+  },
+  {
+    "source": "skills/resource-pattern/references/collections.md",
+    "block": 0,
+    "className": "ItemDatabase"
+  },
+  {
+    "source": "skills/animation-system/references/bone-constraints.md",
+    "block": 0,
+    "className": "AimSetup",
+    "wrap": "members",
+    "contains": "new AimModifier3D()"
+  },
+  {
+    "source": "skills/animation-system/references/bone-constraints.md",
+    "block": 1,
+    "className": "CopySetup",
+    "wrap": "body",
+    "contains": "new CopyTransformModifier3D()"
+  },
+  {
+    "source": "skills/animation-system/references/ik-recipes.md",
+    "block": 0,
+    "className": "ArmIKController"
+  },
+  {
+    "source": "skills/animation-system/references/ik-recipes.md",
+    "block": 1,
+    "className": "FootIK"
+  },
+  {
+    "source": "skills/animation-system/references/ik-recipes.md",
+    "block": 2,
+    "className": "FabrikSetup",
+    "wrap": "members",
+    "contains": "new Fabrik3D()"
+  },
+  {
+    "source": "skills/animation-system/references/skeleton-modifiers.md",
+    "block": 0,
+    "className": "LookAtSetup",
+    "wrap": "body",
+    "members": "private LookAtModifier3D _lookAt;",
+    "contains": "_lookAt.SymmetryLimitation"
+  },
+  {
+    "source": "skills/multithreading/SKILL.md",
+    "block": 1,
+    "className": "Worker"
+  },
+  {
+    "source": "skills/state-machine/SKILL.md",
+    "block": 1,
+    "className": "State"
+  },
+  {
+    "source": "skills/state-machine/references/node-based-machine.md",
+    "block": 0,
+    "className": "StateMachine"
+  },
+  {
+    "source": "skills/state-machine/references/hierarchical-and-parallel.md",
+    "block": 0,
+    "className": "HierarchicalState"
+  },
+  {
+    "source": "skills/state-machine/references/hierarchical-and-parallel.md",
+    "block": 1,
+    "className": "ParallelPlayer"
+  },
+  {
+    "source": "skills/input-handling/references/action-rebinding.md",
+    "block": 1,
+    "className": "RebindButton"
+  },
+  {
+    "source": "skills/input-handling/references/action-rebinding.md",
+    "block": 2,
+    "className": "BindingPersistence",
+    "wrap": "members",
+    "contains": "public void SaveBindings()"
+  },
+  {
+    "source": "skills/hud-system/references/damage-numbers.md",
+    "block": 0,
+    "className": "DamageNumber"
+  },
+  {
+    "source": "skills/hud-system/references/damage-numbers.md",
+    "block": 1,
+    "className": "DamageNumberSpawner"
+  },
+  {
+    "source": "skills/multiplayer-sync/SKILL.md",
+    "block": 1,
+    "className": "SyncedPlayer"
+  },
+  {
+    "source": "skills/multiplayer-sync/references/interpolation.md",
+    "block": 0,
+    "className": "RemotePlayerDisplay"
+  },
+  {
+    "source": "skills/multiplayer-basics/references/spawning-networked-objects.md",
+    "block": 0,
+    "className": "World"
+  },
+  {
+    "source": "skills/dedicated-server/references/server-config.md",
+    "block": 0,
+    "className": "ServerConfig"
+  },
+  {
+    "source": "skills/inventory-system/references/core-classes.md",
+    "block": 0,
+    "className": "ItemData"
+  },
+  {
+    "source": "skills/inventory-system/references/core-classes.md",
+    "block": 1,
+    "className": "Inventory"
+  },
+  {
+    "source": "skills/inventory-system/references/core-classes.md",
+    "block": 2,
+    "className": "InventorySlot"
+  },
+  {
+    "source": "skills/inventory-system/references/serialization.md",
+    "block": 0,
+    "className": "ItemRegistry"
+  },
+  {
+    "source": "skills/resource-pattern/references/configuration-pattern.md",
+    "block": 0,
+    "className": "EnemyStats"
+  },
+  {
+    "source": "skills/resource-pattern/references/configuration-pattern.md",
+    "block": 1,
+    "className": "Enemy"
+  },
+  {
+    "source": "skills/inventory-system/references/ui-binding.md",
+    "block": 0,
+    "className": "InventoryUI"
+  },
+  {
+    "source": "skills/inventory-system/references/ui-binding.md",
+    "block": 1,
+    "className": "SlotUI"
+  },
+  {
+    "source": "skills/resource-pattern/references/sharing-vs-unique.md",
+    "inline": "DuplicateDeep(Resource.DeepDuplicateMode.All)",
+    "className": "ExplicitDeepDuplicate",
+    "wrap": "body",
+    "prefix": "var copy = new Resource().",
+    "suffix": ";"
+  },
+  {
+    "source": "skills/scene-organization/SKILL.md",
+    "block": 0,
+    "className": "HealthComponent"
+  },
+  {
+    "source": "skills/hud-system/SKILL.md",
+    "block": 0,
+    "className": "HealthBar"
+  },
+  {
+    "source": "skills/hud-system/references/minimap.md",
+    "block": 0,
+    "className": "MinimapSetup"
+  },
+  {
+    "source": "skills/hud-system/references/minimap.md",
+    "block": 1,
+    "className": "MinimapCamera"
+  },
+  {
+    "source": "skills/godot-ui/references/anchors-in-code.md",
+    "block": 0,
+    "className": "AnchorsSetup",
+    "wrap": "body",
+    "contains": "SetAnchorsAndOffsetsPreset"
+  },
+  {
+    "source": "skills/responsive-ui/SKILL.md",
+    "block": 0,
+    "className": "RuntimeScaling",
+    "wrap": "body",
+    "contains": "ContentScaleMode"
+  },
+  {
+    "source": "skills/tween-animation/SKILL.md",
+    "block": 6,
+    "className": "ChainedTween",
+    "wrap": "body",
+    "baseType": "Node2D",
+    "contains": "tween.Chain().TweenCallback"
+  },
+  {
+    "source": "skills/multiplayer-basics/SKILL.md",
+    "block": 0,
+    "className": "Chat"
+  }
+]

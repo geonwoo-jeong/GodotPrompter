@@ -5,7 +5,7 @@ description: Use when creating data containers in Godot — custom Resources for
 
 # Resource Pattern in Godot 4.3+
 
-Resources are Godot's built-in data containers. Use them for configuration, item definitions, character stats, and any data that lives outside the scene tree. All examples target Godot 4.3+ with no deprecated APIs.
+Resources are Godot's built-in data containers. Use them for configuration, item definitions, character stats, and any data that lives outside the scene tree. Examples target Godot 4.3+ unless a newer version is explicitly identified.
 
 > **Related skills:** **inventory-system** for Resource-based item definitions, **save-load** for Resource serialization, **component-system** for data-driven component configuration, **ability-system** for Resource-based ability definitions built on this pattern.
 
@@ -19,9 +19,9 @@ A `Resource` is a reference-counted data object that:
 - Is editable directly in the Godot Inspector
 - Is **loaded once and shared by default** — every node that loads the same path gets the same in-memory object
 - Can be nested inside other Resources and PackedScenes
-- Survives scene changes (unlike Node state, which is discarded on scene reload)
+- Can survive scene changes while another object keeps a reference to it
 
-Because Resources are shared by default, they are ideal for read-only data (item definitions, audio settings, ability blueprints). For per-instance mutable state, call `make_unique()` or `duplicate()` — see section 8.
+Because Resources are shared by default, they are ideal for read-only data (item definitions, audio settings, ability blueprints). For per-instance mutable state, use the Inspector’s **Make Unique** action or call `duplicate()` — see section 8.
 
 ---
 
@@ -116,7 +116,7 @@ The strongest use case: data-driven game content. Loot tables, enemy stats, abil
 
 ## 6. Resource Collections
 
-`@export var entries: Array[Entry] = []` exposes a typed array in the Inspector — drag and drop multiple Resource files. For startup-loaded sets, use `ResourcePreloader`. For asset-folder discovery at runtime, walk `DirAccess`.
+`@export var entries: Array[Entry] = []` exposes a typed array in the Inspector — drag and drop multiple Resource files. For startup-loaded sets, use `ResourcePreloader`. Prefer explicit typed Resource references for exported assets. For directory discovery on Godot 4.4+, use `ResourceLoader.list_directory()` and include dynamically loaded assets in the export preset.
 
 > See [references/collections.md](references/collections.md) for typed-array exports (v1.6.0 C# parity preserved), `ResourcePreloader` setup, and the directory-walking loader pattern.
 
@@ -128,7 +128,7 @@ The strongest use case: data-driven game content. Loot tables, enemy stats, abil
 |---|---|---|
 | Purpose | Data storage and configuration | Behavior, rendering, physics, input |
 | Scene tree | Not in the tree | Lives in the scene tree |
-| Lifecycle hooks | None (`_init` only) | `_ready`, `_process`, `_physics_process`, etc. |
+| Lifecycle hooks | No automatic Node lifecycle callbacks | `_ready`, `_process`, `_physics_process`, etc. |
 | Sharing | Shared by default (same path = same object) | Each instance is independent |
 | Serialization | Saved as `.tres` / `.res`, Inspector-editable | Saved inside `.tscn` |
 | Signals | Supported | Supported |
@@ -177,16 +177,16 @@ func _ready() -> void:
     stats = stats.duplicate()  # now safe to mutate
 ```
 
-### Game logic inside Resources
+### Automatic per-frame behavior belongs in Nodes
 
 ```gdscript
-# BAD — Resources have no scene tree access, no _process, no signals from nodes.
+# BAD — expecting this method to run automatically on a Resource.
 class_name EnemyStats
 extends Resource
 
 func update_health_regen(delta: float) -> void:
-    # Can't call get_tree(), can't read Input, can't access nodes.
-    # This logic belongs in a Node.
+    # Resources receive no automatic _process callback. A caller must invoke this.
+    # They can read Input and use explicitly supplied Node references.
     health = min(health + regen_rate * delta, max_health)
 ```
 
@@ -196,6 +196,8 @@ func update_health_regen(delta: float) -> void:
 func _process(delta: float) -> void:
     _current_health = minf(_current_health + stats.regen_rate * delta, stats.max_health)
 ```
+
+Resources can contain methods, emit/connect signals, read global singletons such as `Input`, and access Nodes passed to them. Keeping definitions as data-only Resources is a design choice; the engine restriction is the absence of automatic Node lifecycle callbacks and a built-in `get_tree()` method.
 
 ### Giant monolithic Resources
 
@@ -260,8 +262,8 @@ public partial class EnemyGood : CharacterBody2D
     }
 }
 
-// ❌ Anti-pattern: game logic inside a Resource
-// Resources have no scene-tree access, no _Process, and cannot call GetTree() or read Input.
+// ❌ Anti-pattern: expecting per-frame callbacks on a Resource.
+// Resources have no automatic _Process or GetTree() method.
 [GlobalClass]
 public partial class EnemyStatsBad : Resource
 {
@@ -269,10 +271,10 @@ public partial class EnemyStatsBad : Resource
     [Export] public float MaxHealth { get; set; }
     [Export] public float RegenRate { get; set; }
 
-    // This logic belongs in a Node, not a Resource.
+    // Put the automatic per-frame driver in a Node.
     public void UpdateHealthRegen(double delta)
     {
-        // Cannot call GetTree(), cannot access nodes, cannot read Input.
+        // A caller must invoke this; Input and supplied Node references are usable.
         Health = Mathf.Min(Health + RegenRate * (float)delta, MaxHealth);
     }
 }

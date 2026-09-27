@@ -22,9 +22,9 @@ Engine converts to InputEvent
     ↓
 _input()              ← raw input, runs first
     ↓
-_shortcut_input()     ← for global shortcuts
-    ↓
 UI Control nodes      ← buttons, sliders consume events
+    ↓
+_shortcut_input()     ← shortcuts not consumed by UI
     ↓
 _unhandled_key_input() ← unhandled key-only events
     ↓
@@ -36,7 +36,7 @@ _unhandled_input()    ← game input (movement, actions)
 | Method | Use For | When It Runs |
 |---------------------------|--------------------------------------------|------------------|
 | `_input()` | Camera look, global hotkeys | First — before everything |
-| `_shortcut_input()` | Global shortcuts (pause, screenshot) | After `_input`, before UI |
+| `_shortcut_input()` | Shortcuts that respect UI consumption | After UI, if still unhandled |
 | `_unhandled_key_input()` | Key-only events that UI didn't consume | After UI, keys only |
 | `_unhandled_input()` | Gameplay actions (jump, attack, interact) | Last — after UI consumes |
 | `Input.is_action_pressed()` in `_physics_process()` | Continuous movement | N/A — polling, not event-driven |

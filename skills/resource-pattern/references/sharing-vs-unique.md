@@ -23,7 +23,7 @@ func _ready() -> void:
     # Shallow duplicate — nested Resources are still shared
     stats = stats.duplicate()
 
-    # Deep duplicate — all nested Resources are also copied
+    # Deep duplicate — exact subresource policy depends on the Godot version
     stats = stats.duplicate(true)
 ```
 
@@ -38,8 +38,8 @@ public partial class Enemy : CharacterBody3D
         // Shallow duplicate — referenced sub-resources still point at the original.
         _stats = (EnemyStats)StatsTemplate.Duplicate();
 
-        // Deep duplicate — sub-resources are also duplicated. Use only when needed (cost scales).
-        // _stats = (EnemyStats)StatsTemplate.Duplicate(subresources: true);
+        // Deep duplicate — see the version-specific subresource policy below.
+        // _stats = (EnemyStats)StatsTemplate.Duplicate(true);
 
         _stats.CurrentHealth = _stats.MaxHealth;
     }
@@ -48,11 +48,12 @@ public partial class Enemy : CharacterBody3D
 
 `duplicate()` (`Duplicate()` in C#) returns a new Resource with the same property values. The original `.tres` file is untouched.
 
-**`make_unique()` in the editor:** In the Inspector, any sub-resource slot shows a **Make Unique** button. Clicking it embeds a private copy of the sub-resource into the parent scene instead of referencing the shared file. Use this when one scene needs different values than the shared default.
+**Make Unique in the editor (not a `Resource` method):** The resource's Inspector menu offers **Make Unique**, which assigns a private copy to that property instead of retaining the shared reference. Save the edited scene or Resource to persist that copy. Use this when one scene needs different values than the shared default.
+
+**Godot 4.7 behavior:** `duplicate(true)` recursively copies containers and internal Resources; external file-backed Resources can remain shared. It does not mean every reachable Resource is copied. For an explicit all-subresource policy on 4.7, use `duplicate_deep(Resource.DEEP_DUPLICATE_ALL)` / `DuplicateDeep(Resource.DeepDuplicateMode.All)`. Property usage flags can still override duplication, and custom Resources with required constructor arguments cannot be duplicated. Verify isolation for the nested mutable data you actually own. See the [versioned Resource API](https://docs.godotengine.org/en/4.7/classes/class_resource.html#class-resource-method-duplicate).
 
 **Guideline:**
 - Read-only data (item definitions, level config) — share freely, no duplication needed.
 - Mutable runtime state (current health, active buffs) — always `duplicate()` in `_ready()`.
 
 ---
-

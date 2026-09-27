@@ -40,9 +40,10 @@ func _ready() -> void:
 func _custom_spawn(data: Variant) -> Node:
 	# data is whatever you passed to spawner.spawn(data).
 	var scene: PackedScene = load("res://scenes/player.tscn")
-	var player: Node = scene.instantiate()
+	var player: Node2D = scene.instantiate() as Node2D
 	player.name = str(data["peer_id"])
-	player.global_position = data["position"]
+	player.position = data["position"]  # Local to Players on every peer.
+	player.set_multiplayer_authority(int(data["peer_id"]))
 	return player
 
 
@@ -51,8 +52,7 @@ func server_spawn_player(peer_id: int, spawn_pos: Vector2) -> void:
 	if not multiplayer.is_server():
 		return
 	var data := {"peer_id": peer_id, "position": spawn_pos}
-	var player: Node = spawner.spawn(data)
-	player.set_multiplayer_authority(peer_id)
+	spawner.spawn(data)
 ```
 
 ### C#
@@ -78,7 +78,8 @@ public partial class World : Node
         var scene  = GD.Load<PackedScene>("res://scenes/player.tscn");
         var player = scene.Instantiate<Node2D>();
         player.Name              = dict["peer_id"].As<int>().ToString();
-        player.GlobalPosition    = dict["position"].As<Vector2>();
+        player.Position          = dict["position"].As<Vector2>();
+        player.SetMultiplayerAuthority(dict["peer_id"].As<int>());
         return player;
     }
 
@@ -90,13 +91,12 @@ public partial class World : Node
             ["peer_id"]  = peerId,
             ["position"] = spawnPos,
         };
-        var player = _spawner.Spawn(data);
-        player.SetMultiplayerAuthority(peerId);
+        _spawner.Spawn(data);
     }
 }
 ```
 
-> **Note:** `spawner.spawn()` must be called on the server. `spawn_path` must point to the container node using a NodePath relative to the MultiplayerSpawner's parent. Every scene passed to `add_spawnable_scene` must be in the project — packed-scene paths are sent over the network.
+> **Note:** `spawner.spawn()` must be called on the server. `spawn_path` must point to the container node using a NodePath relative to the MultiplayerSpawner itself. Every scene passed to `add_spawnable_scene` must be in the project — packed-scene paths are sent over the network. The custom callback runs on every peer: set authority there, before returning the unattached node. `set_multiplayer_authority()` alone does not replicate authority changes. `spawn_pos` is local to `Players`; convert world positions with `Players.to_local()` when the container is a transformed Node2D.
 
 ---
 

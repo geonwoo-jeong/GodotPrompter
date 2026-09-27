@@ -30,6 +30,8 @@ public override void _UnhandledInput(InputEvent @event)
 
 ### Node Processing Order
 
+For an unconsumed key event, the stages are `_input()` → GUI (`_gui_input()`) → `_shortcut_input()` → `_unhandled_key_input()` → `_unhandled_input()`. GUI can consume the event before shortcut handling. Use `_input()` only for shortcuts that deliberately need to run before UI.
+
 Input propagates in **reverse scene tree order** (deepest child first, root last). To control which node gets input first:
 
 - Move it deeper in the tree, or

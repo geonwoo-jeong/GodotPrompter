@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync, existsSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync, existsSync, realpathSync, symlinkSync } from 'node:fs';
 import { tmpdir, homedir } from 'node:os';
 import { createHash } from 'node:crypto';
 import { join, resolve, dirname } from 'node:path';
@@ -412,6 +412,20 @@ test('honours an AGENTS.md at the session root above the nested project', () => 
   rmSync(base, { recursive: true, force: true });
 });
 
+test('honours session-root instructions through a POSIX directory alias', { skip: process.platform === 'win32' }, () => {
+  const { base, projectDir } = makeNestedProject('source');
+  const aliasParent = mkdtempSync(join(tmpdir(), 'gp-alias-'));
+  const alias = join(aliasParent, 'repo');
+  symlinkSync(base, alias, 'dir');
+  writeFileSync(join(base, 'AGENTS.md'), '# Game\n\n## GodotPrompter\n\nAlready wired.\n');
+  try {
+    assert.doesNotMatch(ctxOf(runHook(realpathSync(projectDir), { CLAUDE_PROJECT_DIR: alias })), OFFER);
+  } finally {
+    rmSync(aliasParent, { recursive: true, force: true });
+    rmSync(base, { recursive: true, force: true });
+  }
+});
+
 // A near-miss must not silence the offer: the heading has to be the real one.
 test('does not accept a passing mention of GodotPrompter as the section', () => {
   const { base, cwd } = makeProject();
@@ -544,13 +558,41 @@ test('tells the agent where to record a decline', () => {
 // Must match hooks/session-start's canonical_path() — bash and Node see the same directory
 // under different path spellings on Windows, so the raw path is not a usable key.
 function canonicalPath(p) {
-  return resolve(p).replace(/\\/g, '/');
+  const absolute = resolve(p);
+  // Keep the native-drive convention on Windows. POSIX aliases such as macOS /var ->
+  // /private/var must share one key, including when the final state file is not created yet.
+  if (process.platform === 'win32') return absolute.replace(/\\/g, '/');
+  let ancestor = absolute;
+  while (!existsSync(ancestor) && dirname(ancestor) !== ancestor) ancestor = dirname(ancestor);
+  return realpathSync(ancestor) + absolute.slice(ancestor.length);
 }
 
 function stateFileFor(projectPath) {
   const hash = createHash('sha256').update(canonicalPath(projectPath)).digest('hex').slice(0, 16);
   return join(homedir(), '.godot-prompter', 'state', `${hash}.json`);
 }
+
+test('uses one mentor state key through a POSIX directory alias', { skip: process.platform === 'win32' }, () => {
+  const { base } = makeProject();
+  const aliasParent = mkdtempSync(join(tmpdir(), 'gp-alias-'));
+  const alias = join(aliasParent, 'game');
+  symlinkSync(base, alias, 'dir');
+  const sf = stateFileFor(base);
+  mkdirSync(dirname(sf), { recursive: true });
+  writeFileSync(sf, JSON.stringify({ mode: 'mentor', section_offer: 'declined' }));
+  try {
+    for (const cwd of [realpathSync(base), alias]) {
+      const ctx = ctxOf(runHook(cwd, { PWD: cwd, CLAUDE_PROJECT_DIR: cwd }));
+      assert.match(ctx, /Mentor mode is ACTIVE/);
+      assert.doesNotMatch(ctx, OFFER);
+      assert.ok(ctx.includes(canonicalPath(sf)), 'both spellings must name the same state file');
+    }
+  } finally {
+    rmSync(sf, { force: true });
+    rmSync(aliasParent, { recursive: true, force: true });
+    rmSync(base, { recursive: true, force: true });
+  }
+});
 
 test('injects the mentor contract when state enables mentor mode', () => {
   const { base, cwd } = makeProject();

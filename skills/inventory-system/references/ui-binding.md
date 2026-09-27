@@ -99,8 +99,11 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
     return data is Dictionary and data.has("from_index")
 
 
-func _drop_data(_at_position: Vector2, data: Dictionary) -> void:
-    var from: int = data["from_index"]
+func _drop_data(at_position: Vector2, data: Variant) -> void:
+    if not _can_drop_data(at_position, data):
+        return
+    var payload: Dictionary = data
+    var from: int = payload["from_index"]
     var to:   int = slot_index
     if from == to:
         return
@@ -227,12 +230,13 @@ public partial class SlotUI : Button
 
     public override bool _CanDropData(Vector2 atPosition, Variant data)
     {
-        var dict = data.AsGodotDictionary();
-        return dict != null && dict.ContainsKey("from_index");
+        if (data.VariantType != Variant.Type.Dictionary) return false;
+        return data.AsGodotDictionary().ContainsKey("from_index");
     }
 
     public override void _DropData(Vector2 atPosition, Variant data)
     {
+        if (!_CanDropData(atPosition, data)) return;
         var dict = data.AsGodotDictionary();
         int from = dict["from_index"].As<int>();
         int to   = SlotIndex;

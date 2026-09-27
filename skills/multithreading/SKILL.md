@@ -123,6 +123,7 @@ func _exit_tree():
 ```csharp
 using Godot;
 using System.Threading;
+using Thread = System.Threading.Thread;
 
 public partial class Worker : Node
 {

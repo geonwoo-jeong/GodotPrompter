@@ -7,9 +7,9 @@ Reference for `skills/hud-system/SKILL.md` — floating damage-number scene with
 ---
 ## 4. Damage Numbers
 
-Damage numbers are short-lived `Label` nodes that float upward and fade out. Spawn one per damage event; release it after the tween completes. For high-frequency damage (e.g. rapid-fire weapons) a simple manual pool avoids per-hit allocation.
+Damage numbers are `Label` nodes that briefly float upward and fade out. The pool below keeps each node alive: hide it when its tween completes, then reset and reuse it for another damage event. For high-frequency damage (e.g. rapid-fire weapons) this avoids per-hit allocation.
 
-### GDScript — DamageNumber scene (single instance)
+### GDScript — DamageNumber scene (pooled instance)
 
 ```gdscript
 ## damage_number.gd — attach to a Label; root of a small PackedScene
@@ -26,33 +26,39 @@ extends Label
 @export var critical_color: Color = Color(1.0, 0.3, 0.1)
 @export var normal_color: Color   = Color(1.0, 1.0, 1.0)
 
+var _tween: Tween
+
 
 func show_damage(amount: int, is_critical: bool = false) -> void:
+    # Reuse can interrupt an animation; cancel its motion and completion callback.
+    if _tween:
+        _tween.kill()
     text           = str(amount) if not is_critical else "!" + str(amount)
-    modulate.a     = 1.0
     add_theme_font_size_override("font_size", 24 if not is_critical else 32)
     modulate       = critical_color if is_critical else normal_color
+    modulate.a     = 1.0
+    show()
     _play_animation()
 
 
 func _play_animation() -> void:
-    var tween := create_tween()
-    tween.set_parallel(true)
+    _tween = create_tween()
+    _tween.set_parallel(true)
 
     # Rise upward
-    tween.tween_property(self, "position:y", position.y - rise_distance, lifetime) \
+    _tween.tween_property(self, "position:y", position.y - rise_distance, lifetime) \
         .set_ease(Tween.EASE_OUT) \
         .set_trans(Tween.TRANS_QUAD)
 
     # Fade out (start fading at halfway point)
-    tween.tween_property(self, "modulate:a", 0.0, lifetime * 0.5) \
+    _tween.tween_property(self, "modulate:a", 0.0, lifetime * 0.5) \
         .set_delay(lifetime * 0.5) \
         .set_ease(Tween.EASE_IN)
 
-    tween.finished.connect(queue_free)
+    _tween.finished.connect(hide)
 ```
 
-### C# — DamageNumber scene (single instance)
+### C# — DamageNumber scene (pooled instance)
 
 ```csharp
 // DamageNumber.cs — attach to a Label; root of a small PackedScene
@@ -65,31 +71,35 @@ public partial class DamageNumber : Label
     [Export] public Color CriticalColor { get; set; } = new(1.0f, 0.3f, 0.1f);
     [Export] public Color NormalColor { get; set; } = new(1.0f, 1.0f, 1.0f);
 
+    private Tween _tween;
+
     public void ShowDamage(int amount, bool isCritical = false)
     {
+        // Reuse cancels both the previous animation and its completion callback.
+        _tween?.Kill();
         Text = isCritical ? $"!{amount}" : amount.ToString();
-        Modulate = new Color(Modulate, 1.0f);
         AddThemeFontSizeOverride("font_size", isCritical ? 32 : 24);
-        Modulate = isCritical ? CriticalColor : NormalColor;
+        Modulate = new Color(isCritical ? CriticalColor : NormalColor, 1.0f);
+        Show();
         PlayAnimation();
     }
 
     private void PlayAnimation()
     {
-        var tween = CreateTween();
-        tween.SetParallel(true);
+        _tween = CreateTween();
+        _tween.SetParallel(true);
 
         // Rise upward
-        tween.TweenProperty(this, "position:y", Position.Y - RiseDistance, Lifetime)
+        _tween.TweenProperty(this, "position:y", Position.Y - RiseDistance, Lifetime)
             .SetEase(Tween.EaseType.Out)
             .SetTrans(Tween.TransitionType.Quad);
 
         // Fade out (start fading at halfway point)
-        tween.TweenProperty(this, "modulate:a", 0.0f, Lifetime * 0.5f)
+        _tween.TweenProperty(this, "modulate:a", 0.0f, Lifetime * 0.5f)
             .SetDelay(Lifetime * 0.5f)
             .SetEase(Tween.EaseType.In);
 
-        tween.Finished += QueueFree;
+        _tween.Finished += Hide;
     }
 }
 ```
@@ -103,7 +113,7 @@ extends Node
 @export var damage_number_scene: PackedScene
 
 ## Simple pool: pre-instantiate a fixed number and recycle them.
-## For low-frequency damage, omit pooling and just instantiate directly.
+## Each instance hides on completion; do not queue_free pooled nodes.
 const POOL_SIZE := 20
 var _pool: Array[DamageNumber] = []
 var _pool_index: int = 0
@@ -125,10 +135,9 @@ func spawn(world_position: Vector2, amount: int, is_critical: bool = false) -> v
 
     # Wraps around — if POOL_SIZE is too small, older labels get recycled mid-animation.
     var dn := _pool[_pool_index % POOL_SIZE]
-    _pool_index += 1
+    _pool_index = (_pool_index + 1) % POOL_SIZE
 
     dn.position = screen_pos
-    dn.visible  = true
     dn.show_damage(amount, is_critical)
 ```
 
@@ -166,10 +175,9 @@ public partial class DamageNumberSpawner : Node
         var screenPos = GetViewport().GetCanvasTransform() * worldPosition;
 
         var dn = _pool[_poolIndex % PoolSize];
-        _poolIndex++;
+        _poolIndex = (_poolIndex + 1) % PoolSize;
 
         dn.Position = screenPos;
-        dn.Visible = true;
         dn.ShowDamage(amount, isCritical);
     }
 }
@@ -195,7 +203,6 @@ EventBus.Instance.DamageDealt += (Vector2 pos, int amount, bool crit) =>
 };
 ```
 
-**Pool notes:** The simple modular pool above recycles labels before they finish animating if POOL_SIZE is too small. Increase the pool size or skip pooling entirely for games with infrequent hits. A more robust pool tracks which instances are free using a `free_list` array.
+**Pool notes:** The simple modular pool above may replace a still-visible number when all slots are busy. Each spawn resets its position, text, font size, color, and opacity, and cancels the old tween so it cannot move or hide the new number. Increase the pool size or track available instances with a free list if early replacement is undesirable. For a non-pooled variant, instantiate on every hit and use `queue_free` / `QueueFree` on completion instead of hiding; never combine that lifetime with this retained-reference pool.
 
 ---
-

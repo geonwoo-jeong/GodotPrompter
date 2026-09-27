@@ -10,7 +10,7 @@ A character with 3 movement states (idle, walk, run) and 3 combat states (none, 
 
 ## Approach A: Hierarchical (Nested State Machines)
 
-States can contain sub-state machines. The outer machine handles high-level states; inner machines handle details.
+States can contain sub-state machines. The outer machine handles high-level states; inner machines handle details. Use the [node-based machine lifecycle](node-based-machine.md): nested machines register in `_ready()` but stay inactive until their owning state enters. Re-entering a parent resets its sub-machine to its initial state.
 
 **Scene Tree:**
 
@@ -42,16 +42,11 @@ extends State
 
 func enter() -> void:
 	if sub_state_machine:
-		sub_state_machine.set_physics_process(true)
-		sub_state_machine.set_process(true)
-		# Sub-machine starts from its initial state
-		sub_state_machine.current_state.enter()
+		sub_state_machine.activate()
 
 func exit() -> void:
 	if sub_state_machine:
-		sub_state_machine.current_state.exit()
-		sub_state_machine.set_physics_process(false)
-		sub_state_machine.set_process(false)
+		sub_state_machine.deactivate()
 
 func physics_update(delta: float) -> String:
 	# Check for transitions OUT of this hierarchical state first
@@ -72,9 +67,7 @@ public partial class HierarchicalState : State
     {
         if (SubStateMachine != null)
         {
-            SubStateMachine.SetPhysicsProcess(true);
-            SubStateMachine.SetProcess(true);
-            SubStateMachine.CurrentState.Enter();
+            SubStateMachine.Activate();
         }
     }
 
@@ -82,9 +75,7 @@ public partial class HierarchicalState : State
     {
         if (SubStateMachine != null)
         {
-            SubStateMachine.CurrentState.Exit();
-            SubStateMachine.SetPhysicsProcess(false);
-            SubStateMachine.SetProcess(false);
+            SubStateMachine.Deactivate();
         }
     }
 

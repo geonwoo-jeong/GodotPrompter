@@ -106,9 +106,9 @@ Slot-grid UI: a `GridContainer` of `Panel` slot widgets, each rendering one `Inv
 
 ## 5. Serialization
 
-Persist Inventory + Equipment as a Dictionary keyed by item resource path (since ItemData lives at `res://items/<name>.tres`). Reload by `load(path)` and reconstructing the slot list. Version field gates migration on load.
+Persist each slot as an `id + quantity` pair (or `null` for an empty slot). Resolve stable item IDs through `ItemRegistry` when loading; do not persist resource paths. Keep the save format version in the surrounding save document and apply migrations before restoring slots.
 
-> See [references/serialization.md](references/serialization.md) for the GDScript and C# save/load implementation with `version` field and ConfigFile / JSON variants.
+> See [references/serialization.md](references/serialization.md) for the GDScript and C# serialization helpers to call from a versioned JSON or ConfigFile save system.
 
 ---
 

@@ -9,32 +9,24 @@ Reference for `skills/inventory-system/SKILL.md` — save/load via Resource → 
 
 Save inventories as `item_id + quantity` pairs. Never serialize the full `ItemData` Resource — instead, look up items at load time from a preloaded registry. This keeps save files small and decoupled from resource paths.
 
+Register an **autoload scene** named `ItemRegistry`: attach this script to its root and assign every item asset to `item_definitions` / `ItemDefinitions` in the Inspector. These explicit Resource references are export dependencies; unlike filesystem extension scans, they survive resource remapping. Keep IDs unique and stable.
+
+Loading replaces the destination inventory: missing trailing entries become empty slots, while entries beyond its current capacity are ignored. Perform any capacity migration before calling this helper.
+
 ### GDScript
 
 ```gdscript
-# item_registry.gd — add as autoload named ItemRegistry
+# item_registry.gd — attach to the autoload scene named ItemRegistry
 extends Node
 
-# Populate by scanning a folder, or assign manually in _ready().
+@export var item_definitions: Array[ItemData] = []
 var _items: Dictionary = {}  # id → ItemData
 
 
 func _ready() -> void:
-    _load_all("res://items/")
-
-
-func _load_all(folder: String) -> void:
-    var dir := DirAccess.open(folder)
-    if dir == null:
-        return
-    dir.list_dir_begin()
-    var file_name := dir.get_next()
-    while file_name != "":
-        if file_name.ends_with(".tres"):
-            var item: ItemData = load(folder + file_name)
-            if item and item.id != "":
-                _items[item.id] = item
-        file_name = dir.get_next()
+    for item in item_definitions:
+        if item != null and not item.id.is_empty():
+            _items[item.id] = item
 
 
 func get_item(id: String) -> ItemData:
@@ -56,6 +48,8 @@ func serialize_inventory(inventory: Inventory) -> Array:
 # ── Deserialize ──────────────────────────────────────────────────────────────
 
 func deserialize_inventory(inventory: Inventory, data: Array) -> void:
+    for i in inventory.slots.size():
+        inventory.slots[i] = InventorySlot.new()
     for i in mini(data.size(), inventory.slots.size()):
         var entry = data[i]
         if entry == null:
@@ -86,34 +80,21 @@ ItemRegistry.deserialize_inventory(player.inventory, data["inventory"])
 ### C#
 
 ```csharp
-// ItemRegistry.cs — add as autoload named ItemRegistry
+// ItemRegistry.cs — attach to the autoload scene named ItemRegistry
 using System.Collections.Generic;
 using Godot;
-using Godot.Collections;
 
 public partial class ItemRegistry : Node
 {
     private readonly Dictionary<string, ItemData> _items = new();
 
-    public override void _Ready() => LoadAll("res://items/");
+    [Export] public Godot.Collections.Array<ItemData> ItemDefinitions { get; set; } = new();
 
-    private void LoadAll(string folder)
+    public override void _Ready()
     {
-        using var dir = DirAccess.Open(folder);
-        if (dir == null) return;
-
-        dir.ListDirBegin();
-        string fileName = dir.GetNext();
-        while (fileName != "")
-        {
-            if (fileName.EndsWith(".tres"))
-            {
-                var item = GD.Load<ItemData>(folder + fileName);
-                if (item != null && item.Id != "")
-                    _items[item.Id] = item;
-            }
-            fileName = dir.GetNext();
-        }
+        foreach (var item in ItemDefinitions)
+            if (item != null && !string.IsNullOrEmpty(item.Id))
+                _items[item.Id] = item;
     }
 
     public ItemData GetItem(string id)
@@ -142,6 +123,8 @@ public partial class ItemRegistry : Node
 
     public void DeserializeInventory(Inventory inventory, Godot.Collections.Array data)
     {
+        for (int i = 0; i < inventory.Slots.Count; i++)
+            inventory.Slots[i] = new InventorySlot();
         int count = Mathf.Min(data.Count, inventory.Slots.Count);
         for (int i = 0; i < count; i++)
         {

@@ -23,20 +23,20 @@ Pass `--headless` on the command line to suppress the display and audio drivers 
 ./my_game.x86_64 --headless
 ```
 
-This is distinct from the `server` platform — `--headless` is a runtime flag that works on any exported binary. The `server` export template strips rendering entirely from the binary, reducing its size.
+Since Godot 4.0, a specialized server binary is no longer required. An ordinary editor or export-template binary can run with `--headless`. Prefer an export template for deployment because it excludes editor functionality; dedicated-server export strips selected visual resource data from the PCK, not rendering/audio code from the executable.
 
 ### Server Export Preset
 
-In the Godot editor, create a dedicated **Linux/X11** (or **Linux Server**) export preset:
+In the Godot editor, create a separate export preset for your server platform (for example **Linux/BSD** in Godot 4.7):
 
 1. Open **Project → Export**.
-2. Add a **Linux/X11** preset and name it `Linux Server`.
-3. Under **Options → Binary**, enable **Export As Dedicated Server** (Godot 4.2+). This uses the server export template that omits rendering and audio code.
-4. Under **Resources**, use the **Exclude** list to strip client-only assets (shaders, high-res textures, audio files) from the server PCK.
+2. Add a preset for the deployment platform and name it `Linux Server`.
+3. In the **Resources** tab, select **Export as dedicated server**. This adds the `dedicated_server` feature and enables headless operation automatically.
+4. Use **Strip Visuals** for supported resources to preserve references with placeholders; **Keep** data needed by server logic. Use **Remove** only when server scenes do not reference that resource. Removing referenced audio/scenes can break loading.
 
 ### Feature Tags
 
-Use `OS.has_feature()` to branch between server and client code at runtime. Define a custom `server` feature in the export preset (Project Settings → Export → Custom Features) or rely on the built-in `dedicated_server` feature that the server template sets automatically:
+Use `OS.has_feature()` to branch between server and client code at runtime. Define a custom `server` feature in the export preset (Project → Export → Features) or rely on the `dedicated_server` feature that the dedicated-server export mode sets automatically:
 
 ```gdscript
 # boot.gd — autoload, runs before any scene loads
@@ -81,8 +81,8 @@ public partial class Boot : Node
 
 | Tag | Set by | Notes |
 |-----|--------|-------|
-| `dedicated_server` | Server export template | Most reliable way to detect a server binary |
-| `headless` | `--headless` CLI flag | Set at runtime, not baked into the binary |
+| `dedicated_server` | Dedicated-server export mode or explicit custom feature | Detects a server export; automatically enables headless mode |
+| Headless display driver | `--headless` or a dedicated-server export | Check `DisplayServer.get_name() == "headless"`; this is a driver name, not a promised OS feature tag |
 | Custom `server` | Your export preset's Custom Features | Useful when sharing a binary between roles |
 
 ---
@@ -250,8 +250,8 @@ public partial class World : Node
 
 ## 7. Checklist
 
-- [ ] Export preset uses the **server** export template (`dedicated_server` feature is set automatically)
-- [ ] Client-only assets (shaders, audio, high-res textures) are excluded from the server PCK
+- [ ] Export preset uses **Export as dedicated server** in Resources (`dedicated_server` feature is set automatically)
+- [ ] Visual resources use Strip Visuals where supported; removed client-only assets are not referenced by server scenes
 - [ ] Boot script checks `OS.has_feature("dedicated_server")` or `DisplayServer.get_name() == "headless"` to branch server vs client startup
 - [ ] `RenderingServer.set_render_loop_enabled(false)` called on the server to prevent any render work
 - [ ] Server-only nodes use `PROCESS_MODE_DISABLED` on clients; client-only nodes use `PROCESS_MODE_DISABLED` on the server
@@ -287,7 +287,7 @@ Drive lobby → countdown → in-game → results with a state machine. Server i
 
 ## 5. Server Configuration
 
-Parse CLI flags from `OS.get_cmdline_args()` for `--port`, `--max-players`, `--tick-rate`, `--log-level`. Pre-set `Engine.physics_ticks_per_second` *before* the first physics frame; reading and writing the others is straightforward `match` / `switch` work.
+Put custom flags after `--` and parse them from `OS.get_cmdline_user_args()` for `--port`, `--max-players`, `--tick-rate`, `--log-level`. Pre-set `Engine.physics_ticks_per_second` *before* the first physics frame; reading and writing the others is straightforward `match` / `switch` work.
 
 > See [references/server-config.md](references/server-config.md) for the GDScript and C# argument-parsing helper that reads all four flags safely at startup.
 
@@ -295,7 +295,7 @@ Parse CLI flags from `OS.get_cmdline_args()` for `--port`, `--max-players`, `--t
 
 ## 6. Deployment
 
-A Linux VPS with a `Dockerfile` and `systemd` service file is the standard production layout. The Dockerfile bundles the headless export template, the exported PCK, and the .NET runtime (for C# projects). systemd handles auto-restart, log rotation via `journald`, and resource limits.
+A Linux VPS with a `Dockerfile` and `systemd` service file is the standard production layout. The Dockerfile shown copies a standard exported binary and its PCK for a GDScript project. C# exports require the complete .NET export output and dependencies for the chosen deployment mode. systemd handles auto-restart, log rotation via `journald`, and resource limits.
 
 > See [references/deployment.md](references/deployment.md) for the Dockerfile, the Linux VPS setup steps, the systemd unit file, and log-rotation configuration.
 
@@ -311,3 +311,5 @@ A Linux VPS with a `Dockerfile` and `systemd` service file is the standard produ
 - [ ] Match-flow state machine has explicit transitions and a single source of truth (server)
 - [ ] Production deployment uses systemd or Docker for auto-restart and log rotation
 - [ ] Headless build is exported with **Export with Debug** off in production presets
+
+Godot 4 export behavior: [official dedicated-server export guide](https://docs.godotengine.org/en/4.7/tutorials/export/exporting_for_dedicated_servers.html).
