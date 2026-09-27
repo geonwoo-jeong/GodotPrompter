@@ -21,7 +21,7 @@ PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # Up wins: a session opened inside a project must resolve to that project and not to some
 # fixture nested under it, which would also churn the mentor state key.
 find_godot_project_up() {
-  local dir="$PWD" depth=0 parent
+  local dir="$CWD_FS" depth=0 parent
   while [ "$depth" -le 4 ]; do
     if [ -f "${dir}/project.godot" ]; then
       printf '%s' "$dir"
@@ -71,19 +71,21 @@ SESSION_ROOT="${CLAUDE_PROJECT_DIR:-${COPILOT_PROJECT_DIR:-$PWD}}"
 
 # Hosts hand back a native path ("D:\game"), which never string-equals bash's "/d/game" for the
 # same directory — so without normalizing, the fallback below always rescans the CWD it just
-# searched. Kept separate from SESSION_ROOT, which stays native for display.
-session_root_fs() {
+# searched. On POSIX, resolve aliases too: macOS /var and /private/var (or a symlinked
+# workspace) must compare as the same directory. SESSION_ROOT stays native for display.
+filesystem_path() {
   if command -v cygpath >/dev/null 2>&1; then
-    cygpath -u "$SESSION_ROOT" 2>/dev/null || printf '%s' "$SESSION_ROOT"
+    cygpath -u "$1" 2>/dev/null || printf '%s' "$1"
   else
-    printf '%s' "$SESSION_ROOT"
+    (cd -- "$1" >/dev/null 2>&1 && pwd -P) || printf '%s' "$1"
   fi
 }
 
-SESSION_ROOT_FS="$(session_root_fs)"
+CWD_FS="$(filesystem_path "$PWD")"
+SESSION_ROOT_FS="$(filesystem_path "$SESSION_ROOT")"
 
-PROJECT_ROOT="$(find_godot_project_up)" || PROJECT_ROOT="$(find_godot_project_down "$PWD")" || true
-if [ -z "${PROJECT_ROOT:-}" ] && [ "$SESSION_ROOT_FS" != "$PWD" ]; then
+PROJECT_ROOT="$(find_godot_project_up)" || PROJECT_ROOT="$(find_godot_project_down "$CWD_FS")" || true
+if [ -z "${PROJECT_ROOT:-}" ] && [ "$SESSION_ROOT_FS" != "$CWD_FS" ]; then
   PROJECT_ROOT="$(find_godot_project_down "$SESSION_ROOT_FS")" || true
 fi
 [ -n "${PROJECT_ROOT:-}" ] || exit 0
@@ -135,12 +137,13 @@ fi
 # The state key must be identical whether bash or the agent computes it. Under Git Bash the
 # same directory is "/c/Users/x/game" to bash but "C:\Users\x\game" to Node — hashing the raw
 # path would produce two different keys and mentor mode would silently never restore on
-# Windows. Canonical form: absolute, forward slashes, native drive letter (C:/Users/x/game).
+# Windows. Canonical form: absolute, forward slashes, native drive letter (C:/Users/x/game)
+# on Windows; a physical directory path on POSIX so aliases restore the same state file.
 canonical_path() {
   if command -v cygpath >/dev/null 2>&1; then
     cygpath -m "$1"
   else
-    printf '%s' "$1"
+    filesystem_path "$1"
   fi
 }
 

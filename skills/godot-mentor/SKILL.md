@@ -64,16 +64,19 @@ repository:
 ```
 
 **Canonical path form — get this exactly right or the hook will not find the file.** Absolute,
-**forward slashes**, native drive letter:
+**forward slashes**, with the native drive letter on Windows and symlinks resolved on macOS / Linux:
 
 | Platform | Canonical form |
 |---|---|
 | Windows | `C:/Users/you/game` — not `C:\Users\you\game`, and not `/c/Users/you/game` |
-| macOS / Linux | `/home/you/game` |
+| macOS / Linux | The physical directory path from `pwd -P`, e.g. `/home/you/game` |
 
 The same directory has two spellings on Windows: bash sees `/c/Users/you/game`, most tools see
 `C:\Users\you\game`. Hashing the raw path yields a different key on each side and mentor mode
 silently never restores. The hook normalizes with `cygpath -m`; match that form when you write.
+On macOS / Linux, resolve the project directory first with `(cd /path/to/game && pwd -P)`
+or Node's `fs.realpathSync(projectPath)`. This gives directory aliases such as macOS `/var`
+and `/private/var`, or a symlinked workspace, the same state key.
 
 Compute the key exactly like the hook does:
 
@@ -95,7 +98,7 @@ file lands where the hook looks before relying on it.
 ```
 
 > `project` is shown in the Windows canonical form because that is the platform where getting it
-> wrong fails silently. On macOS / Linux it is just the absolute path, e.g. `/home/you/game`.
+> wrong fails silently. On macOS / Linux use the physical absolute path, e.g. `/home/you/game`.
 
 | Key | Values | Meaning |
 |---|---|---|
