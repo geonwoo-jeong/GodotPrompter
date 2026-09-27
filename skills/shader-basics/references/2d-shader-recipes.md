@@ -1,4 +1,4 @@
-# 2D Shader Recipes
+# 2D Shader Recipes (2D)
 
 Reference for `skills/shader-basics/SKILL.md` — canvas_item shader recipes: dissolve, outline, flash-white, color-swap, scrolling UV, wave distortion.
 
@@ -145,3 +145,21 @@ void fragment() {
 
 ---
 
+
+## Toon lighting for lit sprites
+
+Use Light2D nodes and a normal map on the sprite's CanvasTexture. Unlike a 3D material, a flat sprite has no geometric silhouette curvature for a view-dependent Fresnel rim; use the alpha-outline recipe above for edge highlighting. [3D counterparts](3d-shader-recipes.md) include toon, Fresnel, and water geometry.
+
+```glsl
+shader_type canvas_item;
+
+uniform float shade_levels : hint_range(2.0, 8.0) = 3.0;
+
+void light() {
+    float amount = max(dot(NORMAL, LIGHT_DIRECTION), 0.0);
+    float stepped = floor(amount * shade_levels) / shade_levels;
+    LIGHT = vec4(COLOR.rgb * LIGHT_COLOR.rgb * LIGHT_ENERGY * stepped, LIGHT_COLOR.a);
+}
+```
+
+The shader language is shared by GDScript and C#. The existing scrolling-UV and wave-distortion recipes provide 2D water/cloud motion; they do not simulate a 3D displaced water surface.

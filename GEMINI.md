@@ -1,2 +1,2 @@
 @./skills/using-godot-prompter/SKILL.md
-@./skills/using-godot-prompter/references/antigravity-tools.md
+@./skills/using-godot-prompter/references/common-antigravity-tools.md

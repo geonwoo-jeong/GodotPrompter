@@ -3,7 +3,7 @@ name: particles-vfx
 description: Use when implementing particle effects — GPUParticles2D/3D, ParticleProcessMaterial, emission shapes, subemitters, trails, attractors, collision, and common VFX recipes
 ---
 
-# Particle Systems in Godot 4.3+
+# Particle Systems in Godot 4.3+ (Common)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -12,6 +12,15 @@ All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first,
 ---
 
 ## 1. Core Concepts
+
+| Topic | 2D | 3D |
+|---|---|---|
+| Fire / explosion / dust | [2D recipes](references/2d-vfx-recipes.md) | [3D recipes](references/3d-vfx-recipes.md) |
+| Flipbooks | [CanvasItemMaterial](references/2d-flipbook-animation.md) | [Billboard mesh material](references/3d-flipbook-animation.md) |
+| Trails | [2D trails](references/2d-trails.md) | [3D trails](references/3d-trails.md) |
+| Collision | [Occluder SDF](references/2d-collision.md) | [Collision nodes](references/3d-attractors-and-collision.md) |
+
+[Subemitters](references/common-subemitters.md) and [process-material properties](references/common-process-material-basics.md) are shared; their reference includes dimensional setup where it differs.
 
 ### GPU vs CPU Particles
 
@@ -22,17 +31,18 @@ All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first,
 | `CPUParticles2D`    | CPU        | Simpler, no trails/attractors           | Low-end devices, few particles |
 | `CPUParticles3D`    | CPU        | Simpler, no trails/attractors           | Low-end devices, few particles |
 
-**Rule of thumb:** Use GPU particles by default. Switch to CPU particles only for low-end/web targets or when you need CPU-side particle positions (e.g., spawning objects at particle locations).
+**Rule of thumb:** Use GPU particles by default. Switch to CPU particles only for low-end/web targets or when the target platform benefits from CPU simulation.
 
 > You can convert between GPU and CPU particles in the editor: select the node → toolbar → **Convert to CPUParticles2D/3D** (or vice versa).
 
 ### Particle System Architecture
 
 ```
+GPUParticles2D uses Texture; GPUParticles3D uses mesh draw passes.
 GPUParticles2D/3D
 ├── Process Material (ParticleProcessMaterial)   ← physics, emission, color
-├── Draw Pass 1 (Mesh)                            ← what each particle looks like
-└── (Optional) Draw Pass 2-4                      ← additional meshes
+├── (3D) Draw Pass 1 (Mesh)                            ← what each particle looks like
+└── (3D, Optional) Draw Pass 2-4                      ← additional meshes
 ```
 
 ### Minimal Setup
@@ -127,7 +137,7 @@ mat.RotationVelocity3DMax = new Vector3(2.0f, 0.0f, 0.0f);
 
 The material drives per-particle behavior: **emission shape** (Point / Sphere / Box / Ring / Points / Directed Points), **direction + spread + initial velocity**, **gravity**, **scale and color over lifetime** (via `scale_curve` / `color_ramp`), **damping**, **radial/tangential acceleration**, and **angular velocity**.
 
-> See [references/process-material-basics.md](references/process-material-basics.md) for the emission-shape table and GDScript + C# snippets for each property group.
+> See [references/common-process-material-basics.md](references/common-process-material-basics.md) for the emission-shape table and GDScript + C# snippets for each property group.
 
 ### Per-Axis 3D Scale & Rotation (Godot 4.7+)
 
@@ -167,27 +177,27 @@ mat.ParticleFlagInheritEmitterScale = true;
 
 ---
 
-## 4. Common VFX Recipes
+## 4. VFX Recipes (2D and 3D)
 
-The recipes most projects need: **fire** (2D, looped emission with hot-color gradient + scale-down), **explosion burst** (one-shot, high-amount short-lifetime), **dust / footstep puff** (one-shot, scale-up + rapid fade).
+Paired factories build continuous fire, one-shot explosions, and dust puffs with fading gradients. 2D uses pixel velocities and negative-Y upward motion; 3D uses world-unit velocities, positive-Y upward motion, and a draw mesh.
 
-> See [references/vfx-recipes.md](references/vfx-recipes.md) for ready-to-use GDScript wiring and recommended `ParticleProcessMaterial` settings for all three.
+> See [2D VFX recipes](references/2d-vfx-recipes.md) and [3D VFX recipes](references/3d-vfx-recipes.md) for the matching GDScript and C# factories.
 
 ---
 
 ## 5. Trails (Forward+ and Mobile only)
 
-Set `trail_enabled = true` on `GPUParticles2D/3D` and assign a `Mesh` (`RibbonTrailMesh` or `TubeTrailMesh`). Trails are NOT supported in the Compatibility renderer.
+Set `trail_enabled = true` on the GPU particle node. 2D configures trail sections directly; 3D uses a RibbonTrailMesh or TubeTrailMesh with a trail-enabled material. Trails are not supported in the Compatibility renderer.
 
-> See [references/trails.md](references/trails.md) for the setup and trail-mesh-type comparison.
+> See [references/3d-trails.md](references/3d-trails.md) for the setup and trail-mesh-type comparison.
 
 ---
 
 ## 6. Subemitters
 
-A particle can spawn another particle scene at lifecycle events (birth, collision, death, manual). Configure via `ParticleProcessMaterial.SubEmitterMode` + `subemitter` property on the parent particles node.
+A parent emitter can trigger particles in a second emitter at timed intervals, collision, or particle death. Configure the trigger through `ParticleProcessMaterial.sub_emitter_mode` and the target path through the parent node's `sub_emitter` property.
 
-> See [references/subemitters.md](references/subemitters.md) for trigger modes, scene setup, GDScript and C# (v1.6.0 parity), and limitations.
+> See [references/common-subemitters.md](references/common-subemitters.md) for trigger modes, scene setup, GDScript and C# (v1.6.0 parity), and limitations.
 
 > ⚠️ **Changed in Godot 4.7:** Subemitter velocity inheritance was reworked ([GH-118062](https://github.com/godotengine/godot/pull/118062)). With `sub_emitter_keep_velocity = true` (default `false`), subemitted particles inherit the parent particle's velocity when they spawn. Subemitter effects authored on earlier versions may look different after upgrading — re-check initial velocity and spread on affected systems.
 
@@ -195,23 +205,23 @@ A particle can spawn another particle scene at lifecycle events (birth, collisio
 
 ## 7. Attractors & Collision (3D)
 
-`GPUParticlesAttractor*3D` (Box / Sphere / Vector Field) pulls particles toward a region. `GPUParticlesCollision*3D` (Box / Sphere / SDF / HeightField) lets particles bounce off geometry. Both Forward+/Mobile only; no 2D equivalents.
+`GPUParticlesAttractor*3D` (Box / Sphere / Vector Field) pulls particles toward a region. `GPUParticlesCollision*3D` (Box / Sphere / SDF / HeightField) lets particles bounce off geometry. 3D uses dedicated attractor/collision nodes. 2D uses LightOccluder2D SDF collision; it has no dedicated attractor-node counterpart.
 
-> See [references/attractors-and-collision.md](references/attractors-and-collision.md) for full setup of each attractor and collision type.
+> See [references/3d-attractors-and-collision.md](references/3d-attractors-and-collision.md) for full setup of each attractor and collision type.
 
 ---
 
 ## 8. Turbulence
 
-Set `turbulence_enabled = true` on `ParticleProcessMaterial` and tune `turbulence_noise_strength` (0.5–2.0 typical), `turbulence_noise_scale` (lower = larger swirls), `turbulence_noise_speed` (animate the noise field). Cheap effect for "alive" smoke, fire, dust.
+Set `turbulence_enabled = true` on `ParticleProcessMaterial` and tune `turbulence_noise_strength` (0.5–2.0 typical), `turbulence_noise_scale` (higher = broader swirls), `turbulence_noise_speed` (animate the noise field). GPU-expensive effect for moving smoke, fire, and dust; profile before enabling broadly.
 
 ---
 
-## 9. Flipbook Animation (2D)
+## 9. Flipbook Animation (2D and 3D)
 
-Sprite-sheet animated particles via `ParticleProcessMaterial.AnimSpeedMin/Max` + `CanvasItemMaterial.ParticlesAnimHFrames/VFrames` for the sheet layout. Particles cycle through frames over their lifetime.
+Both dimensions use ParticleProcessMaterial animation speed/offset. 2D sets the sheet layout on CanvasItemMaterial; 3D uses StandardMaterial3D with particle billboarding. Particles cycle through frames over their lifetime.
 
-> See [references/flipbook-animation.md](references/flipbook-animation.md) for the full setup with GDScript + C# (v1.6.0 parity).
+> See [references/2d-flipbook-animation.md](references/2d-flipbook-animation.md) for the full setup with GDScript + C# (v1.6.0 parity).
 
 ---
 
@@ -221,7 +231,7 @@ The biggest wins are the obvious ones: keep `amount` at the minimum that reads w
 
 Most "broken particles" reports are one of eleven known causes — invisible (no texture / no draw-pass mesh), vanishing (`lifetime` too short), one-shot not re-firing (needs `restart()` first), wrong direction (2D Y is inverted), or a base `color` silently overriding `color_ramp`.
 
-Full performance table, the 4.7+ timeline-seek API, dynamic quality scaling (GDScript + C#), and the complete symptom/cause/fix table: [references/performance-and-pitfalls.md](references/performance-and-pitfalls.md)
+Full performance table, the 4.7+ timeline-seek API, dynamic quality scaling (GDScript + C#), and the complete symptom/cause/fix table: [references/common-performance-and-pitfalls.md](references/common-performance-and-pitfalls.md)
 
 ---
 
@@ -235,7 +245,7 @@ Full performance table, the 4.7+ timeline-seek API, dynamic quality scaling (GDS
 - [ ] `color_ramp` fades alpha to 0 at the end so particles don't vanish abruptly
 - [ ] `scale_curve` shrinks particles over lifetime for natural fade
 - [ ] `local_coords` is set correctly — `true` for attached effects, `false` for world-space
-- [ ] One-shot particles are cleaned up with `queue_free` after `lifetime` + margin
+- [ ] One-shot particles are cleaned up on `finished` when their emission cycle completes
 - [ ] `visibility_rect` (2D) is set to prevent particles from being culled prematurely
 - [ ] Dynamic quality scaling uses `amount_ratio` for player-accessible quality settings
 - [ ] Performance-heavy features (turbulence, trails) are disabled on low-end targets

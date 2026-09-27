@@ -3,7 +3,7 @@ name: godot-code-review
 description: Use when reviewing GDScript or C# Godot code — checklist of best practices, common anti-patterns, and Godot-specific pitfalls
 ---
 
-# Godot Code Review
+# Godot Code Review (Common)
 
 A structured review guide for Godot 4.3+ projects covering GDScript and C#. Work through each checklist section, then produce a review summary using the output template at the end.
 

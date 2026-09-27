@@ -3,11 +3,11 @@ name: animation-system
 description: Use when implementing animations — AnimationPlayer, AnimationTree, blend trees, state machines, sprite animation, and code-driven animation
 ---
 
-# Animation System in Godot 4.3+
+# Animation System in Godot 4.3+ (Common)
 
-All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
+Godot 4.3+ unless marked; GDScript precedes C#.
 
-> **Related skills:** **state-machine** for gameplay state management, **player-controller** for movement that drives animation, **component-system** for reusable animation components, **2d-essentials** for TileMaps, parallax scrolling, 2D lights, and canvas layer organization, **3d-essentials** for AnimationTree and 3D animation blending, **shader-basics** for shader-driven hit flash and dissolve effects, **tween-animation** for code-driven motion alongside keyframe animation.
+> **Related skills:** **state-machine** for gameplay state management, **player-controller** for movement that drives animation, **component-system** for reusable animation components, **2d-essentials** for TileMaps, parallax scrolling, 2D lights, and canvas layer organization, **3d-essentials** for mesh rendering, **shader-basics** for shader-driven hit flash and dissolve effects, **tween-animation** for code-driven motion alongside keyframe animation.
 
 ---
 
@@ -33,7 +33,7 @@ All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first,
 
 ---
 
-## 2. AnimationPlayer Basics
+## 2. AnimationPlayer Basics (2D example; common playback API)
 
 ### Scene Structure
 
@@ -159,25 +159,17 @@ private void OnAnimationFinished(StringName animName)
 
 ### Method Call Tracks
 
-Add a **Call Method** track to trigger game logic at exact animation frames (spawn projectile at frame 5, play SFX at impact frame, enable hitbox during swing). In the Animation panel: Add Track → Call Method Track → select target node → add keyframes → set method name and arguments.
-
-```gdscript
-func spawn_projectile() -> void:
-    var bullet := preload("res://scenes/bullet.tscn").instantiate()
-    get_parent().add_child(bullet)
-    bullet.global_position = $Muzzle.global_position
-
-func enable_hitbox() -> void:
-    $HitboxArea/CollisionShape2D.disabled = false
-```
+Use a Call Method track for frame-timed gameplay events such as enabling a hitbox, playing audio, or spawning a projectile. The called method belongs to the selected track target; use Node2D/Vector2 or Node3D/Vector3 in that method according to the actual scene. C# methods invoked by name must be public.
 
 ---
 
-## 4. Sprite Frame Animation
+## 4. Sprite Frame Animation (2D and 3D)
 
-Two approaches for 2D character animation: `AnimatedSprite2D` (quick, frames-only) and `AnimationPlayer + Sprite2D` (full property animation). Pick AnimatedSprite2D for simple characters; AnimationPlayer when you also animate hitboxes, particles, sounds, or other properties in sync.
+For 2D character animation, choose between `AnimatedSprite2D` (quick, frames-only) and `AnimationPlayer + Sprite2D` (full property animation). Pick AnimatedSprite2D for simple characters; AnimationPlayer when you also animate hitboxes, particles, sounds, or other properties in sync.
 
-> See [references/sprite-animation.md](references/sprite-animation.md) for the full GDScript and C# example (a CharacterBody2D walking with `AnimatedSprite2D` driven by `Input.get_vector` and `flip_h`).
+> See [references/2d-sprite-animation.md](references/2d-sprite-animation.md) for the full GDScript and C# example (a CharacterBody2D walking with `AnimatedSprite2D` driven by `Input.get_vector` and `flip_h`).
+
+Use [3D billboard sprite animation](references/3d-sprite-animation.md) for AnimatedSprite3D in a 3D world. For cutout rigs, see [2D skeletal animation](references/2d-skeleton-animation.md); mesh rigs use the 3D modifier references below.
 
 ### Ping-Pong Playback (Godot 4.7+)
 
@@ -213,7 +205,9 @@ Character (CharacterBody2D)
 
 The canonical pattern: cache `AnimationNodeStateMachinePlayback` from `anim_tree["parameters/playback"]`, call `travel("state")` from gameplay code (`travel()` transitions smoothly; `start()` switches immediately), and query the active state with `get_current_node()`.
 
-> See [references/state-machine-examples.md](references/state-machine-examples.md) for the full GDScript and C# CharacterBody2D example.
+> See [references/2d-state-machine-examples.md](references/2d-state-machine-examples.md) for the full GDScript and C# CharacterBody2D example.
+
+The [3D state-machine counterpart](references/3d-state-machine-examples.md) uses the same AnimationPlayer/AnimationTree APIs with CharacterBody3D movement on the XZ plane. To use direct playback instead, cache AnimationPlayer and call `play("walk")`/`play("idle")` at those same transitions.
 
 ### Blend Trees — BlendSpace1D / BlendSpace2D
 
@@ -259,7 +253,7 @@ int runIndex = blendSpace.FindBlendPointByName("run");
 
 Procedurally rotates a bone to look at a world-space target. Ideal for head tracking and eye contact without extra animation clips.
 
-> See [references/skeleton-modifiers.md](references/skeleton-modifiers.md) for the full GDScript and C# example with angle limits and influence blending.
+> See [references/3d-skeleton-modifiers.md](references/3d-skeleton-modifiers.md) for the full GDScript and C# example with angle limits and influence blending.
 
 > ⚠️ **Changed in Godot 4.7:** `LookAtModifier3D.relative` now defaults to `false` (was `true`) — the rotation is applied relative to the rest pose by default instead of the current pose. Set `relative = true` to restore the 4.6 behavior. See the [4.7 migration guide](https://docs.godotengine.org/en/latest/tutorials/migrating/upgrading_to_godot_4.7.html).
 
@@ -267,13 +261,13 @@ Procedurally rotates a bone to look at a world-space target. Ideal for head trac
 
 `AimModifier3D`, `CopyTransformModifier3D`, and `ConvertTransformModifier3D` operate **bone-relative** rather than world-space — use them when the aim/source target is itself a bone on the same skeleton (mirroring, secondary rig binding, bone-to-bone aiming).
 
-> See [references/bone-constraints.md](references/bone-constraints.md) for the full deep dive — modifier table, scene structure, GDScript and C# examples for AimModifier3D and CopyTransformModifier3D.
+> See [references/3d-bone-constraints.md](references/3d-bone-constraints.md) for the full deep dive — modifier table, scene structure, GDScript and C# examples for AimModifier3D and CopyTransformModifier3D.
 
 ### SpringBoneSimulator3D (Godot 4.4+)
 
 Simulates spring physics on bones — hair, capes, tails, antennas bounce and sway procedurally. Add as child of `Skeleton3D`, configure spring chains (root bone, end bone, stiffness, damping, gravity, drag) in the Inspector.
 
-> See [references/skeleton-modifiers.md](references/skeleton-modifiers.md) for property reference table and recommended starting values per use-case (hair, antennas, capes).
+> See [references/3d-skeleton-modifiers.md](references/3d-skeleton-modifiers.md) for property reference table and recommended starting values per use-case (hair, antennas, capes).
 
 ### Animation Markers (Godot 4.4+)
 
@@ -283,7 +277,7 @@ Markers define named points/regions within an animation clip — use them for su
 
 Godot 4.3 retargets animations from one skeleton to another during `.glb`/`.gltf` import via `SkeletonProfile` (e.g., `SkeletonProfileHumanoid`). Animations then target generic profile bone names, so any matching skeleton can play them.
 
-> See [references/retargeting.md](references/retargeting.md) for the full import-dock setup steps.
+> See [references/3d-retargeting.md](references/3d-retargeting.md) for the full import-dock setup steps.
 
 ---
 
@@ -293,17 +287,17 @@ Godot 4.6 adds `IKModifier3D`, a base class for skeletal IK solvers, with eight 
 
 Pick the cheapest solver that fits the chain: `TwoBoneIK3D` for exactly-two-bone limbs (the common humanoid case), `CCDIK3D` for short non-2-bone chains, `FABRIK3D` for longer or variable-length chains, and `JacobianIK3D` only when rig accuracy matters more than CPU cost.
 
-> See [references/ik-solver-comparison.md](references/ik-solver-comparison.md) for the full solver comparison table and selection guidance.
+> See [references/3d-ik-solver-comparison.md](references/3d-ik-solver-comparison.md) for the full solver comparison table and selection guidance.
 
-> See [references/ik-recipes.md](references/ik-recipes.md) for the full GDScript and C# recipes — two-bone arm reach with influence blending (CCDIK3D), foot placement on uneven terrain (FABRIK3D + raycast), and basic FABRIK arm IK setup.
+> See [references/3d-ik-recipes.md](references/3d-ik-recipes.md) for the full GDScript and C# recipes — two-bone arm reach with influence blending (CCDIK3D), foot placement on uneven terrain (FABRIK3D + raycast), and basic FABRIK arm IK setup.
 
 ---
 
 ## 8. Common Recipes
 
-Two gameplay-flavored animation recipes: a hit-flash modulate tween and a buffered attack combo using AnimationPlayer's Call Method track.
+Hit feedback has [2D sprite](references/2d-hit-flash.md) and [3D mesh](references/3d-hit-flash.md) implementations. The attack combo shares AnimationPlayer logic in both dimensions.
 
-> See [references/common-recipes.md](references/common-recipes.md) for the full GDScript and C# code (Hit Flash, Attack Combo with combo-window buffering).
+> See [references/common-recipes.md](references/common-recipes.md) for the shared GDScript and C# attack-combo controller.
 
 ---
 

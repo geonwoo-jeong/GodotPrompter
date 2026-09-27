@@ -3,7 +3,10 @@ name: resource-pattern
 description: Use when creating data containers in Godot — custom Resources for configuration, items, stats, and editor integration
 ---
 
-# Resource Pattern in Godot 4.3+
+# Resource Pattern in Godot 4.3+ (Common)
+
+> **Dimension:** Common. These data, signal and dialogue nodes can be children of either Node2D or Node3D. Spatial behavior belongs in the matching movement, physics or HUD reference.
+
 
 Resources are Godot's built-in data containers. Use them for configuration, item definitions, character stats, and any data that lives outside the scene tree. Examples target Godot 4.3+ unless a newer version is explicitly identified.
 
@@ -102,7 +105,7 @@ GD.Print(potion.Value);  // 50
 
 Use `class_name`, `@tool`, and `@icon` to make custom Resources first-class in the Inspector — they appear in the Resource picker, can be created via right-click "New Resource", show a custom icon. `@export_group` and `@export_subgroup` organize properties.
 
-> See [references/editor-integration.md](references/editor-integration.md) for the full GDScript + C# pattern with `class_name`, `@icon`, `@export_group`.
+> See [references/common-editor-integration.md](references/common-editor-integration.md) for the full GDScript + C# pattern with `class_name`, `@icon`, `@export_group`.
 
 ---
 
@@ -110,7 +113,7 @@ Use `class_name`, `@tool`, and `@icon` to make custom Resources first-class in t
 
 The strongest use case: data-driven game content. Loot tables, enemy stats, ability definitions, item catalogs all become custom Resources. Designers tweak `.tres` files in the Inspector; programmers wire the loader. Avoids JSON's loose schema and stringly-typed parsing.
 
-> See [references/configuration-pattern.md](references/configuration-pattern.md) for a worked LootTable + DropEntry example (GDScript + C#).
+> See [references/common-configuration-pattern.md](references/common-configuration-pattern.md) for a worked LootTable + DropEntry example (GDScript + C#).
 
 ---
 
@@ -118,7 +121,7 @@ The strongest use case: data-driven game content. Loot tables, enemy stats, abil
 
 `@export var entries: Array[Entry] = []` exposes a typed array in the Inspector — drag and drop multiple Resource files. For startup-loaded sets, use `ResourcePreloader`. Prefer explicit typed Resource references for exported assets. For directory discovery on Godot 4.4+, use `ResourceLoader.list_directory()` and include dynamically loaded assets in the export preset.
 
-> See [references/collections.md](references/collections.md) for typed-array exports (v1.6.0 C# parity preserved), `ResourcePreloader` setup, and the directory-walking loader pattern.
+> See [references/common-collections.md](references/common-collections.md) for typed-array exports (v1.6.0 C# parity preserved), `ResourcePreloader` setup, and the directory-walking loader pattern.
 
 ---
 
@@ -143,7 +146,7 @@ The strongest use case: data-driven game content. Loot tables, enemy stats, abil
 
 By default, Resources are shared by reference. Two scenes referencing `res://items/sword.tres` see the SAME instance — mutating one mutates both. Use `.duplicate()` (shallow) or `.duplicate(true)` (deep) for instance-local state.
 
-> See [references/sharing-vs-unique.md](references/sharing-vs-unique.md) for the full pattern (v1.6.0 C# parity preserved).
+> See [references/common-sharing-vs-unique.md](references/common-sharing-vs-unique.md) for the full pattern (v1.6.0 C# parity preserved).
 
 ---
 
@@ -151,7 +154,7 @@ By default, Resources are shared by reference. Two scenes referencing `res://ite
 
 `ResourceSaver.save(resource, path)` writes to a `.tres` (text) or `.res` (binary) file. Use for save games (where the schema lives in code as a Resource subclass) instead of hand-rolled JSON when you want strong typing.
 
-> See [references/saving-resources.md](references/saving-resources.md) for the full save/load pattern (GDScript + C#) and security caveat (never load `.tres` from untrusted sources — they execute embedded GDScript).
+> See [references/common-saving-resources.md](references/common-saving-resources.md) for the full save/load pattern (GDScript + C#) and security caveat (never load `.tres` from untrusted sources — they execute embedded GDScript).
 
 ---
 
@@ -163,7 +166,7 @@ By default, Resources are shared by reference. Two scenes referencing `res://ite
 # BAD — all enemies share the same EnemyStats object.
 # Damaging one enemy damages all of them.
 class_name Enemy
-extends CharacterBody2D
+extends Node
 
 @export var stats: EnemyStats  # loaded from .tres, shared
 
@@ -236,7 +239,7 @@ extends Resource
 // All enemies share the same EnemyStats object loaded from the .tres file.
 // Damaging one enemy damages all of them.
 [GlobalClass]
-public partial class Enemy : CharacterBody2D
+public partial class Enemy : Node
 {
     [Export] public EnemyStats Stats;  // loaded from .tres, shared by default
 
@@ -247,7 +250,7 @@ public partial class Enemy : CharacterBody2D
 }
 
 // ✅ Correct: duplicate before mutating so each instance owns its own copy.
-public partial class EnemyGood : CharacterBody2D
+public partial class EnemyGood : Node
 {
     [Export] public EnemyStats Stats;
 
@@ -280,7 +283,7 @@ public partial class EnemyStatsBad : Resource
 }
 
 // ✅ Correct: keep logic in Nodes, data in Resources.
-public partial class EnemyCorrect : CharacterBody2D
+public partial class EnemyCorrect : Node
 {
     [Export] public EnemyStats Stats;
     private float _currentHealth;

@@ -3,7 +3,10 @@ name: gdscript-patterns
 description: Use when writing GDScript — static typing, await/coroutines, lambdas, match patterns, export annotations, inner classes, and common idioms
 ---
 
-# GDScript Patterns in Godot 4.3+
+# GDScript Patterns in Godot 4.3+ (Common)
+
+> **Dimension:** Common language rules. Spatial abstract-class examples: [2D](references/2d-abstract-classes.md) · [3D](references/3d-abstract-classes.md).
+
 
 All examples target Godot 4.3+ with no deprecated APIs.
 
@@ -329,7 +332,7 @@ match enemy_type:
 
 `@export` exposes a variable to the Inspector. Hint variants (`@export_range`, `@export_enum`, `@export_file`) constrain editor input. Use `@export_group` and `@export_subgroup` to organize. Node and Resource exports use NodePath / typed Resource references.
 
-> See [references/export-annotations.md](references/export-annotations.md) for the full export annotation catalog (basic exports, range/hint variants, groups, node and Resource exports).
+> See [references/common-export-annotations.md](references/common-export-annotations.md) for the full export annotation catalog (basic exports, range/hint variants, groups, node and Resource exports).
 
 ---
 
@@ -380,7 +383,7 @@ func calculate_hit() -> HitResult:
 
 When you override a virtual method that the engine calls (`_ready`, `_process`, `_input`, etc.) and your parent class also implements it, call `super()` to chain the parent's behavior. Forgetting to call `super._ready()` is the most common cause of "my base class init didn't run" bugs.
 
-> See [references/super-in-virtual-methods.md](references/super-in-virtual-methods.md) for the full pattern (problem / fix), the C# `base.X()` equivalent, and a catalog of bugs from missing super calls.
+> See [references/common-super-in-virtual-methods.md](references/common-super-in-virtual-methods.md) for the full pattern (problem / fix), the C# `base.X()` equivalent, and a catalog of bugs from missing super calls.
 
 ---
 
@@ -388,7 +391,7 @@ When you override a virtual method that the engine calls (`_ready`, `_process`, 
 
 The recurring small patterns: ternary expressions (`value if cond else other`), printf-style string formatting (`"%s %d" % [a, b]`), null/empty checks (`is_instance_valid` vs `!= null`, empty Array/String checks), Dictionary access (`get(key, default)`), Array operations (`Array.has`, `Array.find`, `Array.has_all`), setget via `set` and `get` accessors.
 
-> See [references/common-idioms.md](references/common-idioms.md) for full code examples of each idiom.
+> See [references/common-common-idioms.md](references/common-common-idioms.md) for full code examples of each idiom.
 
 ---
 
@@ -435,21 +438,21 @@ The recurring small patterns: ternary expressions (`value if cond else other`), 
 
 ## 12. Variadic Functions (Godot 4.5+)
 
-Godot 4.5 added trailing-argument arrays via `...args`. The args are collected into an `Array`. Useful for printf-style helpers and flexible APIs without overloads.
+Godot 4.5+ collects trailing `...args` into an Array.
 
-> See [references/variadic-functions.md](references/variadic-functions.md) for the full syntax, common patterns, and notes on when to prefer overloads.
+> See [references/common-variadic-functions.md](references/common-variadic-functions.md) for syntax and patterns.
 
 ---
 
 ## 13. Abstract Classes and Methods (Godot 4.5+)
 
-The `@abstract` annotation prevents direct instantiation of a class and forces subclasses to implement any `@abstract`-annotated method (similar to C#'s `abstract` keyword).
+`@abstract` prevents direct instantiation and requires subclass implementations.
 
-> See [references/abstract-classes.md](references/abstract-classes.md) for full base-class patterns and subclass implementation rules.
+> See [references/2d-abstract-classes.md](references/2d-abstract-classes.md) for the 2D hierarchy; the 3D pair is linked above.
 
 ---
 
-## 11. Implementation Checklist
+## 14. Implementation Checklist
 
 - [ ] All variables, parameters, and return types have explicit type hints
 - [ ] Typed arrays (`Array[Type]`) are used instead of untyped `Array` where possible
@@ -464,3 +467,5 @@ The `@abstract` annotation prevents direct instantiation of a class and forces s
 - [ ] Overridden virtual methods call `super()` when extending non-built-in base classes
 - [ ] Variadic functions (`...args`) used when the number of trailing arguments is open-ended (Godot 4.5+)
 - [ ] Base classes that must not be instantiated use `@abstract`; required methods use `@abstract func` (Godot 4.5+)
+
+Spatial references: [2d-variadic-spawning](references/2d-variadic-spawning.md) · [3d-variadic-spawning](references/3d-variadic-spawning.md).

@@ -3,13 +3,15 @@ name: state-machine
 description: Use when implementing state machines in Godot — enum-based, node-based, and resource-based FSM patterns with trade-offs
 ---
 
-# State Machines in Godot 4.3+
+# State Machines in Godot 4.3+ (Common)
 
 Choose the right FSM pattern for your complexity level. All examples target Godot 4.3+ with no deprecated APIs.
 
 > **Related skills:** **player-controller** for movement state integration, **ai-navigation** for AI state patterns, **resource-pattern** for resource-based state configuration, **animation-system** for AnimationTree states driven by FSM, **dialogue-system** for dialogue flow as a state machine, **ability-system** for caster state gating (casting/stunned), **limboai** for the LimboAI addon's HSM (`BTState`) if you need a behavior tree alongside your FSM, **beehave** for a GDScript-only BT alternative.
 
 > **When to reach for an addon:** This skill covers the built-in FSM patterns (enum, node-based, resource-based). If your agent needs a full behavior tree, see **limboai** (C++ + HSM, Godot 4.6+) or **beehave** (pure GDScript, Godot 4.1+) instead.
+
+> **Dimension routing:** Shared lifecycle and resource states work in both dimensions. Use [2D character states](references/2d-character-states.md) or [3D character states](references/3d-character-states.md).
 
 ---
 
@@ -27,157 +29,7 @@ Choose the right FSM pattern for your complexity level. All examples target Godo
 
 Use when you have a small number of states and no significant enter/exit logic.
 
-### GDScript
-
-```gdscript
-extends CharacterBody2D
-
-enum State { IDLE, PATROL, CHASE, ATTACK }
-
-@export var patrol_range: float = 200.0
-@export var chase_range: float = 300.0
-@export var attack_range: float = 50.0
-@export var speed: float = 80.0
-
-var current_state: State = State.IDLE
-var patrol_target: Vector2 = Vector2.ZERO
-
-@onready var player: Node2D = get_tree().get_first_node_in_group("player")
-
-
-func _physics_process(delta: float) -> void:
-	match current_state:
-		State.IDLE:
-			_state_idle()
-		State.PATROL:
-			_state_patrol()
-		State.CHASE:
-			_state_chase()
-		State.ATTACK:
-			_state_attack()
-
-	move_and_slide()
-
-
-func _state_idle() -> void:
-	velocity = Vector2.ZERO
-	if _player_in_range(chase_range):
-		current_state = State.CHASE
-	elif randf() < 0.005:
-		patrol_target = global_position + Vector2(randf_range(-patrol_range, patrol_range), 0.0)
-		current_state = State.PATROL
-
-
-func _state_patrol() -> void:
-	var direction := (patrol_target - global_position)
-	if direction.length() < 4.0:
-		current_state = State.IDLE
-		return
-	velocity = direction.normalized() * speed
-	if _player_in_range(chase_range):
-		current_state = State.CHASE
-
-
-func _state_chase() -> void:
-	if not is_instance_valid(player):
-		current_state = State.IDLE
-		return
-	if _player_in_range(attack_range):
-		current_state = State.ATTACK
-		return
-	if not _player_in_range(chase_range):
-		current_state = State.PATROL
-		return
-	velocity = (player.global_position - global_position).normalized() * speed
-
-
-func _state_attack() -> void:
-	velocity = Vector2.ZERO
-	if not _player_in_range(attack_range):
-		current_state = State.CHASE
-
-
-func _player_in_range(range: float) -> bool:
-	if not is_instance_valid(player):
-		return false
-	return global_position.distance_to(player.global_position) <= range
-```
-
-### C# Equivalent
-
-```csharp
-using Godot;
-
-public partial class SimpleEnemy : CharacterBody2D
-{
-    private enum State { Idle, Patrol, Chase, Attack }
-
-    [Export] public float PatrolRange { get; set; } = 200f;
-    [Export] public float ChaseRange  { get; set; } = 300f;
-    [Export] public float AttackRange { get; set; } = 50f;
-    [Export] public float Speed       { get; set; } = 80f;
-
-    private State _currentState = State.Idle;
-    private Vector2 _patrolTarget = Vector2.Zero;
-    private Node2D _player;
-
-    public override void _Ready()
-    {
-        _player = GetTree().GetFirstNodeInGroup("player") as Node2D;
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        switch (_currentState)
-        {
-            case State.Idle:   StateIdle();   break;
-            case State.Patrol: StatePatrol(); break;
-            case State.Chase:  StateChase();  break;
-            case State.Attack: StateAttack(); break;
-        }
-        MoveAndSlide();
-    }
-
-    private void StateIdle()
-    {
-        Velocity = Vector2.Zero;
-        if (PlayerInRange(ChaseRange))
-        {
-            _currentState = State.Chase;
-        }
-        else if (GD.Randf() < 0.005f)
-        {
-            _patrolTarget = GlobalPosition + new Vector2(GD.RandRange(-PatrolRange, PatrolRange), 0f);
-            _currentState = State.Patrol;
-        }
-    }
-
-    private void StatePatrol()
-    {
-        var direction = _patrolTarget - GlobalPosition;
-        if (direction.Length() < 4f) { _currentState = State.Idle; return; }
-        Velocity = direction.Normalized() * Speed;
-        if (PlayerInRange(ChaseRange)) _currentState = State.Chase;
-    }
-
-    private void StateChase()
-    {
-        if (!IsInstanceValid(_player)) { _currentState = State.Idle; return; }
-        if (PlayerInRange(AttackRange)) { _currentState = State.Attack; return; }
-        if (!PlayerInRange(ChaseRange)) { _currentState = State.Patrol; return; }
-        Velocity = (_player.GlobalPosition - GlobalPosition).Normalized() * Speed;
-    }
-
-    private void StateAttack()
-    {
-        Velocity = Vector2.Zero;
-        if (!PlayerInRange(AttackRange)) _currentState = State.Chase;
-    }
-
-    private bool PlayerInRange(float range) =>
-        IsInstanceValid(_player) && GlobalPosition.DistanceTo(_player.GlobalPosition) <= range;
-}
-```
+See [2D enum enemy](references/2d-enum-enemy.md) and [3D enum enemy](references/3d-enum-enemy.md). Transition decisions are shared; the body adapters determine distances and gravity.
 
 > **When to upgrade away from enum-based:**
 > - Enter/exit logic starts duplicating across state methods
@@ -193,7 +45,7 @@ Each state is its own node. The `StateMachine` node delegates input and process 
 ### Scene Tree
 
 ```
-Player (CharacterBody2D)
+Player (CharacterBody2D or CharacterBody3D)
 └── StateMachine (Node)
     ├── Idle  (State)
     ├── Run   (State)
@@ -210,7 +62,7 @@ class_name State
 extends Node
 
 ## Populated by StateMachine._ready()
-var entity: CharacterBody2D
+var entity: Node
 var state_machine: StateMachine
 
 
@@ -247,7 +99,7 @@ using Godot;
 public partial class State : Node
 {
     /// Populated by StateMachine._Ready()
-    public CharacterBody2D Entity { get; set; }
+    public Node Entity { get; set; }
     public StateMachine StateMachine { get; set; }
 
     public virtual void Enter() { }
@@ -262,36 +114,11 @@ public partial class State : Node
 
 The machine registers its child states, assigns their character and machine references, and owns their enter/exit lifecycle. Top-level machines activate automatically; a machine directly under a `State` waits for that state to activate it. Activation always starts at the exported initial state. Deactivation exits once and disables update, physics, and input together.
 
-See [references/node-based-machine.md](references/node-based-machine.md) for the complete GDScript and C# `StateMachine` implementation, including `activate()` / `Activate()` and `deactivate()` / `Deactivate()`. Use that same implementation for the hierarchical and parallel examples below.
+See [references/common-node-based-machine.md](references/common-node-based-machine.md) for the complete GDScript and C# `StateMachine` implementation, including `activate()` / `Activate()` and `deactivate()` / `Deactivate()`. Use that same implementation for the hierarchical and parallel examples below.
 
-### Concrete Example: IdleState
+### Concrete States and Body Adapters
 
-**GDScript (`idle_state.gd`)**
-
-```gdscript
-class_name IdleState
-extends State
-
-
-func enter() -> void:
-	entity.get_node("AnimationPlayer").play("idle")
-
-
-func physics_update(delta: float) -> String:
-	if not entity.is_on_floor():
-		return "Jump"
-	if Input.get_axis("move_left", "move_right") != 0.0:
-		return "Run"
-	return ""
-
-
-func handle_input(event: InputEvent) -> String:
-	if event.is_action_pressed("jump") and entity.is_on_floor():
-		return "Jump"
-	if event.is_action_pressed("attack"):
-		return "Attack"
-	return ""
-```
+The shared `State`/`StateMachine` lifecycle only needs `Node`. Use [typed 2D states](references/2d-character-states.md) or [typed 3D states](references/3d-character-states.md) for `is_on_floor()`, velocity and movement. Do not assume a Node is a CharacterBody or convert a 2D velocity to 3D by changing its type name.
 
 ---
 
@@ -334,7 +161,7 @@ Attach an `Array[StateData]` export on your AI controller class (`[Export] publi
 
 When a flat FSM grows beyond ~8 states or spans multiple concerns (movement + combat + animation), split into **hierarchical** machines (states own sub-state machines, e.g. `OnGround` containing `Idle/Walk/Run`) or **parallel** machines (independent FSMs for movement, combat, animation running side-by-side). Both keep state counts additive instead of multiplicative.
 
-See [references/hierarchical-and-parallel.md](references/hierarchical-and-parallel.md) for full scene trees, `HierarchicalState` base class, parallel-machine character example, and a "which to choose" comparison table — GDScript and C# for each.
+See [references/common-hierarchical-and-parallel.md](references/common-hierarchical-and-parallel.md) for full scene trees, `HierarchicalState` base class, parallel-machine character example, and a "which to choose" comparison table — GDScript and C# for each.
 
 ---
 

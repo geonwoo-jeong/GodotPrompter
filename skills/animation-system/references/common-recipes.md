@@ -1,4 +1,4 @@
-# Common Animation Recipes
+# Common Animation Recipes (Common)
 
 Reference for `skills/animation-system/SKILL.md` — gameplay-flavored animation recipes.
 
@@ -6,39 +6,22 @@ Reference for `skills/animation-system/SKILL.md` — gameplay-flavored animation
 
 ---
 
-## Hit Flash (Modulate Tween)
-
-```gdscript
-@onready var _sprite: Sprite2D = $Sprite2D
-
-func flash_hit() -> void:
-    var tween := create_tween()
-    tween.tween_property(_sprite, "modulate", Color(3.0, 3.0, 3.0, 1.0), 0.05)
-    tween.tween_property(_sprite, "modulate", Color.WHITE, 0.1)
-```
-
-```csharp
-public void FlashHit()
-{
-    var tween = CreateTween();
-    tween.TweenProperty(_sprite, "modulate", new Color(3f, 3f, 3f, 1f), 0.05);
-    tween.TweenProperty(_sprite, "modulate", Colors.White, 0.1);
-}
-```
-
-For a true white-out flash that overrides the sprite texture, use a `canvas_item` shader with a `flash_amount` uniform — see **shader-basics**.
+The controller only needs an AnimationPlayer child. It works on an independent Node beneath either a 2D or 3D character. Dimension-specific hit feedback: [2D sprite](2d-hit-flash.md), [3D mesh](3d-hit-flash.md).
 
 ## Attack Combo
 
 Chain attacks within a buffer window. The Call Method track on each attack animation calls `open_combo_window()` near the end of the swing.
 
 ```gdscript
-extends CharacterBody2D
+extends Node
 
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 
 var _combo_step: int = 0
 var _combo_window: bool = false
+
+func _ready() -> void:
+    anim_player.animation_finished.connect(_on_animation_finished)
 
 func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_pressed("attack"):
@@ -67,7 +50,7 @@ func _on_animation_finished(anim_name: StringName) -> void:
 ```
 
 ```csharp
-public partial class Player : CharacterBody2D
+public partial class ComboAnimation : Node
 {
     private AnimationPlayer _animPlayer;
     private int _comboStep;

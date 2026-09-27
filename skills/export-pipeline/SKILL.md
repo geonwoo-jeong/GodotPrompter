@@ -3,7 +3,7 @@ name: export-pipeline
 description: Use when exporting and distributing Godot games — export presets, platform settings, CI/CD with GitHub Actions
 ---
 
-# Export Pipeline in Godot 4.3+
+# Export Pipeline in Godot 4.3+ (Common)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, C# follows where applicable.
 
@@ -168,7 +168,7 @@ packer.Flush();
 
 Run `godot --headless --export-release` inside a GitHub Actions matrix that builds Windows, Linux, and Web artifacts on every push and tagged release. Use [`chickensoft-games/setup-godot@v2`](https://github.com/chickensoft-games/setup-godot) to install the engine + export templates (set `use-dotnet: true` for C# projects). Inject the version from `git describe` before export so `application/config/version` is correct in the binary.
 
-See [references/ci-cd-github-actions.md](references/ci-cd-github-actions.md) for the full `.github/workflows/export.yml` with matrix presets, artifact upload, and Linux executable bit handling.
+See [references/common-ci-cd-github-actions.md](references/common-ci-cd-github-actions.md) for the full `.github/workflows/export.yml` with matrix presets, artifact upload, and Linux executable bit handling.
 
 ---
 
@@ -243,7 +243,7 @@ Use [Semantic Versioning](https://semver.org/) tags: `v1.2.3`. `git describe` th
 
 **Steam** requires three pieces: the Steamworks SDK (non-redistributable, keep out of public repos), the [GodotSteam](https://godotsteam.com/) addon for engine bindings, and depot configurations driven by `steamcmd +run_app_build app_build.vdf`. Steam integration is outside the export pipeline itself.
 
-See [references/distribution-itch-steam.md](references/distribution-itch-steam.md) for full butler install instructions, channel naming table, the `deploy-itch` GitHub Actions job, and the Steam component breakdown.
+See [references/common-distribution-itch-steam.md](references/common-distribution-itch-steam.md) for full butler install instructions, channel naming table, the `deploy-itch` GitHub Actions job, and the Steam component breakdown.
 
 ---
 

@@ -3,7 +3,10 @@ name: scene-organization
 description: Use when designing scene tree structure — composition vs inheritance, when to split scenes, node hierarchy patterns
 ---
 
-# Scene Organization
+# Scene Organization (Common)
+
+> **Dimension:** Common composition rules. [2D scene trees](references/2d-scene-trees.md) · [3D scene trees](references/3d-scene-trees.md).
+
 
 A guide for structuring Godot 4.3+ scene trees: when to split, when to compose, and how nodes should communicate.
 
@@ -281,17 +284,15 @@ Enemy (CharacterBody2D)
 ├── Visuals
 │   ├── Sprite2D
 │   └── AnimationPlayer
-├── Collision
-│   └── CollisionShape2D
+├── CollisionShape2D
 ├── Components
 │   ├── HealthComponent
 │   └── HitboxComponent
-└── AI
-    ├── NavigationAgent2D
-    └── StateMachine
+├── NavigationAgent2D
+└── StateMachine
 ```
 
-Group by concern using plain `Node` containers (`Visuals`, `Collision`, `Components`, `AI`). Each sub-group can be collapsed in the editor and worked on independently.
+Group logic by concern, but keep CollisionShape2D/3D directly under its CollisionObject2D/3D. A NavigationAgent should also directly belong to its moving parent. Use Node2D/Node3D for visual transform groups; plain Node groups do not propagate a spatial transform.
 
 ### UI Scene Pattern
 

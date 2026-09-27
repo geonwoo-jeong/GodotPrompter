@@ -3,7 +3,7 @@ name: 2d-essentials
 description: Use when working with 2D-specific systems — TileMaps, parallax scrolling, 2D lights and shadows, canvas layers, particles 2D, custom drawing, and 2D meshes in Godot 4.3+
 ---
 
-# 2D Essentials in Godot 4.3+
+# 2D Essentials in Godot 4.3+ (2D)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -12,6 +12,8 @@ All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first,
 ---
 
 ## 1. Canvas Layers and Draw Order
+
+For transferable features, see the 3D counterparts: [GridMap](../3d-essentials/references/3d-gridmap.md), [custom geometry](../3d-essentials/references/3d-custom-geometry.md), [lighting/materials](../3d-essentials/references/3d-materials-and-lighting-recipes.md), and [particles](../particles-vfx/references/3d-vfx-recipes.md). [2D surface stamps](references/2d-surface-stamps.md) cover the gameplay purpose of 3D decals. Canvas draw order, TileSet terrain painting, and pixel snapping remain 2D-specific.
 
 ### Draw Order Rules
 
@@ -86,7 +88,7 @@ Vector2 screenPos = GetViewport().GetScreenTransform() * GetGlobalTransformWithC
 
 `TileMapLayer` (Godot 4.5+) is the modern API — one tilemap = one node = one layer. Drive painting with a `TileSet` resource (atlas + properties + physics + custom data). Use **terrain autotiling** for biome-aware tile selection, **scene collection tiles** for placing scene instances on tiles.
 
-> See [references/tilemap.md](references/tilemap.md) for full TileSet setup, atlas / physics / terrain configuration, custom data on tiles, scene collection tiles, and the 4.5+ tile-collision-bump auto-merge fix.
+> See [references/2d-tilemap.md](references/2d-tilemap.md) for full TileSet setup, atlas / physics / terrain configuration, custom data on tiles, scene collection tiles, and the 4.5+ tile-collision-bump auto-merge fix.
 
 ---
 
@@ -94,7 +96,7 @@ Vector2 screenPos = GetViewport().GetScreenTransform() * GetGlobalTransformWithC
 
 `Parallax2D` (Godot 4.4+) replaces the older `ParallaxBackground`/`ParallaxLayer` pair. Set `scroll_scale` per layer (0 = static, 1 = follows camera 1:1, fractional values for depth). Add `repeat_size` for infinite tiling.
 
-> See [references/parallax.md](references/parallax.md) for `Parallax2D` setup, side-scroller layer example, infinite repeat, split-screen parallax, common mistakes.
+> See [references/2d-parallax.md](references/2d-parallax.md) for `Parallax2D` setup, side-scroller layer example, infinite repeat, split-screen parallax, common mistakes.
 
 ---
 
@@ -102,13 +104,13 @@ Vector2 screenPos = GetViewport().GetScreenTransform() * GetGlobalTransformWithC
 
 `PointLight2D` and `DirectionalLight2D` cast lighting onto sprites — pair with a normal map for 3D-style shading or use additive-blend illumination on flat sprites. Cast shadows with `LightOccluder2D`.
 
-> See [references/lights-and-shadows.md](references/lights-and-shadows.md) for node overview, PointLight2D properties, shadow settings, cull masks, occluders, 2D normal maps, pixel-art lighting tips, and additive-sprite fake-light tricks.
+> See [references/2d-lights-and-shadows.md](references/2d-lights-and-shadows.md) for node overview, PointLight2D properties, shadow settings, cull masks, occluders, 2D normal maps, pixel-art lighting tips, and additive-sprite fake-light tricks.
 
 ---
 
 ## 5. 2D Particle Systems
 
-`GPUParticles2D` for high counts (≥ 50 particles, GPU-driven), `CPUParticles2D` for low counts or platforms without GPU support. Both share the same `ParticleProcessMaterial` interface; differences are mainly performance.
+`GPUParticles2D` for high counts (≥ 50 particles, GPU-driven), `CPUParticles2D` for low counts or platforms without GPU support. GPU particles use ParticleProcessMaterial; CPU particles expose their simulation settings directly on the node.
 
 > See [references/2d-particles.md](references/2d-particles.md) for the GPU-vs-CPU distinguishing choices, basic setup, ParticleProcessMaterial 2D properties, emission from textures, flipbook, visibility rect, common 2D recipes.
 
@@ -118,7 +120,7 @@ Vector2 screenPos = GetViewport().GetScreenTransform() * GetGlobalTransformWithC
 
 Override `_draw()` on any `CanvasItem` to draw lines, polygons, text, or arbitrary shapes. Call `queue_redraw()` to trigger a re-render (never call `_draw()` directly).
 
-> See [references/custom-drawing.md](references/custom-drawing.md) for the `_draw()` method, redrawing patterns, full drawing-methods reference, default font usage, `@tool` editor preview, line-width gotchas.
+> See [references/2d-custom-drawing.md](references/2d-custom-drawing.md) for the `_draw()` method, redrawing patterns, full drawing-methods reference, default font usage, `@tool` editor preview, line-width gotchas.
 
 > **Godot 4.7+:** `DrawableTexture2D` — a runtime-drawable texture type — shipped experimental in 4.7 and is not yet recommended for production.
 

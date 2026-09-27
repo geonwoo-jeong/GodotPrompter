@@ -3,7 +3,7 @@ name: multithreading
 description: Use when running work off the main thread — WorkerThreadPool, Thread/Mutex/Semaphore, call_deferred, thread-safe scene access, and threaded resource loading
 ---
 
-# Multithreading
+# Multithreading (Common)
 
 Run expensive work off the main thread without corrupting the scene tree. Prefer `WorkerThreadPool` for short parallel jobs; reach for `Thread`/`Mutex`/`Semaphore` only when you need a long-lived worker.
 
@@ -269,7 +269,7 @@ public override void _Process(double delta)
 private void OnComputed(int result) => GD.Print($"Done: {result}");
 ```
 
-> **Deeper:** see [Pitfalls & deadlocks](references/pitfalls.md) for data races, the `ERR_BUSY` nested-wait deadlock, and when threading hurts.
+> **Deeper:** see [Pitfalls & deadlocks](references/common-pitfalls.md) for data races, the `ERR_BUSY` nested-wait deadlock, and when threading hurts.
 
 ---
 

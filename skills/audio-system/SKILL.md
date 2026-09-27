@@ -3,7 +3,9 @@ name: audio-system
 description: Use when implementing audio — audio buses, AudioStreamPlayer, spatial audio, music management, SFX pooling, and dynamic mixing
 ---
 
-# Audio System in Godot 4.3+
+# Audio System in Godot 4.3+ (Common)
+
+> **Scope:** Common architecture for 2D and 3D games; choose the dimension-specific reference when world coordinates or spatial nodes are involved.
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -40,22 +42,24 @@ Every AudioStreamPlayer has a `bus` property — set it to the target bus name (
 
 ---
 
-## 2. Basic Audio Playback
+## 2. Basic Non-positional Playback
+
+This shared example uses non-positional audio. For sounds attached to a character in the world, select the [2D](references/2d-spatial-audio.md) or [3D](references/3d-spatial-audio.md) adapter.
 
 ### GDScript
 
 ```gdscript
-extends Node2D
+extends Node
 
-@onready var sfx_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var sfx_player: AudioStreamPlayer = $SFXPlayer
 @onready var music_player: AudioStreamPlayer = $MusicPlayer
 
 func _ready() -> void:
     # Play background music (looping is set on the AudioStream resource)
     music_player.play()
 
-func play_jump_sound() -> void:
-    sfx_player.stream = preload("res://audio/sfx/jump.wav")
+func play_confirm_sound() -> void:
+    sfx_player.stream = preload("res://audio/sfx/confirm.wav")
     sfx_player.play()
 ```
 
@@ -64,21 +68,21 @@ func play_jump_sound() -> void:
 ```csharp
 using Godot;
 
-public partial class AudioExample : Node2D
+public partial class AudioExample : Node
 {
-    private AudioStreamPlayer2D _sfxPlayer;
+    private AudioStreamPlayer _sfxPlayer;
     private AudioStreamPlayer _musicPlayer;
 
     public override void _Ready()
     {
-        _sfxPlayer = GetNode<AudioStreamPlayer2D>("AudioStreamPlayer2D");
+        _sfxPlayer = GetNode<AudioStreamPlayer>("SFXPlayer");
         _musicPlayer = GetNode<AudioStreamPlayer>("MusicPlayer");
         _musicPlayer.Play();
     }
 
-    public void PlayJumpSound()
+    public void PlayConfirmSound()
     {
-        _sfxPlayer.Stream = GD.Load<AudioStream>("res://audio/sfx/jump.wav");
+        _sfxPlayer.Stream = GD.Load<AudioStream>("res://audio/sfx/confirm.wav");
         _sfxPlayer.Play();
     }
 }
@@ -184,89 +188,16 @@ func set_underwater(enabled: bool) -> void:
 
 ---
 
-## 4. Spatial Audio (2D & 3D)
+## 4. Spatial Audio
 
-### AudioStreamPlayer2D
+| World | Emitter | Position and falloff | Reference |
+|---|---|---|---|
+| 2D | `AudioStreamPlayer2D` | Canvas pixels; `max_distance`, `attenuation` | [2D spatial audio and listener](references/2d-spatial-audio.md) |
+| 3D | `AudioStreamPlayer3D` | World units; attenuation model, `unit_size`, `max_distance` | [3D spatial audio and listener](references/3d-spatial-audio.md) |
 
-Automatically adjusts volume and panning based on distance to the nearest `AudioListener2D` (or the Camera2D if no listener exists).
+Each reference includes an actor-owned player and explicit listener in GDScript and C#. Attach emitters to moving actors; use the positional pools below for detached one-shot effects. Non-positional music, UI sounds, bus routing, and volume settings stay common.
 
-```
-Enemy (CharacterBody2D)
-├── Sprite2D
-└── AudioStreamPlayer2D   ← positioned at enemy's location
-    bus = "SFX"
-    max_distance = 1000.0
-    attenuation = 1.0
-```
-
-Key properties:
-
-| Property        | Description                                   | Default  |
-|-----------------|-----------------------------------------------|----------|
-| `max_distance`  | Beyond this distance, sound is silent          | 2000.0   |
-| `attenuation`   | Volume falloff curve (1.0 = linear, higher = sharper) | 1.0 |
-| `max_polyphony` | Max simultaneous instances of this player      | 1        |
-| `panning_strength` | How much the sound pans left/right          | 1.0      |
-
-### AudioStreamPlayer3D
-
-Same concept but in 3D. Works with `AudioListener3D` (or the Camera3D).
-
-Key additional properties:
-
-| Property            | Description                                 |
-|---------------------|---------------------------------------------|
-| `unit_size`         | Distance at which volume is 0 dB            |
-| `max_db`            | Maximum volume cap                          |
-| `attenuation_model` | Inverse, InverseSquare, Logarithmic, Disabled |
-| `doppler_tracking`  | Enable Doppler effect for moving sources    |
-
-### AudioListener
-
-```gdscript
-# Make a specific camera the audio listener
-# 2D: add AudioListener2D as child of Camera2D, call make_current()
-# 3D: add AudioListener3D as child of Camera3D, call make_current()
-
-# By default, the current Camera2D/3D acts as the listener.
-# Only add an explicit AudioListener if you need a different listening position.
-```
-
-```csharp
-// 2D spatial player
-public partial class Footsteps : AudioStreamPlayer2D
-{
-    public override void _Ready()
-    {
-        Bus = "SFX";
-        MaxDistance = 1000.0f;     // Pixels at which volume reaches zero
-        Attenuation = 1.0f;         // Linear falloff (higher = sharper)
-        MaxPolyphony = 4;           // Allow overlapping footstep sounds
-    }
-
-    public void PlayStep() => Play();
-}
-
-// 3D spatial player
-public partial class EngineHum : AudioStreamPlayer3D
-{
-    public override void _Ready()
-    {
-        Bus = "SFX";
-        UnitSize = 4.0f;            // Meters at which volume is 0 dB
-        MaxDistance = 50.0f;
-        AttenuationModel = AttenuationModelEnum.InverseDistance;
-    }
-}
-
-// Custom listener — overrides the default Camera2D / Camera3D listener.
-public partial class FollowCamListener : AudioListener3D
-{
-    public override void _Ready() => MakeCurrent();
-}
-```
-
-> ⚠️ **Changed in Godot 4.7:** The default `area_mask` on `AudioStreamPlayer2D`/`AudioStreamPlayer3D` changed from `1` to `0` (disabled) — the `audio_bus_override` feature on `Area2D`/`Area3D` (e.g. an underwater bus) stops working for players left at the default. Set `area_mask` back to layer 1 to restore it; masks explicitly set to anything other than layer 1 keep working. (The migration guide says "AudioStreamPlayer", but `area_mask` only exists on the 2D/3D variants.) See the [4.7 migration guide](https://docs.godotengine.org/en/latest/tutorials/migrating/upgrading_to_godot_4.7.html).
+> **Godot 4.7:** The default `area_mask` on the positional players changes from `1` to `0`. Set the needed bits explicitly when using `Area2D` / `Area3D` audio bus overrides. See the [migration guide](https://docs.godotengine.org/en/latest/tutorials/migrating/upgrading_to_godot_4.7.html).
 
 ---
 
@@ -274,15 +205,15 @@ public partial class FollowCamListener : AudioListener3D
 
 Crossfade between background tracks via a singleton autoload that manages two `AudioStreamPlayer` nodes and tweens their volume_db. Wire a `Music` audio bus so the settings menu can adjust music separately.
 
-> See [references/music-manager.md](references/music-manager.md) for the full GDScript and C# autoload (crossfade, push/pop stack, current-track query).
+> See [references/common-music-manager.md](references/common-music-manager.md) for the full GDScript and C# autoload (crossfade, push/pop stack, current-track query).
 
 ---
 
 ## 6. SFX Pool
 
-Pre-instantiate a fixed pool of `AudioStreamPlayer` nodes; `play_sfx(stream)` finds the next free player and plays. Avoids per-shot instancing churn for high-volume effects (gunshots, footsteps, hits).
+Pre-instantiate a fixed number of player nodes and cycle through them. The examples use round-robin reuse: when the pool is full, the next call interrupts the oldest slot. This policy is the same for non-positional, 2D, and 3D playback.
 
-> See [references/sfx-pooling.md](references/sfx-pooling.md) for the GDScript + C# pooled player and a 2D positional variant (pool of `AudioStreamPlayer2D` nodes that follow a target).
+> Choose [common non-positional pooling](references/common-sfx-pooling.md), [2D positional pooling](references/2d-sfx-pooling.md), or [3D positional pooling](references/3d-sfx-pooling.md). Each includes GDScript and C#.
 
 ---
 
@@ -290,7 +221,7 @@ Pre-instantiate a fixed pool of `AudioStreamPlayer` nodes; `play_sfx(stream)` fi
 
 Wire HSliders in the settings menu to bus volumes via `AudioServer.set_bus_volume_db(bus_idx, linear_to_db(value))`. Persist with `ConfigFile`. Use the `linear_to_db` / `db_to_linear` helpers — never log-base by hand.
 
-> See [references/audio-settings.md](references/audio-settings.md) for the full settings menu wiring with persistence (GDScript + C#).
+> See [references/common-audio-settings.md](references/common-audio-settings.md) for the full settings menu wiring with persistence (GDScript + C#).
 
 ---
 
@@ -300,7 +231,7 @@ Three stream types for adaptive music: `AudioStreamPlaylist` (sequenced or shuff
 
 > **Godot 4.7+:** `AudioStreamInteractive` now exposes `TRANSITION_TO_TIME_PREVIOUS_POSITION` (`TransitionToTime` enum) to scripts — the destination clip resumes from its last played position if there was a previous transition from that clip, otherwise it plays from its start. Ideal for exploration ↔ combat music that picks up where it left off.
 
-> See [references/interactive-music.md](references/interactive-music.md) for the stream-type comparison, GDScript recipes, the 4.7+ resume-position transition, and the 4.4+ runtime-load example.
+> See [references/common-interactive-music.md](references/common-interactive-music.md) for the stream-type comparison, GDScript recipes, the 4.7+ resume-position transition, and the 4.4+ runtime-load example.
 
 ---
 

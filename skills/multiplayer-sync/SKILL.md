@@ -3,7 +3,9 @@ name: multiplayer-sync
 description: Use when synchronizing multiplayer state — MultiplayerSynchronizer, interpolation, prediction, and lag compensation
 ---
 
-# Multiplayer Synchronization in Godot 4.3+
+# Multiplayer Synchronization in Godot 4.3+ (Common)
+
+**Dimension routing:** Replication configuration and bandwidth formats are common. The paired references below separate movement, interpolation, prediction, visibility, and lag compensation into 2D and 3D.
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -49,38 +51,9 @@ Register/remove filter Callables with `add_visibility_filter()` / `remove_visibi
 
 Choose a replication mode per property in `SceneReplicationConfig`. The two intervals govern different property sets; setting both does not send an ON_CHANGE property again as a periodic full-state heartbeat. A zero interval does not disable ongoing replication; use `REPLICATION_MODE_NEVER` for that property. Its separate spawn flag still controls transmission during spawning.
 
-### Visibility Filters (GDScript)
+### Visibility and Spatial Interest
 
-```gdscript
-# Only send updates to peers within 500 units of this object.
-func _ready() -> void:
-    $MultiplayerSynchronizer.add_visibility_filter(_is_peer_in_range)
-
-func _is_peer_in_range(peer_id: int) -> bool:
-    var peer_player := _get_player_node(peer_id)
-    if peer_player == null:
-        return false
-    return global_position.distance_to(peer_player.global_position) <= 500.0
-```
-
-### Visibility Filters (C#)
-
-```csharp
-// Only send updates to peers within 500 units of this object.
-public override void _Ready()
-{
-    var sync = GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
-    sync.AddVisibilityFilter(Callable.From<int, bool>(IsPeerInRange));
-}
-
-private bool IsPeerInRange(int peerId)
-{
-    var peerPlayer = GetPlayerNode(peerId);
-    if (peerPlayer is null)
-        return false;
-    return GlobalPosition.DistanceTo(peerPlayer.GlobalPosition) <= 500.0f;
-}
-```
+Use [2D interest management](references/2d-interest-management.md) or [3D interest management](references/3d-interest-management.md). Registering a filter is common, but player types, positions, and distance thresholds depend on world dimension.
 
 ---
 
@@ -98,88 +71,7 @@ Sync the minimal state needed to reconstruct the visual on remote peers. Typical
 | `animation_state` | `String` / `int` | Sync on change; use an enum int to save bandwidth |
 | `is_crouching` | `bool` | Low-change boolean; delta sync or RPC on change |
 
-### Synced Player (GDScript)
-
-```gdscript
-# synced_player.gd
-extends CharacterBody2D
-
-## Sync interval in seconds — exposed so designers can tune per object type.
-@export var sync_interval: float = 0.05  # 20 Hz
-
-@export var speed: float = 200.0
-
-# These properties are listed in the MultiplayerSynchronizer replication config.
-var synced_position: Vector2 = Vector2.ZERO
-var synced_velocity: Vector2 = Vector2.ZERO
-var synced_health: int = 100
-var synced_anim: int = 0  # 0 = idle, 1 = run, 2 = jump
-
-@onready var _sync: MultiplayerSynchronizer = $MultiplayerSynchronizer
-
-
-func _ready() -> void:
-    _sync.replication_interval = sync_interval
-    # Only the authority (owner) drives movement.
-    set_physics_process(is_multiplayer_authority())
-
-
-func _physics_process(_delta: float) -> void:
-    # Authority: write canonical state so MultiplayerSynchronizer can replicate it.
-    synced_position = global_position
-    synced_velocity = velocity
-    synced_anim     = _compute_anim_state()
-
-
-func _compute_anim_state() -> int:
-    if not is_on_floor():
-        return 2
-    return 1 if velocity.length() > 1.0 else 0
-```
-
-### Synced Player (C#)
-
-```csharp
-// SyncedPlayer.cs
-using Godot;
-
-public partial class SyncedPlayer : CharacterBody2D
-{
-    /// <summary>Sync interval in seconds. Exposed so designers can tune per object type.</summary>
-    [Export] public float SyncInterval { get; set; } = 0.05f; // 20 Hz
-
-    [Export] public float Speed { get; set; } = 200.0f;
-
-    // These properties are listed in the MultiplayerSynchronizer replication config.
-    public Vector2 SyncedPosition { get; set; } = Vector2.Zero;
-    public Vector2 SyncedVelocity { get; set; } = Vector2.Zero;
-    public int SyncedHealth { get; set; } = 100;
-    public int SyncedAnim   { get; set; } = 0; // 0=idle, 1=run, 2=jump
-
-    private MultiplayerSynchronizer _sync = null!;
-
-    public override void _Ready()
-    {
-        _sync = GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
-        _sync.ReplicationInterval = SyncInterval;
-        SetPhysicsProcess(IsMultiplayerAuthority());
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        // Authority: write canonical state for replication.
-        SyncedPosition = GlobalPosition;
-        SyncedVelocity = Velocity;
-        SyncedAnim     = ComputeAnimState();
-    }
-
-    private int ComputeAnimState()
-    {
-        if (!IsOnFloor()) return 2;
-        return Velocity.Length() > 1f ? 1 : 0;
-    }
-}
-```
+Choose the complete [2D synchronized player](references/2d-synced-player.md) or [3D synchronized player](references/3d-synced-player.md) publisher, then pair it with the matching interpolation display.
 
 ---
 
@@ -187,15 +79,15 @@ public partial class SyncedPlayer : CharacterBody2D
 
 `MultiplayerSynchronizer` updates target properties at sync intervals (e.g., 30 Hz), but rendering runs at frame rate (60+ Hz). Without interpolation, remote players appear to teleport between snapshots. The fix: store position snapshots with timestamps and lerp in `_process` toward the latest snapshot using a small offset (interpolation buffer ~100 ms).
 
-> See [references/interpolation.md](references/interpolation.md) for the full GDScript and C# interpolation buffer pattern (bounded timestamped snapshots, delayed render-time lerp).
+> See [2D interpolation](references/2d-interpolation.md) or [3D interpolation](references/3d-interpolation.md) for the full GDScript and C# interpolation buffer pattern (bounded timestamped snapshots, delayed render-time lerp).
 
 ---
 
 ## 4. Client-Side Prediction
 
-For local-player responsiveness: predict movement immediately on client, send input to server, reconcile when server snapshot arrives. If server diverges from client prediction beyond a threshold, snap; otherwise smoothly lerp the correction over 100-200 ms.
+For local-player responsiveness: predict movement immediately on client, send input to server, reconcile when server snapshot arrives. On each new authoritative acknowledgement, restore the acknowledged state and replay pending input; smooth a separate visual offset if needed.
 
-> See [references/client-prediction.md](references/client-prediction.md) for the full predict-and-reconcile pattern (input ring buffer, server reconciliation, replay) in GDScript + C#.
+> See [2D prediction](references/2d-client-prediction.md) or [3D prediction](references/3d-client-prediction.md) for the bounded predict-and-reconcile core (fixed-step movement, authoritative acknowledgement, replay) in GDScript + C#.
 
 ---
 
@@ -203,7 +95,7 @@ For local-player responsiveness: predict movement immediately on client, send in
 
 For hit-scan weapons in fast-paced games: when the server validates a hit, it rewinds the world state to the client's view-time (`now - client_rtt/2 - interp_delay`) and tests the hit against that historical state.
 
-> See [references/lag-compensation.md](references/lag-compensation.md) for the snapshot-history pattern, view-time calculation, and a hit-scan validator in GDScript + C#.
+> See [2D lag compensation](references/2d-lag-compensation.md) or [3D lag compensation](references/3d-lag-compensation.md) for the snapshot-history pattern, view-time calculation, and a hit-scan validator in GDScript + C#.
 
 ---
 
@@ -230,7 +122,7 @@ Choose the synchronization model that fits your game's needs:
 
 Four levers: **sync only changed properties** (replication-config mode per property), **quantize and pack floats** (use a bounded integer range and an explicit compact wire format), **distance-based sync rate** (far-away objects sync at 5 Hz, close at 30 Hz), and **channel selection** (reliable for state changes that must arrive, unreliable for position streams that get superseded).
 
-> See [references/bandwidth-optimization.md](references/bandwidth-optimization.md) for full GDScript + C# recipes for each lever, plus the reliable-vs-unreliable channel decision tree.
+> See [references/common-bandwidth-optimization.md](references/common-bandwidth-optimization.md) for common quantization/configuration recipes and the reliable-vs-unreliable decision table, with links to paired spatial interest recipes.
 
 ---
 
@@ -244,7 +136,7 @@ Four levers: **sync only changed properties** (replication-config mode per prope
 - [ ] Network interpolation stores timestamped snapshots and blends against a delayed network render time, independent of the physics-tick fraction
 - [ ] Client-side prediction is applied only to the local player's own character
 - [ ] Pending input buffer is bounded (max ~128 ticks) to prevent memory growth
-- [ ] Reconciliation threshold prevents jitter from micro-corrections
+- [ ] Reconciliation restores simulation state; visual correction smoothing is separate
 - [ ] Position and velocity use `unreliable` RPC; state changes use `reliable`
 - [ ] Float quantization is applied before sending position data over the network
 - [ ] Lag compensation snapshot history is pruned each tick to a bounded window

@@ -29,7 +29,7 @@ test('gdUnit4: documented command discovers tests, writes reports and returns fa
     await cp(addon, path.join(projectDir, 'addons/gdUnit4'), { recursive: true });
     const imported = run(['--headless', '--editor', '--import', '--quit']);
     assert.equal(imported.status, 0, imported.output);
-    const markdown = await readFile(path.join(repoRoot, 'skills/godot-testing/references/running-tests.md'), 'utf8');
+    const markdown = await readFile(path.join(repoRoot, 'skills/godot-testing/references/common-running-tests.md'), 'utf8');
     const commands = markdown.split('\n').filter(line => line.startsWith('godot ') && line.includes('GdUnitCmdTool.gd'));
     assert.equal(commands.length, 4, 'Keep all four documented CLI variants covered');
     for (const command of commands) {

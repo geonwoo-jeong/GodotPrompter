@@ -3,7 +3,10 @@ name: dialogue-manager
 description: Use when using the Dialogue Manager addon — .dialogue files with titles, responses, conditions and mutations, runtime balloons, and C# support
 ---
 
-# Dialogue Manager
+# Dialogue Manager (Common)
+
+> **Dimension:** Common. These data, signal and dialogue nodes can be children of either Node2D or Node3D. Spatial behavior belongs in the matching movement, physics or HUD reference.
+
 
 > **Related skills:** **dialogue-system** for hand-rolled dialogue data structures, **localization** for translating lines, **popochiu** for full adventure-game workflows.
 
@@ -143,7 +146,7 @@ returns `null` on every end-of-dialogue path — a `line == {}` check would neve
 
 ```gdscript
 # npc.gd
-extends Node2D
+extends Node
 
 @export var dialogue_resource: DialogueResource
 
@@ -170,7 +173,7 @@ func _manual_walk() -> void:
 using Godot;
 using DialogueManagerRuntime;
 
-public partial class Npc : Node2D
+public partial class Npc : Node
 {
     [Export] public Resource DialogueResource;
 

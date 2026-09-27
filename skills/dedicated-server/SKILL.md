@@ -3,7 +3,9 @@ name: dedicated-server
 description: Use when building dedicated servers — headless export, server architecture, lobby management, and deployment
 ---
 
-# Dedicated Server in Godot 4.3+
+# Dedicated Server in Godot 4.3+ (Common)
+
+**Dimension scope:** Common to 2D and 3D. Headless export, lobby state, match flow, deployment, and configuration do not depend on spatial node types. Use the paired recipes in **multiplayer-basics** and **multiplayer-sync** for world objects.
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, C# follows.
 
@@ -273,7 +275,7 @@ public partial class World : Node
 
 A per-player state dictionary keyed by `peer_id` is the canonical pattern. Server holds the authoritative dict; clients receive updates via RPC. Implement a `--max-players` CLI cap and a ready-toggle RPC so all peers can confirm before starting.
 
-> See [references/lobby-management.md](references/lobby-management.md) for the full GDScript and C# lobby implementation (player_list dict, max-players cap, ready toggle RPC, broadcast pattern).
+> See [references/common-lobby-management.md](references/common-lobby-management.md) for the full GDScript and C# lobby implementation (player_list dict, max-players cap, ready toggle RPC, broadcast pattern).
 
 ---
 
@@ -281,7 +283,7 @@ A per-player state dictionary keyed by `peer_id` is the canonical pattern. Serve
 
 Drive lobby → countdown → in-game → results with a state machine. Server is authoritative — clients only receive state-change RPCs. Common states: `LOBBY`, `COUNTDOWN`, `IN_GAME`, `RESULTS`.
 
-> See [references/match-flow.md](references/match-flow.md) for the full state machine with countdown/results timers and GDScript + C# implementations.
+> See [references/common-match-flow.md](references/common-match-flow.md) for the full state machine with countdown/results timers and GDScript + C# implementations.
 
 ---
 
@@ -289,7 +291,7 @@ Drive lobby → countdown → in-game → results with a state machine. Server i
 
 Put custom flags after `--` and parse them from `OS.get_cmdline_user_args()` for `--port`, `--max-players`, `--tick-rate`, `--log-level`. Pre-set `Engine.physics_ticks_per_second` *before* the first physics frame; reading and writing the others is straightforward `match` / `switch` work.
 
-> See [references/server-config.md](references/server-config.md) for the GDScript and C# argument-parsing helper that reads all four flags safely at startup.
+> See [references/common-server-config.md](references/common-server-config.md) for the GDScript and C# argument-parsing helper that reads all four flags safely at startup.
 
 ---
 
@@ -297,7 +299,7 @@ Put custom flags after `--` and parse them from `OS.get_cmdline_user_args()` for
 
 A Linux VPS with a `Dockerfile` and `systemd` service file is the standard production layout. The Dockerfile shown copies a standard exported binary and its PCK for a GDScript project. C# exports require the complete .NET export output and dependencies for the chosen deployment mode. systemd handles auto-restart, log rotation via `journald`, and resource limits.
 
-> See [references/deployment.md](references/deployment.md) for the Dockerfile, the Linux VPS setup steps, the systemd unit file, and log-rotation configuration.
+> See [references/common-deployment.md](references/common-deployment.md) for the Dockerfile, the Linux VPS setup steps, the systemd unit file, and log-rotation configuration.
 
 ---
 

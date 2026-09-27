@@ -20,7 +20,7 @@ export default [
       // the same regression can show the original lifecycle failure, not ENOENT.
       let stateMachine;
       try {
-        stateMachine = await gdscriptBlock(repoRoot, 'skills/state-machine/references/node-based-machine.md', 'class_name StateMachine');
+        stateMachine = await gdscriptBlock(repoRoot, 'skills/state-machine/references/common-node-based-machine.md', 'class_name StateMachine');
       } catch (error) {
         if (error.code !== 'ENOENT') throw error;
         stateMachine = await gdscriptBlock(repoRoot, 'skills/state-machine/SKILL.md', 'class_name StateMachine');
@@ -28,7 +28,7 @@ export default [
       await writeProject(projectDir, {
         'state.gd': await gdscriptBlock(repoRoot, 'skills/state-machine/SKILL.md', 'class_name State\n'),
         'state_machine.gd': stateMachine,
-        'hierarchical_state.gd': await gdscriptBlock(repoRoot, 'skills/state-machine/references/hierarchical-and-parallel.md', 'class_name HierarchicalState'),
+        'hierarchical_state.gd': await gdscriptBlock(repoRoot, 'skills/state-machine/references/common-hierarchical-and-parallel.md', 'class_name HierarchicalState'),
         'probe_state.gd': `extends State
 var enters := 0
 var exits := 0
@@ -144,7 +144,7 @@ func run() -> void:
     name: 'movement: rebinding ignores release and echo until a fresh press',
     async setup({ repoRoot, projectDir }) {
       await writeProject(projectDir, {
-        'rebind_button.gd': await gdscriptBlock(repoRoot, 'skills/input-handling/references/action-rebinding.md', '# rebind_button.gd'),
+        'rebind_button.gd': await gdscriptBlock(repoRoot, 'skills/input-handling/references/common-action-rebinding.md', '# rebind_button.gd'),
         'test.gd': `extends SceneTree
 ${checks}
 func _initialize() -> void: run.call_deferred()

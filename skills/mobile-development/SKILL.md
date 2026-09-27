@@ -3,7 +3,7 @@ name: mobile-development
 description: Use when targeting Android/iOS — export and signing, permissions, plugins, in-app purchases, ads, app lifecycle, device features, and mobile performance
 ---
 
-# Mobile Development
+# Mobile Development (Common)
 
 Ship a Godot 4.x game to Android and iOS. This covers the platform-specific deltas beyond a generic export: signing, lifecycle, permissions, plugins, IAP, device features, and the mobile renderer/perf budget.
 
@@ -139,7 +139,7 @@ private void OnPermResult(string permission, bool granted)
 
 **Godot 4.4+ only.** `JavaClassWrapper.wrap("<java.class>")` calls Java/Kotlin classes with no plugin; the `AndroidRuntime` singleton (`Engine.get_singleton("AndroidRuntime")`) exposes `getActivity()`, `getApplicationContext()`, and `createRunnableFromGodotCallable(callable)`.
 
-The simpler cross-platform alternative needs no 4.4: `Input.vibrate_handheld(duration_ms, amplitude)` (requires the `VIBRATE` permission; iOS needs iOS 13+). See [Plugins](references/plugins.md) for the full JavaClassWrapper/AndroidRuntime API, Toast/Intent recipes, and inner-class syntax.
+The simpler cross-platform alternative needs no 4.4: `Input.vibrate_handheld(duration_ms, amplitude)` (requires the `VIBRATE` permission; iOS needs iOS 13+). See [Plugins](references/common-plugins.md) for the full JavaClassWrapper/AndroidRuntime API, Toast/Intent recipes, and inner-class syntax.
 
 ### GDScript
 
@@ -267,7 +267,7 @@ Use the **Mobile** (or **Compatibility**) renderer; the iOS simulator is Compati
 
 C# Android/iOS export is **Godot 4.2+ but experimental**. **Android C# export requires .NET 9+** (with Godot 4.5); iOS export only from macOS, and the simulator templates are x64-only. **C# cannot export to Web.** Test the C# export pipeline early — it is the riskiest part of a C# mobile project.
 
-> **Deeper:** [Plugins (Android v2 / iOS)](references/plugins.md) · [In-app purchases & ads](references/iap-and-ads.md) · [Crash debugging](references/crash-debugging.md)
+> **Deeper:** [Plugins (Android v2 / iOS)](references/common-plugins.md) · [In-app purchases & ads](references/common-iap-and-ads.md) · [Crash debugging](references/common-crash-debugging.md)
 
 ---
 

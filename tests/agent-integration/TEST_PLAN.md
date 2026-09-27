@@ -479,3 +479,17 @@ existing decision record.
 **Pass criteria:** the grill is invoked without the user naming it or asking to be grilled — this
 is the path eval case grill-04 cannot exercise, because eval runs start in an empty temp directory
 where the SessionStart hook finds no `project.godot` and injects nothing.
+
+---
+
+## Category 7: Dimension-aware routing
+
+Run these in a fresh host session with this revision of the plugin loaded. These are read-only discovery checks; do not build a project to answer them.
+
+1. Ask for 3D multiplayer player spawning and interpolation. Expect the common transport entry and `3d-spawning-networked-objects.md`, `3d-synced-player.md`, `3d-interpolation.md`. The 2D versions must remain separately discoverable.
+2. Ask for a 2D stencil masking effect. Expect `2d-masking.md`; the agent must not suggest spatial stencil syntax in a canvas shader.
+3. Ask for inventory and a projected interaction HUD in a 3D game. Expect common inventory/Control UI plus `3d-interaction-prompts.md`; UI Vector2 coordinates must not cause the whole system to be classified as 2D gameplay.
+4. Ask for a 3D enemy state machine with patrol/chase. Expect common lifecycle/behavior-tree logic plus 3D state and navigation adapters.
+5. Ask where the old reference paths moved. Expect the dimension guide/catalog or rename map, with no failed `@` imports or invented skill IDs.
+
+Record actual host results separately from static file/link validation. See [the dimension audit](../../docs/audits/2026-09-27-dimension-organization.md) for this revision's verification scope.

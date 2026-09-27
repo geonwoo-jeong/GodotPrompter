@@ -3,7 +3,10 @@ name: save-load
 description: Use when implementing save/load systems — ConfigFile, JSON, Resource serialization, save game architecture
 ---
 
-# Save / Load Systems in Godot 4.3+
+# Save / Load Systems in Godot 4.3+ (Common)
+
+> **Dimension:** Common. [2D JSON saves](references/2d-json-saves.md) · [3D JSON saves](references/3d-json-saves.md). ConfigFile, version migration and SaveableComponent are shared.
+
 
 Choose the right serialization strategy for your data type. All examples target Godot 4.3+ with no deprecated APIs.
 
@@ -28,7 +31,7 @@ Choose the right serialization strategy for your data type. All examples target 
 
 `ConfigFile` writes INI-style sections — ideal for audio / video / controls settings (small, designer-debuggable). Use `set_value(section, key, value)` then `save(path)`; load with `load(path)` and `get_value(section, key, default)`.
 
-> See [references/configfile.md](references/configfile.md) for the full GDScript + C# settings save/load + typical settings-menu wiring.
+> See [references/common-configfile.md](references/common-configfile.md) for the full GDScript + C# settings save/load + typical settings-menu wiring.
 
 ---
 
@@ -36,7 +39,7 @@ Choose the right serialization strategy for your data type. All examples target 
 
 `JSON.stringify(dict)` to serialize, `JSON.parse_string(text)` to deserialize. Read/write through `FileAccess`. Best for game saves where you want human-readable files. Build a Dictionary that captures all gameplay state (player position, inventory, world flags), serialize, write to `user://save_<slot>.json`.
 
-> See [references/json-saves.md](references/json-saves.md) for the full GDScript + C# save/load implementation, including FileAccess wrapping and error handling.
+> See [references/2d-json-saves.md](references/2d-json-saves.md) for the full GDScript + C# save/load implementation, including FileAccess wrapping and error handling.
 
 > ⚠️ **Changed in Godot 4.7:** `JSON.stringify(data, indent = "", sort_keys = true, full_precision = false)` now serializes an empty `Dictionary` compactly as `{}` even when an `indent` is passed ([GH-115883](https://github.com/godotengine/godot/pull/115883)). Save files written with an indent change formatting for empty-dict fields after upgrading — anything that diffs or hashes save output byte-for-byte must tolerate the new form. Parsing is unaffected.
 
@@ -46,7 +49,7 @@ Choose the right serialization strategy for your data type. All examples target 
 
 For larger games, attach a `SaveableComponent` to each persistent node. Each component declares `save_callable` and `load_callable`. The save manager iterates components by ID, calls each one's save callable, builds a master Dictionary.
 
-> See [references/save-architecture.md](references/save-architecture.md) for the full `SaveableComponent` + save-manager implementation.
+> See [references/common-save-architecture.md](references/common-save-architecture.md) for the full `SaveableComponent` + save-manager implementation.
 
 ---
 
@@ -68,7 +71,7 @@ For larger games, attach a `SaveableComponent` to each persistent node. Each com
 
 Save files outlive the schema that wrote them. Always include `"version": <int>` at the top of the saved Dictionary; on load, switch on the version and migrate older saves forward incrementally (`v1 → v2 → v3 → current`). Never break old saves — always migrate.
 
-> See [references/version-migration.md](references/version-migration.md) for the full migration helper pattern.
+> See [references/common-version-migration.md](references/common-version-migration.md) for the full migration helper pattern.
 
 ---
 

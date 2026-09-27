@@ -3,7 +3,10 @@ name: csharp-signals
 description: Use when implementing signals in C# — [Signal] delegates, EmitSignal patterns, async signal awaiting, and event-driven architecture
 ---
 
-# Signals in C# (Godot 4.x)
+# Signals in C# (Godot 4.x) (Common)
+
+> **Dimension:** Common. These data, signal and dialogue nodes can be children of either Node2D or Node3D. Spatial behavior belongs in the matching movement, physics or HUD reference.
+
 
 This skill is **C# only**. For general C# conventions and project setup, see the **csharp-godot** skill. Godot signals in C# require a different mental model from GDScript: delegates declared with `[Signal]`, strongly-typed `+=`/`-=` connections, and mandatory disconnection in `_ExitTree()`. All examples target Godot 4.x with no deprecated APIs.
 
@@ -18,7 +21,7 @@ Signals are declared as `public delegate void` with the `[Signal]` attribute ins
 ```csharp
 using Godot;
 
-public partial class Player : CharacterBody2D
+public partial class Player : Node
 {
     // Signal name in engine: "HealthChanged"
     [Signal] public delegate void HealthChangedEventHandler(int current, int maximum);
@@ -53,7 +56,7 @@ Use `EmitSignal(SignalName.SignalName, args...)`. The `SignalName` nested class 
 ```csharp
 using Godot;
 
-public partial class Player : CharacterBody2D
+public partial class Player : Node
 {
     [Signal] public delegate void HealthChangedEventHandler(int current, int maximum);
     [Signal] public delegate void DiedEventHandler();
@@ -165,7 +168,7 @@ Always connect inside `_Ready()`. The node's references are resolved and the sce
 
 Unlike GDScript (which auto-cleans on `queue_free`), **C# must disconnect explicitly** in `_ExitTree()` — otherwise the listener delegate keeps the GodotObject alive past disposal, causing leaks. Use `signal -= handler` mirroring how you `+= handler` in `_Ready()`.
 
-> See [references/disconnecting.md](references/disconnecting.md) for the `-=` cleanup pattern, why C# differs from GDScript, and a SafeDisconnect helper.
+> See [references/common-disconnecting.md](references/common-disconnecting.md) for the `-=` cleanup pattern, why C# differs from GDScript, and a SafeDisconnect helper.
 
 ---
 
@@ -173,7 +176,7 @@ Unlike GDScript (which auto-cleans on `queue_free`), **C# must disconnect explic
 
 `await ToSignal(node, SignalName.X)` pauses until the signal fires. Returns `Variant[]` of the signal's args. Add a timeout with `Task.WhenAny` or a `CancellationTokenSource` to avoid permanent hangs.
 
-> See [references/awaiting-signals.md](references/awaiting-signals.md) for basic await, return-value extraction, and both timeout patterns.
+> See [references/common-awaiting-signals.md](references/common-awaiting-signals.md) for basic await, return-value extraction, and both timeout patterns.
 
 ---
 
@@ -181,7 +184,7 @@ Unlike GDScript (which auto-cleans on `queue_free`), **C# must disconnect explic
 
 Three patterns: **typed event args** (wrap signal payload in a Resource subclass), **static event bus** (use C# `static event` as a pure-C# alternative when both peers are C#), **generic signal helper** (one helper per `SignalName.X` to reduce repetition).
 
-> See [references/custom-signal-patterns.md](references/custom-signal-patterns.md) for full code on each pattern.
+> See [references/common-custom-signal-patterns.md](references/common-custom-signal-patterns.md) for full code on each pattern.
 
 ---
 
@@ -189,7 +192,7 @@ Three patterns: **typed event args** (wrap signal payload in a Resource subclass
 
 When the signal is declared in a GDScript node and the listener is C#, use `node.Connect("signal_name", new Callable(this, MethodName.Handler))`. The `MethodName` generated symbol still works for C# methods.
 
-> See [references/connecting-gdscript-signals.md](references/connecting-gdscript-signals.md) for the full pattern with both string-name and `MethodName` variants.
+> See [references/common-connecting-gdscript-signals.md](references/common-connecting-gdscript-signals.md) for the full pattern with both string-name and `MethodName` variants.
 
 ---
 

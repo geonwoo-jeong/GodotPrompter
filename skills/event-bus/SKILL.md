@@ -3,7 +3,10 @@ name: event-bus
 description: Use when implementing decoupled communication between nodes — global EventBus autoload with typed signals
 ---
 
-# Event Bus in Godot 4.3+
+# Event Bus in Godot 4.3+ (Common)
+
+> **Dimension:** Common. These data, signal and dialogue nodes can be children of either Node2D or Node3D. Spatial behavior belongs in the matching movement, physics or HUD reference.
+
 
 A global signal hub that lets unrelated nodes communicate without holding references to each other. All examples target Godot 4.3+ with no deprecated APIs.
 
@@ -204,7 +207,7 @@ Producers call `EventBus.<signal_name>.emit(...)` (GDScript) or `EmitSignal(Sign
 ### GDScript
 
 ```gdscript
-extends CharacterBody2D
+extends Node
 
 @export var max_health: int = 100
 var current_health: int = max_health
@@ -237,7 +240,7 @@ func complete_level(level_id: int) -> void:
 ```csharp
 using Godot;
 
-public partial class Player : CharacterBody2D
+public partial class Player : Node
 {
     [Export] public int MaxHealth { get; set; } = 100;
 
@@ -284,7 +287,7 @@ public partial class Player : CharacterBody2D
 
 Type every signal parameter. An untyped bus degrades into "what shape is this payload?" archaeology at every call site, and typos in parameter counts only surface at runtime. For anything richer than two or three primitives, pass a small `Resource` or a `class_name`'d data object rather than growing the parameter list.
 
-Typed signal declarations, payload-object patterns, and the C# `[Signal]` delegate equivalents: [references/typed-signals.md](references/typed-signals.md)
+Typed signal declarations, payload-object patterns, and the C# `[Signal]` delegate equivalents: [references/common-typed-signals.md](references/common-typed-signals.md)
 
 ---
 
@@ -292,7 +295,7 @@ Typed signal declarations, payload-object patterns, and the C# `[Signal]` delega
 
 Four recurring failures: routing **everything** through the bus when a parent could just reach its own child (over-decoupling); handlers whose side effects emit further signals, so tracing one event means reading every handler; **circular chains**, where a listener re-emits the signal it just received and loops forever; and connecting without disconnecting in C#, which leaks the handler for the bus's lifetime.
 
-Each anti-pattern with the failing code, why it hurts, and the fix, in GDScript and C#: [references/anti-patterns.md](references/anti-patterns.md)
+Each anti-pattern with the failing code, why it hurts, and the fix, in GDScript and C#: [references/common-anti-patterns.md](references/common-anti-patterns.md)
 
 ---
 
@@ -300,7 +303,7 @@ Each anti-pattern with the failing code, why it hurts, and the fix, in GDScript 
 
 Use [GUT](https://github.com/bitwes/Gut) to verify both producer-side emission (`watch_signals(event_bus)` then `assert_signal_emitted_with_parameters(...)`) and consumer-side reactions (emit on the bus, then assert on the consumer's state). Always test against the real autoload EventBus retrieved via `get_tree().root.get_node("EventBus")`, not a fresh instance.
 
-See [references/testing.md](references/testing.md) for full producer-side and consumer-side test files plus a GUT-helper reference table.
+See [references/common-testing.md](references/common-testing.md) for full producer-side and consumer-side test files plus a GUT-helper reference table.
 
 ---
 

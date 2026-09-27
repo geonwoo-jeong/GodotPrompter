@@ -3,7 +3,7 @@ name: assets-pipeline
 description: Use when importing and managing assets — image compression, 3D scene import, audio formats, resource formats, and import configuration
 ---
 
-# Assets Pipeline in Godot 4.3+
+# Assets Pipeline in Godot 4.3+ (Common)
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -149,7 +149,7 @@ Select the imported `.glb`/`.gltf` in FileSystem, then in the Import dock:
 
 ### Runtime Scene Loading
 
-Use `preload()` for paths known at compile time and `load()` for data-driven paths. GDScript + C# snippets: [references/runtime-resource-loading.md](references/runtime-resource-loading.md).
+Use `preload()` for paths known at compile time and `load()` for data-driven paths. GDScript + C# snippets: [references/common-runtime-resource-loading.md](references/common-runtime-resource-loading.md).
 
 ### Runtime glTF Import Flags (Godot 4.7+)
 
@@ -266,7 +266,7 @@ var resource = GD.Load<Resource>("res://data/item.tres");
 
 ### Threaded Resource Loading
 
-Load large resources without freezing the game with the `ResourceLoader.load_threaded_request()` / `load_threaded_get_status()` / `load_threaded_get()` pattern. Full loading-screen recipe (GDScript + C#): [references/runtime-resource-loading.md](references/runtime-resource-loading.md).
+Load large resources without freezing the game with the `ResourceLoader.load_threaded_request()` / `load_threaded_get_status()` / `load_threaded_get()` pattern. Full loading-screen recipe (GDScript + C#): [references/common-runtime-resource-loading.md](references/common-runtime-resource-loading.md).
 
 ---
 
@@ -303,3 +303,5 @@ Load large resources without freezing the game with the `ResourceLoader.load_thr
 - [ ] Custom data resources use `.tres` (text) for version control diffability
 - [ ] Large or runtime-loaded resources use `ResourceLoader.load_threaded_request()`
 - [ ] Scene files use `.tscn` (text format) for version control
+
+Spatial references: [2d-runtime-scene-loading](references/2d-runtime-scene-loading.md) · [3d-runtime-scene-loading](references/3d-runtime-scene-loading.md).

@@ -13,7 +13,7 @@ export default [
   {
     name: 'api: abstract enemy classes parse and concrete subclasses share behavior',
     async setup({ repoRoot, projectDir }) {
-      const blocks = await codeBlocks(repoRoot, 'skills/gdscript-patterns/references/abstract-classes.md');
+      const blocks = await codeBlocks(repoRoot, 'skills/gdscript-patterns/references/2d-abstract-classes.md');
       await writeProject(projectDir, {
         'base_enemy.gd': blocks[0],
         'melee_enemy.gd': blocks[1],
@@ -63,7 +63,7 @@ ${indent(source)}
   {
     name: 'api: procedural circle uses a supported primitive and closes its line strip',
     async setup({ repoRoot, projectDir }) {
-      const source = await gdscriptBlock(repoRoot, 'skills/gdscript-advanced/references/tool-script-recipes.md', 'class_name CircleVisualizer');
+      const source = await gdscriptBlock(repoRoot, 'skills/gdscript-advanced/references/3d-tool-preview.md', 'class_name CircleVisualizer');
       await writeProject(projectDir, {
         'circle.gd': source,
         'test.gd': `extends SceneTree
@@ -91,7 +91,7 @@ func _initialize() -> void:
   {
     name: 'api: MultiMesh rotation and scale preserve requested instance positions',
     async setup({ repoRoot, projectDir }) {
-      const source = await gdscriptBlock(repoRoot, 'skills/3d-essentials/references/lod-and-culling.md', 'func spawn_grass');
+      const source = await gdscriptBlock(repoRoot, 'skills/3d-essentials/references/3d-lod-and-culling.md', 'func spawn_grass');
       // The headless dummy renderer returns identity from MultiMesh transform getters.
       // Record the actual values passed by the unchanged example to the renderer.
       const observed = source.replace(
@@ -128,7 +128,7 @@ func _initialize() -> void:
   {
     name: 'api: CSV context and three-form plurals import and format in each locale',
     async setup({ repoRoot, projectDir }) {
-      const relativePath = 'skills/localization/references/csv-plural-context.md';
+      const relativePath = 'skills/localization/references/common-csv-plural-context.md';
       const [csv] = await codeBlocks(repoRoot, relativePath, 'csv');
       const context = await gdscriptBlock(repoRoot, relativePath, 'var file_noun');
       const plural = await gdscriptBlock(repoRoot, relativePath, 'var enemy_count');

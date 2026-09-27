@@ -3,7 +3,7 @@ name: popochiu
 description: Use when using the Popochiu addon — point-and-click adventure framework with rooms, characters, props/hotspots, inventory, dialog trees, and a command-based GUI
 ---
 
-# Popochiu
+# Popochiu (2D)
 
 > **Related skills:** **dialogue-system** for hand-rolled dialogue data, **inventory-system** for generic inventory patterns, **save-load** for core-engine persistence.
 
@@ -125,7 +125,7 @@ func _on_item_used(item: PopochiuInventoryItem) -> void:
 
 Full callback set: `_on_room_set`, `_on_click`, `_on_double_click`, `_on_right_click`, `_on_middle_click`, `_on_item_used(item)`, `_on_position_changed`, `_on_movement_started`, `_on_movement_ended`.
 
-**Command-based GUI, at a glance**: each shipped GUI template (9 Verb / Sierra / SimpleClick) registers verbs via `E.register_command(id, "Display Name", fallback)`. On click, Popochiu snake_cases the active command and looks for `on_<command>()` on the clicked object (e.g. `on_look_at()`) before falling back to `_on_click()`. Full mechanics — including `E.current_command`, registering custom commands, and the deprecated `E.active_command` snippet you may see in older tutorials — are in [references/gui.md](references/gui.md).
+**Command-based GUI, at a glance**: each shipped GUI template (9 Verb / Sierra / SimpleClick) registers verbs via `E.register_command(id, "Display Name", fallback)`. On click, Popochiu snake_cases the active command and looks for `on_<command>()` on the clicked object (e.g. `on_look_at()`) before falling back to `_on_click()`. Full mechanics — including `E.current_command`, registering custom commands, and the deprecated `E.active_command` snippet you may see in older tutorials — are in [references/2d-gui.md](references/2d-gui.md).
 
 ---
 
@@ -148,9 +148,9 @@ func _on_click() -> void:
     D.PopsyHouseChat.start()
 ```
 
-Dialog trees are `PopochiuDialog` resources with branching options, per-option conditions, and handler methods — full authoring pattern (including the `Array`-only `turn_on_options()`/`turn_off_options()` gotcha) is in [references/dialogs.md](references/dialogs.md).
+Dialog trees are `PopochiuDialog` resources with branching options, per-option conditions, and handler methods — full authoring pattern (including the `Array`-only `turn_on_options()`/`turn_off_options()` gotcha) is in [references/2d-dialogs.md](references/2d-dialogs.md).
 
-Deep dives: [references/dialogs.md](references/dialogs.md), [references/inventory.md](references/inventory.md), [references/gui.md](references/gui.md), [references/pipeline.md](references/pipeline.md)
+Deep dives: [references/2d-dialogs.md](references/2d-dialogs.md), [references/2d-inventory.md](references/2d-inventory.md), [references/2d-gui.md](references/2d-gui.md), [references/2d-pipeline.md](references/2d-pipeline.md)
 
 ---
 

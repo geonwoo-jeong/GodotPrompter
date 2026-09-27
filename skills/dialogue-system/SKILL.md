@@ -3,7 +3,9 @@ name: dialogue-system
 description: Use when implementing dialogue — data structures for branching dialogue, conditions, and UI presentation
 ---
 
-# Dialogue Systems in Godot 4.3+
+# Dialogue Systems in Godot 4.3+ (Common)
+
+> **Scope:** Common to 2D and 3D games. Screen-space `Control` layouts and shared game data do not depend on the world dimension.
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -180,7 +182,7 @@ public partial class DialogueData : Resource
 
 A singleton autoload owns the active `DialogueData` and tracks current line ID. `start(data)` sets the data and emits the first line; `advance(choice_index)` moves forward. Wires three signals: `line_changed(line)`, `choices_presented(choices)`, `dialogue_ended()`.
 
-> See [references/dialogue-manager.md](references/dialogue-manager.md) for the full GDScript and C# manager (line traversal, choice handling, condition evaluation hooks, signals).
+> See [references/common-dialogue-manager.md](references/common-dialogue-manager.md) for the full GDScript and C# manager (line traversal, choice handling, condition evaluation hooks, signals).
 
 ---
 
@@ -188,7 +190,7 @@ A singleton autoload owns the active `DialogueData` and tracks current line ID. 
 
 Choices live on `DialogueLine.choices` (an Array of Dictionary). Each choice has `text`, `next_line_id`, optional `condition`. Conditions are GDScript expressions evaluated via the `Expression` class — passed a context object with project state (e.g. `GameState`).
 
-> See [references/branching-and-conditions.md](references/branching-and-conditions.md) for the full choice-handling and condition-evaluator implementations (GDScript + C#), plus security notes on Expression input.
+> See [references/common-branching-and-conditions.md](references/common-branching-and-conditions.md) for the full choice-handling and condition-evaluator implementations (GDScript + C#), plus security notes on Expression input.
 
 ---
 
@@ -196,7 +198,7 @@ Choices live on `DialogueLine.choices` (an Array of Dictionary). Each choice has
 
 A `CanvasLayer` with a `RichTextLabel` for the line body (BBCode-enabled), a `Label` for speaker name, and a `VBoxContainer` for choice buttons. Typewriter effect via `RichTextLabel.visible_characters` driven by a `Tween`. UI subscribes to `DialogueManager` signals.
 
-> See [references/ui-presentation.md](references/ui-presentation.md) for the scene-tree fragment, typewriter recipe, choice-button spawning, and full GDScript + C# wiring.
+> See [references/common-ui-presentation.md](references/common-ui-presentation.md) for the scene-tree fragment, typewriter recipe, choice-button spawning, and full GDScript + C# wiring.
 
 ---
 
@@ -204,7 +206,7 @@ A `CanvasLayer` with a `RichTextLabel` for the line body (BBCode-enabled), a `La
 
 Load dialogue from JSON for designer-friendly editing — map JSON keys to `DialogueLine` properties at load time. Or integrate the **Dialogic** addon for a node-graph editor (community standard).
 
-> See [references/external-formats.md](references/external-formats.md) for the JSON loader recipe and Dialogic integration notes.
+> See [references/common-external-formats.md](references/common-external-formats.md) for the JSON loader recipe and Dialogic integration notes.
 
 ---
 
@@ -212,7 +214,7 @@ Load dialogue from JSON for designer-friendly editing — map JSON keys to `Dial
 
 Dialogue text supports `{player_name}`-style placeholders. Resolve via a small templater: `text.format(vars)` (GDScript) or `string.Format` with named-tag preprocessing (C#).
 
-> See [references/variable-interpolation.md](references/variable-interpolation.md) for the GDScript and C# interpolation helpers.
+> See [references/common-variable-interpolation.md](references/common-variable-interpolation.md) for the GDScript and C# interpolation helpers.
 
 ---
 

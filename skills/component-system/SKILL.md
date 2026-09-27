@@ -3,7 +3,9 @@ name: component-system
 description: Use when building reusable node components — composition patterns, component communication, and interface design
 ---
 
-# Component System in Godot 4.3+
+# Component System in Godot 4.3+ (Common)
+
+> **Scope:** Common architecture for 2D and 3D games; choose the dimension-specific reference when world coordinates or spatial nodes are involved.
 
 Build behavior through composition. Attach small, focused components to any entity rather than climbing an inheritance chain. All examples target Godot 4.3+ with no deprecated APIs.
 
@@ -30,7 +32,7 @@ Key benefits:
 ## 2. Component Design Rules
 
 1. **One responsibility per component.** If you find yourself naming it `HealthAndShieldAndRegenComponent`, split it.
-2. **Communicate via signals, not direct sibling access.** A component must not call `get_parent().get_node("SiblingComponent")`. Emit a signal instead.
+2. **Use signals and explicit dependencies.** Emit signals for notifications; inject required interfaces with exported references. Avoid `get_parent().get_node("SiblingComponent")` to discover dependencies.
 3. **Stateless where possible.** Prefer deriving state from inputs and `@export` configuration over storing mutable state. When state is necessary, keep it private.
 4. **Use `@export` for all configuration.** Damage amount, cooldown duration, and layer masks belong in the Inspector, not hardcoded constants.
 
@@ -40,7 +42,7 @@ Key benefits:
 
 | Component | Purpose | Key Signals |
 |---|---|---|
-| `HealthComponent` | Tracks current and max HP, applies damage and healing | `health_changed(current, maximum)`, `died` |
+| `HealthComponent` | Tracks current and max HP, applies damage and healing | `health_changed(old_value, new_value)`, `died` |
 | `HitboxComponent` | Detects overlapping hurtboxes and triggers damage | `hit(target_hurtbox)` |
 | `HurtboxComponent` | Receives hits, routes damage to `HealthComponent` | `hurt(damage_amount)` |
 | `InteractableComponent` | Marks an entity as interactable and fires on player overlap | `interacted(interactor)` |
@@ -48,203 +50,19 @@ Key benefits:
 
 ---
 
-## 4. HitboxComponent
+## 4. Spatial Damage Adapters
 
-Attach to any entity that deals damage. Configure `damage` in the Inspector.
-
-### GDScript (`hitbox_component.gd`)
-
-```gdscript
-class_name HitboxComponent
-extends Area2D
-
-## Damage dealt to the target hurtbox on contact.
-@export var damage: int = 10
-
-## Minimum seconds between successive hits (0 = no cooldown).
-@export var cooldown_duration: float = 0.5
-
-signal hit(target_hurtbox: HurtboxComponent)
-
-var _on_cooldown: bool = false
-
-@onready var _cooldown_timer: Timer = _build_timer()
-
-
-func _ready() -> void:
-	area_entered.connect(_on_area_entered)
-
-
-func _on_area_entered(area: Area2D) -> void:
-	if _on_cooldown:
-		return
-	if area is not HurtboxComponent:
-		return
-	hit.emit(area)
-	area.receive_hit(damage)
-	if cooldown_duration > 0.0:
-		_on_cooldown = true
-		_cooldown_timer.start(cooldown_duration)
-
-
-func _on_cooldown_timeout() -> void:
-	_on_cooldown = false
-
-
-func _build_timer() -> Timer:
-	var t := Timer.new()
-	t.one_shot = true
-	t.timeout.connect(_on_cooldown_timeout)
-	add_child(t)
-	return t
-```
-
-### C# (`HitboxComponent.cs`)
-
-```csharp
-using Godot;
-
-public partial class HitboxComponent : Area2D
-{
-    /// <summary>Damage dealt to the target hurtbox on contact.</summary>
-    [Export] public int Damage { get; set; } = 10;
-
-    /// <summary>Minimum seconds between successive hits (0 = no cooldown).</summary>
-    [Export] public float CooldownDuration { get; set; } = 0.5f;
-
-    [Signal] public delegate void HitEventHandler(HurtboxComponent targetHurtbox);
-
-    private bool _onCooldown;
-    private Timer _cooldownTimer;
-
-    public override void _Ready()
-    {
-        _cooldownTimer = new Timer { OneShot = true };
-        _cooldownTimer.Timeout += OnCooldownTimeout;
-        AddChild(_cooldownTimer);
-
-        AreaEntered += OnAreaEntered;
-    }
-
-    private void OnAreaEntered(Area2D area)
-    {
-        if (_onCooldown) return;
-        if (area is not HurtboxComponent hurtbox) return;
-
-        EmitSignal(SignalName.Hit, hurtbox);
-        hurtbox.ReceiveHit(Damage);
-
-        if (CooldownDuration > 0f)
-        {
-            _onCooldown = true;
-            _cooldownTimer.Start(CooldownDuration);
-        }
-    }
-
-    private void OnCooldownTimeout() => _onCooldown = false;
-}
-```
-
----
-
-## 5. HurtboxComponent
-
-Attach to any entity that can take damage. Wire it to a sibling `HealthComponent` via `@export`.
-
-### GDScript (`hurtbox_component.gd`)
-
-```gdscript
-class_name HurtboxComponent
-extends Area2D
-
-## Reference to the HealthComponent on the same entity.
-@export var health_component: HealthComponent
-
-## Invincibility frame duration in seconds (0 = none).
-@export var invincibility_duration: float = 0.0
-
-signal hurt(damage_amount: int)
-
-var _invincible: bool = false
-
-@onready var _iframes_timer: Timer = _build_timer()
-
-
-func receive_hit(damage: int) -> void:
-	if _invincible:
-		return
-	hurt.emit(damage)
-	if health_component:
-		health_component.take_damage(damage)
-	if invincibility_duration > 0.0:
-		_invincible = true
-		_iframes_timer.start(invincibility_duration)
-
-
-func _on_iframes_timeout() -> void:
-	_invincible = false
-
-
-func _build_timer() -> Timer:
-	var t := Timer.new()
-	t.one_shot = true
-	t.timeout.connect(_on_iframes_timeout)
-	add_child(t)
-	return t
-```
-
-### C# (`HurtboxComponent.cs`)
-
-```csharp
-using Godot;
-
-public partial class HurtboxComponent : Area2D
-{
-    /// <summary>Reference to the HealthComponent on the same entity.</summary>
-    [Export] public HealthComponent HealthComponent { get; set; }
-
-    /// <summary>Invincibility frame duration in seconds (0 = none).</summary>
-    [Export] public float InvincibilityDuration { get; set; } = 0f;
-
-    [Signal] public delegate void HurtEventHandler(int damageAmount);
-
-    private bool _invincible;
-    private Timer _iframesTimer;
-
-    public override void _Ready()
-    {
-        _iframesTimer = new Timer { OneShot = true };
-        _iframesTimer.Timeout += OnIframesTimeout;
-        AddChild(_iframesTimer);
-    }
-
-    public void ReceiveHit(int damage)
-    {
-        if (_invincible) return;
-
-        EmitSignal(SignalName.Hurt, damage);
-        HealthComponent?.TakeDamage(damage);
-
-        if (InvincibilityDuration > 0f)
-        {
-            _invincible = true;
-            _iframesTimer.Start(InvincibilityDuration);
-        }
-    }
-
-    private void OnIframesTimeout() => _invincible = false;
-}
-```
+Choose [2D hitboxes and hurtboxes](references/2d-hitboxes.md) for `Area2D` / `CollisionShape2D`, or [3D hitboxes and hurtboxes](references/3d-hitboxes.md) for `Area3D` / `CollisionShape3D`. Each includes complete GDScript and C# classes, collision-layer setup, cooldown, and invincibility timers. Health values, signals, and ability data are shared.
 
 ---
 
 ## 6. Component Communication
 
-Components must not call methods on siblings directly. Use signals to keep them decoupled.
+Use signals for notifications and explicit references for required interfaces. Avoid discovering siblings through implicit parent paths.
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Entity (CharacterBody2D)                            │
+│  Entity (Node2D / Node3D)                            │
 │                                                      │
 │  ┌──────────────┐    hit(hurtbox)                    │
 │  │ HitboxComponent ──────────────────────────────┐  │
@@ -280,7 +98,7 @@ Components must not call methods on siblings directly. Use signals to keep them 
 
 Three patterns in order of preference:
 
-### @export NodePath — most flexible, works across the scene tree
+### @export typed node reference — works across the scene tree
 
 ```gdscript
 # hurtbox_component.gd
@@ -299,7 +117,6 @@ Three patterns in order of preference:
 ```gdscript
 # enemy.gd
 @onready var health: HealthComponent = $HealthComponent
-@onready var hurtbox: HurtboxComponent = $HurtboxComponent
 ```
 
 ### get_node pattern — when the path is dynamic or optional
@@ -317,27 +134,25 @@ func _ready() -> void:
 
 ```csharp
 // Pattern 1: [Export] property — drag-and-drop in the Inspector.
-public partial class HurtboxComponent : Area3D
+public partial class HealthBinding : Node
 {
     [Export] public HealthComponent Health { get; set; }
 }
 
 // Pattern 2: GetNode<T> for a known child path (equivalent to @onready var x := $Path).
-public partial class Enemy : CharacterBody3D
+public partial class EnemyComponents : Node
 {
     private HealthComponent _health;
-    private HurtboxComponent _hurtbox;
 
     public override void _Ready()
     {
         _health = GetNode<HealthComponent>("HealthComponent");
-        _hurtbox = GetNode<HurtboxComponent>("HurtboxComponent");
         _health.Died += QueueFree;
     }
 }
 
 // Pattern 3: GetNodeOrNull<T> when the component is optional (equivalent to get_node_or_null).
-public partial class Pickup : Node3D
+public partial class Pickup : Node
 {
     public override void _Ready()
     {
@@ -410,6 +225,6 @@ public static class ComponentUtils
 
 - [ ] Each component is saved as its own `.tscn` scene and reused by instancing
 - [ ] Components communicate through signals — no `get_parent().get_node("Sibling")` calls
-- [ ] No direct sibling access anywhere inside a component script
+- [ ] Required component references are explicitly assigned, rather than discovered through parent paths
 - [ ] All tuneable values (`damage`, `max_health`, `cooldown_duration`) are `@export`
 - [ ] Each component can be tested by attaching it to a minimal test scene in isolation

@@ -3,7 +3,7 @@ name: godot-project-setup
 description: Use when creating a new Godot 4.x project — scaffolds recommended directory structure, project settings, autoloads, and .gitignore
 ---
 
-# Godot Project Setup
+# Godot Project Setup (Common)
 
 This skill scaffolds a new Godot 4.3+ project with recommended directory structure, project settings, autoloads, and version control configuration.
 

@@ -1,0 +1,431 @@
+{
+  "pairedTopics": [
+    {
+      "topic": "HUD damage numbers",
+      "2d": "skills/hud-system/references/2d-damage-numbers.md",
+      "3d": "skills/hud-system/references/3d-damage-numbers.md",
+      "common": "skills/hud-system/references/common-damage-numbers.md",
+      "skill": "hud-system"
+    },
+    {
+      "topic": "HUD interaction prompts",
+      "2d": "skills/hud-system/references/2d-interaction-prompts.md",
+      "3d": "skills/hud-system/references/3d-interaction-prompts.md",
+      "skill": "hud-system"
+    },
+    {
+      "topic": "HUD minimap",
+      "2d": "skills/hud-system/references/2d-minimap.md",
+      "3d": "skills/hud-system/references/3d-minimap.md",
+      "skill": "hud-system"
+    },
+    {
+      "topic": "Spatial audio",
+      "2d": "skills/audio-system/references/2d-spatial-audio.md",
+      "3d": "skills/audio-system/references/3d-spatial-audio.md",
+      "skill": "audio-system"
+    },
+    {
+      "topic": "Positional SFX pool",
+      "2d": "skills/audio-system/references/2d-sfx-pooling.md",
+      "3d": "skills/audio-system/references/3d-sfx-pooling.md",
+      "common": "skills/audio-system/references/common-sfx-pooling.md",
+      "skill": "audio-system"
+    },
+    {
+      "topic": "Hitbox and hurtbox components",
+      "2d": "skills/component-system/references/2d-hitboxes.md",
+      "3d": "skills/component-system/references/3d-hitboxes.md",
+      "skill": "component-system"
+    },
+    {
+      "skill": "player-controller",
+      "topic": "controllers",
+      "2d": "skills/player-controller/references/2d-controllers.md",
+      "3d": "skills/player-controller/references/3d-controllers.md"
+    },
+    {
+      "skill": "player-controller",
+      "topic": "movement-recipes",
+      "2d": "skills/player-controller/references/2d-movement-recipes.md",
+      "3d": "skills/player-controller/references/3d-movement-recipes.md"
+    },
+    {
+      "skill": "state-machine",
+      "topic": "character-states",
+      "2d": "skills/state-machine/references/2d-character-states.md",
+      "3d": "skills/state-machine/references/3d-character-states.md"
+    },
+    {
+      "skill": "state-machine",
+      "topic": "enum-enemy",
+      "2d": "skills/state-machine/references/2d-enum-enemy.md",
+      "3d": "skills/state-machine/references/3d-enum-enemy.md"
+    },
+    {
+      "skill": "ai-navigation",
+      "topic": "navigation-agent",
+      "2d": "skills/ai-navigation/references/2d-navigation-agent.md",
+      "3d": "skills/ai-navigation/references/3d-navigation-agent.md"
+    },
+    {
+      "skill": "ai-navigation",
+      "topic": "patrol-patterns",
+      "2d": "skills/ai-navigation/references/2d-patrol-patterns.md",
+      "3d": "skills/ai-navigation/references/3d-patrol-patterns.md"
+    },
+    {
+      "skill": "ai-navigation",
+      "topic": "chase-attack",
+      "2d": "skills/ai-navigation/references/2d-chase-attack.md",
+      "3d": "skills/ai-navigation/references/3d-chase-attack.md"
+    },
+    {
+      "skill": "ai-navigation",
+      "topic": "steering-behaviors",
+      "2d": "skills/ai-navigation/references/2d-steering-behaviors.md",
+      "3d": "skills/ai-navigation/references/3d-steering-behaviors.md"
+    },
+    {
+      "skill": "ai-navigation",
+      "topic": "behavior-tree-actor",
+      "2d": "skills/ai-navigation/references/2d-behavior-tree-actor.md",
+      "3d": "skills/ai-navigation/references/3d-behavior-tree-actor.md"
+    },
+    {
+      "skill": "math-essentials",
+      "topic": "game-math-recipes",
+      "2d": "skills/math-essentials/references/2d-game-math-recipes.md",
+      "3d": "skills/math-essentials/references/3d-game-math-recipes.md"
+    },
+    {
+      "skill": "math-essentials",
+      "topic": "path-following",
+      "2d": "skills/math-essentials/references/2d-path-following.md",
+      "3d": "skills/math-essentials/references/3d-path-following.md"
+    },
+    {
+      "skill": "input-handling",
+      "topic": "world-input",
+      "2d": "skills/input-handling/references/2d-world-input.md",
+      "3d": "skills/input-handling/references/3d-world-input.md"
+    },
+    {
+      "skill": "camera-system",
+      "topic": "camera-zones",
+      "2d": "skills/camera-system/references/2d-camera-zones.md",
+      "3d": "skills/camera-system/references/3d-camera-zones.md"
+    },
+    {
+      "skill": "camera-system",
+      "topic": "split-screen",
+      "2d": "skills/camera-system/references/2d-split-screen.md",
+      "3d": "skills/camera-system/references/3d-split-screen.md"
+    },
+    {
+      "skill": "camera-system",
+      "topic": "camera-patterns",
+      "2d": "skills/camera-system/references/2d-camera-patterns.md",
+      "3d": "skills/camera-system/references/3d-camera-patterns.md"
+    },
+    {
+      "skill": "multiplayer-basics",
+      "topic": "spawning-networked-objects",
+      "2d": "skills/multiplayer-basics/references/2d-spawning-networked-objects.md",
+      "3d": "skills/multiplayer-basics/references/3d-spawning-networked-objects.md"
+    },
+    {
+      "skill": "multiplayer-basics",
+      "topic": "player-join-flow",
+      "2d": "skills/multiplayer-basics/references/2d-player-join-flow.md",
+      "3d": "skills/multiplayer-basics/references/3d-player-join-flow.md"
+    },
+    {
+      "skill": "multiplayer-basics",
+      "topic": "authority-movement",
+      "2d": "skills/multiplayer-basics/references/2d-authority-movement.md",
+      "3d": "skills/multiplayer-basics/references/3d-authority-movement.md"
+    },
+    {
+      "skill": "multiplayer-sync",
+      "topic": "synced-player",
+      "2d": "skills/multiplayer-sync/references/2d-synced-player.md",
+      "3d": "skills/multiplayer-sync/references/3d-synced-player.md"
+    },
+    {
+      "skill": "multiplayer-sync",
+      "topic": "interpolation",
+      "2d": "skills/multiplayer-sync/references/2d-interpolation.md",
+      "3d": "skills/multiplayer-sync/references/3d-interpolation.md"
+    },
+    {
+      "skill": "multiplayer-sync",
+      "topic": "client-prediction",
+      "2d": "skills/multiplayer-sync/references/2d-client-prediction.md",
+      "3d": "skills/multiplayer-sync/references/3d-client-prediction.md"
+    },
+    {
+      "skill": "multiplayer-sync",
+      "topic": "lag-compensation",
+      "2d": "skills/multiplayer-sync/references/2d-lag-compensation.md",
+      "3d": "skills/multiplayer-sync/references/3d-lag-compensation.md"
+    },
+    {
+      "skill": "multiplayer-sync",
+      "topic": "interest-management",
+      "2d": "skills/multiplayer-sync/references/2d-interest-management.md",
+      "3d": "skills/multiplayer-sync/references/3d-interest-management.md"
+    },
+    {
+      "topic": "area-recipes",
+      "2d": "skills/physics-system/references/2d-area-recipes.md",
+      "3d": "skills/physics-system/references/3d-area-recipes.md"
+    },
+    {
+      "topic": "rigidbody-recipes",
+      "2d": "skills/physics-system/references/2d-rigidbody-recipes.md",
+      "3d": "skills/physics-system/references/3d-rigidbody-recipes.md"
+    },
+    {
+      "topic": "staticbody-recipes",
+      "2d": "skills/physics-system/references/2d-staticbody-recipes.md",
+      "3d": "skills/physics-system/references/3d-staticbody-recipes.md"
+    },
+    {
+      "topic": "raycasting-recipes",
+      "2d": "skills/physics-system/references/2d-raycasting-recipes.md",
+      "3d": "skills/physics-system/references/3d-raycasting-recipes.md"
+    },
+    {
+      "topic": "collision-shapes",
+      "2d": "skills/physics-system/references/2d-collision-shapes.md",
+      "3d": "skills/physics-system/references/3d-collision-shapes.md"
+    },
+    {
+      "topic": "interpolation-camera",
+      "2d": "skills/physics-system/references/2d-interpolation-camera.md",
+      "3d": "skills/physics-system/references/3d-interpolation-camera.md"
+    },
+    {
+      "topic": "ragdoll-recipes",
+      "2d": "skills/physics-system/references/2d-ragdoll-recipes.md",
+      "3d": "skills/physics-system/references/3d-ragdoll-recipes.md"
+    },
+    {
+      "topic": "noise-generation",
+      "2d": "skills/procedural-generation/references/2d-noise-generation.md",
+      "3d": "skills/procedural-generation/references/3d-noise-generation.md"
+    },
+    {
+      "topic": "bsp-dungeons",
+      "2d": "skills/procedural-generation/references/2d-bsp-dungeons.md",
+      "3d": "skills/procedural-generation/references/3d-bsp-dungeons.md"
+    },
+    {
+      "topic": "cellular-automata",
+      "2d": "skills/procedural-generation/references/2d-cellular-automata.md",
+      "3d": "skills/procedural-generation/references/3d-cellular-automata.md"
+    },
+    {
+      "topic": "rendering-optimization",
+      "2d": "skills/godot-optimization/references/2d-rendering.md",
+      "3d": "skills/godot-optimization/references/3d-rendering.md"
+    },
+    {
+      "topic": "pool-placement",
+      "2d": "skills/godot-optimization/references/2d-pool-placement.md",
+      "3d": "skills/godot-optimization/references/3d-pool-placement.md"
+    },
+    {
+      "topic": "animated sprites",
+      "2d": "skills/animation-system/references/2d-sprite-animation.md",
+      "3d": "skills/animation-system/references/3d-sprite-animation.md"
+    },
+    {
+      "topic": "AnimationTree movement",
+      "2d": "skills/animation-system/references/2d-state-machine-examples.md",
+      "3d": "skills/animation-system/references/3d-state-machine-examples.md"
+    },
+    {
+      "topic": "hit feedback",
+      "2d": "skills/animation-system/references/2d-hit-flash.md",
+      "3d": "skills/animation-system/references/3d-hit-flash.md"
+    },
+    {
+      "topic": "particle effects",
+      "2d": "skills/particles-vfx/references/2d-vfx-recipes.md",
+      "3d": "skills/particles-vfx/references/3d-vfx-recipes.md"
+    },
+    {
+      "topic": "particle flipbooks",
+      "2d": "skills/particles-vfx/references/2d-flipbook-animation.md",
+      "3d": "skills/particles-vfx/references/3d-flipbook-animation.md"
+    },
+    {
+      "topic": "particle trails",
+      "2d": "skills/particles-vfx/references/2d-trails.md",
+      "3d": "skills/particles-vfx/references/3d-trails.md"
+    },
+    {
+      "topic": "world motion",
+      "2d": "skills/tween-animation/references/2d-world-motion.md",
+      "3d": "skills/tween-animation/references/3d-world-motion.md"
+    },
+    {
+      "topic": "shader effects",
+      "2d": "skills/shader-basics/references/2d-shader-recipes.md",
+      "3d": "skills/shader-basics/references/3d-shader-recipes.md"
+    },
+    {
+      "topic": "masking",
+      "2d": "skills/shader-basics/references/2d-masking.md",
+      "3d": "skills/shader-basics/references/3d-stencil-buffer.md"
+    },
+    {
+      "topic": "skeletal animation",
+      "2d": "skills/animation-system/references/2d-skeleton-animation.md",
+      "3d": "skills/animation-system/references/3d-skeleton-modifiers.md"
+    },
+    {
+      "topic": "particle collision",
+      "2d": "skills/particles-vfx/references/2d-collision.md",
+      "3d": "skills/particles-vfx/references/3d-attractors-and-collision.md"
+    },
+    {
+      "topic": "grid level construction",
+      "2d": "skills/2d-essentials/references/2d-tilemap.md",
+      "3d": "skills/3d-essentials/references/3d-gridmap.md"
+    },
+    {
+      "topic": "custom geometry",
+      "2d": "skills/2d-essentials/references/2d-custom-drawing.md",
+      "3d": "skills/3d-essentials/references/3d-custom-geometry.md"
+    },
+    {
+      "topic": "surface marks",
+      "2d": "skills/2d-essentials/references/2d-surface-stamps.md",
+      "3d": "skills/3d-essentials/references/3d-decals.md"
+    },
+    {
+      "skill": "dependency-injection",
+      "topic": "scene-injection",
+      "2d": "skills/dependency-injection/references/2d-scene-injection.md",
+      "3d": "skills/dependency-injection/references/3d-scene-injection.md"
+    },
+    {
+      "skill": "save-load",
+      "topic": "json-saves",
+      "2d": "skills/save-load/references/2d-json-saves.md",
+      "3d": "skills/save-load/references/3d-json-saves.md"
+    },
+    {
+      "skill": "godot-brainstorming",
+      "topic": "example-chest",
+      "2d": "skills/godot-brainstorming/references/2d-example-chest.md",
+      "3d": "skills/godot-brainstorming/references/3d-example-chest.md"
+    },
+    {
+      "skill": "beehave",
+      "topic": "spatial-leaves",
+      "2d": "skills/beehave/references/2d-spatial-leaves.md",
+      "3d": "skills/beehave/references/3d-spatial-leaves.md"
+    },
+    {
+      "skill": "limboai",
+      "topic": "spatial-tasks",
+      "2d": "skills/limboai/references/2d-spatial-tasks.md",
+      "3d": "skills/limboai/references/3d-spatial-tasks.md"
+    },
+    {
+      "skill": "phantom-camera",
+      "topic": "camera-recipes",
+      "2d": "skills/phantom-camera/references/2d-camera-recipes.md",
+      "3d": "skills/phantom-camera/references/3d-camera-recipes.md"
+    },
+    {
+      "skill": "assets-pipeline",
+      "topic": "runtime-scene-loading",
+      "2d": "skills/assets-pipeline/references/2d-runtime-scene-loading.md",
+      "3d": "skills/assets-pipeline/references/3d-runtime-scene-loading.md"
+    },
+    {
+      "skill": "gdscript-advanced",
+      "topic": "tool-preview",
+      "2d": "skills/gdscript-advanced/references/2d-tool-preview.md",
+      "3d": "skills/gdscript-advanced/references/3d-tool-preview.md"
+    },
+    {
+      "skill": "addon-development",
+      "topic": "tool-sprite",
+      "2d": "skills/addon-development/references/2d-tool-sprite.md",
+      "3d": "skills/addon-development/references/3d-tool-sprite.md"
+    },
+    {
+      "skill": "gdextension",
+      "topic": "native-class",
+      "2d": "skills/gdextension/references/2d-native-class.md",
+      "3d": "skills/gdextension/references/3d-native-class.md"
+    },
+    {
+      "skill": "scene-organization",
+      "topic": "scene-trees",
+      "2d": "skills/scene-organization/references/2d-scene-trees.md",
+      "3d": "skills/scene-organization/references/3d-scene-trees.md"
+    },
+    {
+      "skill": "gdscript-patterns",
+      "topic": "abstract-classes",
+      "2d": "skills/gdscript-patterns/references/2d-abstract-classes.md",
+      "3d": "skills/gdscript-patterns/references/3d-abstract-classes.md"
+    },
+    {
+      "skill": "gdscript-patterns",
+      "topic": "variadic-spawning",
+      "2d": "skills/gdscript-patterns/references/2d-variadic-spawning.md",
+      "3d": "skills/gdscript-patterns/references/3d-variadic-spawning.md"
+    },
+    {
+      "skill": "addon-development",
+      "topic": "editor visualization",
+      "2d": "skills/addon-development/references/2d-editor-overlay.md",
+      "3d": "skills/addon-development/references/3d-gizmos-deep-dive.md"
+    }
+  ],
+  "scopeNotes": [
+    "Common UI uses Vector2 pixel coordinates regardless of world dimension.",
+    "Shared DamageNumber class moved to common-damage-numbers.md; pool remains 2d-damage-numbers.md. Tests extracting class_name DamageNumber need common source.",
+    "Hitbox/Hurtbox class blocks moved from component-system/SKILL.md into 2d-hitboxes.md; new 3D classes are suffixed 3D.",
+    "Existing C# DamageNumber selection: common-damage-numbers.md block 0. DamageNumberSpawner selection: 2d-damage-numbers.md block 0 (previously block 1).",
+    "New engine suite: tests/godot-examples/cases/dimensions-gameplay.mjs, 4 passing cases. New C# compile selections: work/dimension-gameplay-csharp.json, 17 additions validated with 2 actual shared dependencies.",
+    "Scope API checks used Godot 4.7.2 runtime, official GodotSharp 4.7.2 XML, and official Camera3D/AudioStreamPlayer2D/AudioStreamPlayer3D documentation.",
+    "Six shared entry SKILL.md files keep discovery IDs and use (Common) titles; reference names and routing identify 2D/3D/common.",
+    "Common FSM entity type is Node, with typed CharacterState2D/3D adapters; lifecycle tests continue to use the same State/StateMachine implementation.",
+    "Input device, cursor and scalar curve APIs stay common; Vector2 screen or graph coordinates do not imply a 2D-only game feature.",
+    "First-person look/SpringArm collision are 3D-specific; 2D camera framing uses follow, limits and planar orbit. 3D room zones select cameras rather than invent Camera2D limit properties.",
+    "3D ground examples use XZ movement, Y gravity, world-unit thresholds; flying volumetric navigation is explicitly excluded from ground navmesh examples.",
+    "Split screen shares one level World2D/World3D instead of duplicating physics worlds.",
+    "New runtime cases: dimensions-movement.mjs verifies XY/XZ direction, analog magnitude, deadzone overshoot, gravity signs, typed FSM owner, and navigation horizontal stop preserving falling velocity. Additional recipes imported against Godot 4.7.2.",
+    "C# State selection moved from block1 to block0 in state-machine/SKILL.md; enums moved into 2d/3d-enum-enemy refs.",
+    "Common ActionBuffer now separates event buffering from body movement and has expiration/consume-once runtime checks.",
+    "Dedicated-server configuration, lobby, match flow and deployment are dimension independent.",
+    "Common RPC intro now uses Node and chat only; typed position RPCs moved to paired authority movement recipes.",
+    "Prediction examples use a bounded fixed-step replay core and explicitly document transport and collision integration limits.",
+    "Lag compensation now uses dimension-consistent vector types and finite rays against copied, bounded historical circle/sphere snapshots.",
+    "Shared bandwidth guide delegates authority-side distance filtering and nearest-viewer rate selection to paired interest-management recipes.",
+    "Jolt and SoftBody3D remain 3D-only; one-way CollisionShape2D is 2D-only.",
+    "2D ragdolls use jointed RigidBody2D parts; they do not invent PhysicalBoneSimulator2D.",
+    "Physics Camera2D samples physics positions because the interpolated-global-transform getter is Node3D-only.",
+    "BSP/cave 3D counterparts build planar XZ GridMap levels; volumetric density uses get_noise_3d. WFC remains a shared planar constraint algorithm and explicitly does not claim volumetric coverage.",
+    "Optimization now separates concrete 2D/3D rendering and pool placement, retaining profiling/memory/core pool behavior in common references. Removed unsafe offscreen-collider pooling and false CanvasGroup/GC claims in touched examples.",
+    "39 new or updated C# class selections compiled with official Godot.NET.Sdk 4.7.2; no errors or warnings.",
+    "Four dimensions-physics engine tests passed, including actual 2D clockwise/3D negative-Y right steering, physics overlap, connected BSP floors, detached pool lifetime, and MultiMesh transform arguments.",
+    "Common animation combo now extends Node; hit feedback split by rendering node.",
+    "Subemitters remain common with complete 2D and 3D blocks; target path belongs to emitter node, not process material.",
+    "Turbulence moved from 3D-only attractor reference to shared process-material reference.",
+    "Control/Label HUD tween recipes remain common; transform tweens have dimensional references.",
+    "3D skeleton modifier/IK APIs, glTF humanoid retargeting, volumetric fog, GI, mesh LOD, and compositor remain 3D-specific. Skeleton2D cutout reference is the actual 2D skeletal approach, not suffix-swapped 3D IK.",
+    "3D perspective supplies parallax; 2D parallax scroll, terrain autotiling, and pixel snapping remain dimension-specific.",
+    "Stencil docs corrected to spatial-only stencil_mode syntax; alpha texture masking supplies the 2D gameplay counterpart.",
+    "Headless checks cover engine behavior and configuration, not GPU appearance."
+  ]
+}

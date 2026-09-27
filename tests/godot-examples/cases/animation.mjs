@@ -54,7 +54,7 @@ quit(0)`),
   {
     name: 'animation: AimModifier configures indexed bones and Euler axis',
     async setup({ repoRoot, projectDir }) {
-      const block = await gdscriptBlock(repoRoot, 'skills/animation-system/references/bone-constraints.md', 'var aim :=');
+      const block = await gdscriptBlock(repoRoot, 'skills/animation-system/references/3d-bone-constraints.md', 'var aim :=');
       await writeProject(projectDir, {
         'example.gd': `extends Node3D\n\n${block}`,
         'test.gd': runner(`var actor := Node3D.new()
@@ -80,7 +80,7 @@ quit(0)`),
   {
     name: 'animation: CopyTransform copies rotation without position or scale',
     async setup({ repoRoot, projectDir }) {
-      const block = await gdscriptBlock(repoRoot, 'skills/animation-system/references/bone-constraints.md', 'var copy :=');
+      const block = await gdscriptBlock(repoRoot, 'skills/animation-system/references/3d-bone-constraints.md', 'var copy :=');
       await writeProject(projectDir, {
         'example.gd': `extends Node3D\n\n${block}`,
         'test.gd': runner(`var actor := Node3D.new()
@@ -103,7 +103,7 @@ quit(0)`),
   {
     name: 'animation: FABRIK derives a connected chain and resolves its target path',
     async setup({ repoRoot, projectDir }) {
-      const block = await gdscriptBlock(repoRoot, 'skills/animation-system/references/ik-recipes.md', 'var ik := FABRIK3D.new()');
+      const block = await gdscriptBlock(repoRoot, 'skills/animation-system/references/3d-ik-recipes.md', 'var ik := FABRIK3D.new()');
       await writeProject(projectDir, {
         'example.gd': `extends Node3D\n\n${block}`,
         'test.gd': runner(`var actor := Node3D.new()
@@ -144,7 +144,7 @@ quit(0)`),
   {
     name: 'animation: LookAt uses symmetric flags and explicit angle limits',
     async setup({ repoRoot, projectDir }) {
-      const block = await gdscriptBlock(repoRoot, 'skills/animation-system/references/skeleton-modifiers.md', 'look_at.symmetry_limitation');
+      const block = await gdscriptBlock(repoRoot, 'skills/animation-system/references/3d-skeleton-modifiers.md', 'look_at.symmetry_limitation');
       await writeProject(projectDir, {
         'example.gd': `extends Node3D\n\n${block}`,
         'test.gd': runner(`var container := Node3D.new()

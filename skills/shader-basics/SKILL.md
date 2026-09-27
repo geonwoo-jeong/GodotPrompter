@@ -3,7 +3,7 @@ name: shader-basics
 description: Use when implementing shaders — Godot shader language, visual shaders, common visual recipes, and post-processing effects
 ---
 
-# Shaders in Godot 4.3+
+# Shaders in Godot 4.3+ (Common)
 
 All examples target Godot 4.3+ with no deprecated APIs.
 
@@ -12,6 +12,8 @@ All examples target Godot 4.3+ with no deprecated APIs.
 ---
 
 ## 1. Core Concepts
+
+Choose [2D canvas recipes](references/2d-shader-recipes.md) or [3D spatial recipes](references/3d-shader-recipes.md) for dissolve, hit flash, color swap, scrolling UV, water, and outlines. [Post-processing](references/common-post-processing.md) can be shared; [CompositorEffect](references/3d-compositor-effects.md) works in the 3D rendering pipeline.
 
 ### Shader Types
 
@@ -208,7 +210,7 @@ Visual shaders provide a node-based graph editor — no code required.
 
 The standard pattern: full-rect `ColorRect` with a canvas_item shader on top of the gameplay canvas. For 3D, use a `WorldEnvironment` Adjustment, Glow, or custom shader. For chained effects, render the world to a `SubViewport` then sample its texture in a final shader pass.
 
-> See [references/post-processing.md](references/post-processing.md) for the ColorRect overlay pattern, vignette + CRT/scanline shader source, the SubViewport pipeline, and WorldEnvironment 3D post-processing notes.
+> See [references/common-post-processing.md](references/common-post-processing.md) for the ColorRect overlay pattern, vignette + CRT/scanline shader source, the SubViewport pipeline, and WorldEnvironment 3D post-processing notes.
 
 ---
 
@@ -216,7 +218,7 @@ The standard pattern: full-rect `ColorRect` with a canvas_item shader on top of 
 
 `CompositorEffect` runs custom render passes within Godot's render pipeline (post-tonemap or pre-tonemap). Use when ColorRect overlays aren't enough — multi-pass effects, depth-aware effects, custom AO/SSR variants. Heavier setup than a screen-space shader; reach for it only when needed.
 
-> See [references/compositor-effects.md](references/compositor-effects.md) for setup, a custom CompositorEffect GDScript example, and built-in Compositor use cases.
+> See [references/3d-compositor-effects.md](references/3d-compositor-effects.md) for setup, a custom CompositorEffect GDScript example, and built-in Compositor use cases.
 
 ---
 
@@ -251,9 +253,9 @@ render_mode blend_add;             // Additive blending
 
 ## 9. Stencil Buffer Effects (Godot 4.5+)
 
-Godot 4.5 exposes stencil write/read in spatial and canvas_item shaders via `stencil_write_mode`, `stencil_read_mode`, `stencil_value`, etc. across all rendering backends. Enables portals, X-ray vision, outline masks, and holes-in-geometry effects that previously required compositor-level work.
+Godot 4.5+ spatial shaders support experimental stencil masking with a `stencil_mode` statement. Reading requires the transparent pass. Canvas shaders use texture masks or CanvasItem clipping instead; see [2D masking](references/2d-masking.md).
 
-> See [references/stencil-buffer.md](references/stencil-buffer.md) for render-mode reference and the X-ray vision portal worked example.
+> See [references/3d-stencil-buffer.md](references/3d-stencil-buffer.md) for render-mode reference and the visible-mask stencil sampling example.
 
 ---
 
@@ -287,7 +289,7 @@ This is an editor/export setting only — no runtime API is needed.
 
 The Shader Baker pre-compiles all project shaders for the target platform at export time, eliminating the stutter players experience the first time a new material renders in-game — especially severe on macOS/Apple Silicon (Metal) and Windows (D3D12), where shader translation is expensive. Enable it per export preset for release builds; leave it off for development builds to keep exports fast. It operates at the Godot export pipeline level — see the **export-pipeline** skill for export preset configuration.
 
-> See [references/shader-baker.md](references/shader-baker.md) for enabling steps and the with/without comparison.
+> See [references/common-shader-baker.md](references/common-shader-baker.md) for enabling steps and the with/without comparison.
 
 ---
 
@@ -313,7 +315,7 @@ The Shader Baker pre-compiles all project shaders for the target platform at exp
 - [ ] Shader type matches the node type (`canvas_item` for 2D, `spatial` for 3D)
 - [ ] Uniforms use appropriate hints (`hint_range`, `source_color`, `filter_linear_mipmap`)
 - [ ] Shared visual effects use the same Shader resource with separate ShaderMaterial instances
-- [ ] Post-processing shaders are on a CanvasLayer (2D) or WorldEnvironment (3D), not on game objects
+- [ ] Full-screen canvas post-processing uses a CanvasLayer/ColorRect; 3D pipeline effects use a Compositor on the WorldEnvironment or camera
 - [ ] `TEXTURE` is sampled in canvas_item shaders (otherwise sprite content is lost)
 - [ ] Alpha-transparent shaders set `COLOR.a` correctly and use `blend_mix` render mode
 - [ ] Animated shader parameters (dissolve, flash) are driven by Tweens or AnimationPlayer, not `_process`

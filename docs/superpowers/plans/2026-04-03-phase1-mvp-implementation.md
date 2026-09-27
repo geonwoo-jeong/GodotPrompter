@@ -18,8 +18,8 @@ All files are new creations under the existing `skills/` directory:
 |------|---------------|
 | `skills/godot-project-setup/SKILL.md` | Project scaffolding — directory structure, project.godot settings, autoloads, .gitignore |
 | `skills/godot-testing/SKILL.md` | TDD workflow with GUT and gdUnit4 — test structure, assertions, mocking, running |
-| `skills/godot-testing/gut-reference.md` | GUT-specific API reference and patterns |
-| `skills/godot-testing/gdunit4-reference.md` | gdUnit4-specific API reference and patterns |
+| `skills/godot-testing/common-gut-reference.md` | GUT-specific API reference and patterns |
+| `skills/godot-testing/common-gdunit4-reference.md` | gdUnit4-specific API reference and patterns |
 | `skills/godot-code-review/SKILL.md` | Code review checklist — GDScript/C# best practices, Godot anti-patterns |
 | `skills/scene-organization/SKILL.md` | Scene tree patterns — composition, inheritance, when to split scenes |
 | `skills/state-machine/SKILL.md` | FSM patterns — enum-based, node-based, resource-based with trade-offs |
@@ -300,8 +300,8 @@ Covers directory structure (split and co-located), .gitignore,
 
 **Files:**
 - Create: `skills/godot-testing/SKILL.md`
-- Create: `skills/godot-testing/gut-reference.md`
-- Create: `skills/godot-testing/gdunit4-reference.md`
+- Create: `skills/godot-testing/common-gut-reference.md`
+- Create: `skills/godot-testing/common-gdunit4-reference.md`
 
 - [ ] **Step 1: Create SKILL.md with frontmatter and TDD workflow**
 
@@ -760,7 +760,7 @@ godot --headless -s addons/gdUnit4/bin/GdUnitCmdTool.gd --add res://tests --cs
 
 - [ ] **Step 4: Verify all three files are well-formed**
 
-Run: `head -5 skills/godot-testing/SKILL.md && head -3 skills/godot-testing/gut-reference.md && head -3 skills/godot-testing/gdunit4-reference.md`
+Run: `head -5 skills/godot-testing/SKILL.md && head -3 skills/godot-testing/common-gut-reference.md && head -3 skills/godot-testing/common-gdunit4-reference.md`
 Expected: Correct frontmatter on SKILL.md, correct headers on reference files
 
 - [ ] **Step 5: Commit**

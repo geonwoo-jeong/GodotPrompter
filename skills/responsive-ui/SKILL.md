@@ -3,7 +3,9 @@ name: responsive-ui
 description: Use when handling multiple resolutions — stretch modes, aspect ratios, DPI scaling, and mobile/desktop adaptation
 ---
 
-# Responsive UI in Godot 4.3+
+# Responsive UI in Godot 4.3+ (Common)
+
+> **Scope:** Common to 2D and 3D games. Screen-space `Control` layouts and shared game data do not depend on the world dimension.
 
 All examples target Godot 4.3+ with no deprecated APIs. GDScript is shown first, then C#.
 
@@ -86,7 +88,7 @@ Set via `Project > Project Settings > Display > Window > Stretch > Aspect` or th
 
 For crisp pixel-art games: `Project Settings → Display → Window → Stretch → Mode = viewport`, base resolution at native pixel size (e.g., 320×180), `Window Size Override = 4×` for editor preview. Use integer scaling to avoid sub-pixel blur.
 
-> See [references/pixel-art-setup.md](references/pixel-art-setup.md) for full project settings, integer-scaling script, nearest-neighbour filter overrides.
+> See [references/common-pixel-art-setup.md](references/common-pixel-art-setup.md) for full project settings, integer-scaling script, nearest-neighbour filter overrides.
 
 ---
 
@@ -94,7 +96,7 @@ For crisp pixel-art games: `Project Settings → Display → Window → Stretch 
 
 For retina / high-DPI displays: set `content_scale_factor` to scale the entire UI proportionally. Query `DisplayServer.screen_get_dpi()` at runtime for adaptive scaling per device.
 
-> See [references/dpi-scaling.md](references/dpi-scaling.md) for the `content_scale_factor` recipe and DPI-querying patterns.
+> See [references/common-dpi-scaling.md](references/common-dpi-scaling.md) for the `content_scale_factor` recipe and DPI-querying patterns.
 
 ---
 
@@ -102,7 +104,7 @@ For retina / high-DPI displays: set `content_scale_factor` to scale the entire U
 
 Four mobile-specific concerns: **touch input** (tap, swipe, multi-touch), **safe-area insets** (notch / dynamic island avoidance), **orientation lock** (portrait/landscape pinning), **virtual keyboard** (handle show/hide to avoid covering UI).
 
-> See [references/mobile.md](references/mobile.md) for full GDScript on each concern, plus iOS / Android nuances.
+> See [references/common-mobile.md](references/common-mobile.md) for full GDScript on each concern, plus iOS / Android nuances.
 
 ---
 
@@ -110,7 +112,7 @@ Four mobile-specific concerns: **touch input** (tap, swipe, multi-touch), **safe
 
 Anchor presets + Container nodes do most of the work. Use `size_flags_horizontal`/`vertical` (`FILL`, `EXPAND`, `SHRINK_CENTER`, `SHRINK_END`) to control how children consume container space. Detect runtime resolution changes via `get_viewport().size_changed`.
 
-> See [references/adaptive-layouts.md](references/adaptive-layouts.md) for the anchor + container strategy, resolution-change detection, and the full `size_flags` reference.
+> See [references/common-adaptive-layouts.md](references/common-adaptive-layouts.md) for the anchor + container strategy, resolution-change detection, and the full `size_flags` reference.
 
 ---
 

@@ -3,7 +3,7 @@ name: localization
 description: Use when implementing localization (i18n/l10n) — TranslationServer, CSV/PO translation files, locale switching, RTL support, and pluralization in Godot 4.3+
 ---
 
-# Localization in Godot 4.3+
+# Localization in Godot 4.3+ (Common)
 
 All examples target Godot 4.3+ with no deprecated APIs; GDScript first, then C#.
 
@@ -258,7 +258,7 @@ func _on_language_selected(index: int) -> void:
 
 Arabic, Hebrew, and Persian need `layout_direction` on Controls (`LOCALE` auto-follows the current locale), `structured_text_type` so URLs and paths do not fully reverse, and a font covering the script — Godot's default font does not. Re-apply layout direction whenever the locale changes. `TranslationServer` has **no signals** — override `_notification` and watch for `NOTIFICATION_TRANSLATION_CHANGED` (defined on `MainLoop`, inherited by `Node`). Since you never subscribe, there is no handler to disconnect.
 
-Full recipes, per-control property table, BBCode for mixed direction, and the C# `LocaleAwarePanel`: [references/rtl-support.md](references/rtl-support.md)
+Full recipes, per-control property table, BBCode for mixed direction, and the C# `LocaleAwarePanel`: [references/common-rtl-support.md](references/common-rtl-support.md)
 
 ---
 
@@ -266,7 +266,7 @@ Full recipes, per-control property table, BBCode for mixed direction, and the C#
 
 GDScript has no locale-aware number or date formatting — `"%d" % 1234567` is always `1234567`, so you group digits by hand. C# does have it: look up a `CultureInfo` from `TranslationServer.GetLocale()` (swap `_` for `-`) and use `ToString("N"/"C"/"d", culture)`.
 
-Both helpers in full: [references/locale-formatting.md](references/locale-formatting.md)
+Both helpers in full: [references/common-locale-formatting.md](references/common-locale-formatting.md)
 
 ---
 
@@ -319,7 +319,7 @@ ITEM_SWORD_DESC          # Inventory item description
 
 Godot 4.5 adds a **Preview Language** dropdown under Project Settings → Internationalization: the editor viewport re-renders in any registered locale, so you catch overflow from longer translations and verify RTL layout without entering Play mode. Editor-only — it does not affect exported builds.
 
-Steps and QA benefits: [references/editor-preview.md](references/editor-preview.md)
+Steps and QA benefits: [references/common-editor-preview.md](references/common-editor-preview.md)
 
 ---
 
@@ -327,7 +327,7 @@ Steps and QA benefits: [references/editor-preview.md](references/editor-preview.
 
 Godot 4.6 extends CSV translation with optional `?context` and `?plural` columns and a special `?pluralrule` **row**. Plural forms occupy consecutive rows; each locale can have three or more forms. The optional rule row specifies a Gettext plural expression per locale, not a CLDR category index. Use PO for plural/context support on Godot 4.3–4.5.
 
-Column reference, example CSV, and `tr()` / `tr_n()` usage (GDScript + C#): [references/csv-plural-context.md](references/csv-plural-context.md).
+Column reference, example CSV, and `tr()` / `tr_n()` usage (GDScript + C#): [references/common-csv-plural-context.md](references/common-csv-plural-context.md).
 
 ---
 

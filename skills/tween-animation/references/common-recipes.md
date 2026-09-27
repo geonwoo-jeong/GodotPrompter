@@ -1,4 +1,4 @@
-# Common Tween Recipes
+# Common Tween Recipes (Common)
 
 Reference for `skills/tween-animation/SKILL.md` — fade in/out, UI panel slide, button press bounce, damage number popup, pulsing/breathing, screen shake, shader parameter animation.
 
@@ -136,40 +136,6 @@ public void StartPulse(CanvasItem node)
 }
 ```
 
-### Screen Shake
+### World-space effects
 
-```gdscript
-# On Camera2D
-func shake(intensity: float = 8.0, duration: float = 0.3) -> void:
-    var tween := create_tween().set_loops(int(duration / 0.04))
-    tween.tween_property(self, "offset",
-        Vector2(randf_range(-intensity, intensity), randf_range(-intensity, intensity)), 0.02)
-    tween.tween_property(self, "offset",
-        Vector2(randf_range(-intensity, intensity), randf_range(-intensity, intensity)), 0.02)
-    tween.finished.connect(func(): offset = Vector2.ZERO)
-```
-
-> **Note:** Tween offsets are fixed at creation time, so each loop shakes to the same positions. For truly random per-frame shake, use `_process()` with a timer instead.
-
-### Shader Parameter Animation
-
-```gdscript
-func dissolve(sprite: Sprite2D, duration: float = 1.0) -> void:
-    var mat: ShaderMaterial = sprite.material
-    var tween := create_tween()
-    tween.tween_property(mat, "shader_parameter/dissolve_amount", 1.0, duration)
-    tween.tween_callback(sprite.queue_free)
-```
-
-```csharp
-public void Dissolve(Sprite2D sprite, float duration = 1.0f)
-{
-    var mat = sprite.Material as ShaderMaterial;
-    var tween = CreateTween();
-    tween.TweenProperty(mat, "shader_parameter/dissolve_amount", 1.0f, duration);
-    tween.TweenCallback(Callable.From(sprite.QueueFree));
-}
-```
-
----
-
+Use [2D motion/effects](2d-world-motion.md) or [3D motion/effects](3d-world-motion.md). The Label damage popup above takes HUD-local coordinates and is shared with 3D games; project a 3D position through Camera3D first as explained by **hud-system**.

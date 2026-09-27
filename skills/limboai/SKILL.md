@@ -3,7 +3,10 @@ name: limboai
 description: Use when using the LimboAI addon — behavior trees and hierarchical state machines (C++ GDExtension) with a visual editor, BTTask subclassing, and a blackboard
 ---
 
-# LimboAI
+# LimboAI (Common)
+
+> **Dimension:** Common framework. [2D recipes](references/2d-spatial-tasks.md) · [3D recipes](references/3d-spatial-tasks.md).
+
 
 > **Related skills:** **ai-navigation** for movement the tasks drive, **state-machine** for core-engine FSM (when you don't need an addon), **godot-brainstorming** for choosing an AI approach.
 
@@ -68,7 +71,7 @@ A `BehaviorTree` resource holds the task tree. `BTPlayer` runs it each physics f
 
 ```gdscript
 # EnemyAI.gd — assign behavior_tree in the Inspector or here
-extends CharacterBody2D
+extends Node
 
 @onready var bt_player: BTPlayer = $BTPlayer
 
@@ -88,7 +91,7 @@ func _on_bt_updated(status: int) -> void:
 // EnemyAI.cs
 using Godot;
 
-public partial class EnemyAI : CharacterBody2D
+public partial class EnemyAI : Node
 {
     [Export] private BTPlayer _btPlayer;
 
@@ -113,119 +116,7 @@ public partial class EnemyAI : CharacterBody2D
 
 Subclass `BTAction` (multi-tick work) or `BTCondition` (immediate check). Annotate with `@tool` so `_generate_name()` and `_get_configuration_warnings()` work in the editor. Place scripts under `res://ai/tasks/`; subfolders become task categories.
 
-### GDScript
-
-```gdscript
-@tool
-extends BTAction
-## Moves the agent toward a blackboard position each tick.
-
-@export var target_pos_var: StringName = &"target_pos"
-@export var speed: float = 200.0
-
-func _generate_name() -> String:
-    return "MoveToward %s" % LimboUtility.decorate_var(target_pos_var)
-
-func _setup() -> void:
-    pass  # one-time init; agent and blackboard are available here
-
-func _enter() -> void:
-    pass  # called when task transitions from non-RUNNING → RUNNING
-
-func _tick(delta: float) -> Status:
-    var target: Vector2 = blackboard.get_var(target_pos_var, Vector2.ZERO)
-    if agent.global_position.distance_to(target) < 5.0:
-        return SUCCESS
-    agent.velocity = agent.global_position.direction_to(target) * speed
-    agent.move_and_slide()
-    return RUNNING
-
-func _exit() -> void:
-    pass  # cleanup after SUCCESS or FAILURE
-```
-
-```gdscript
-@tool
-extends BTCondition
-## Returns SUCCESS if the agent is within range of a target node.
-
-@export var target_var: StringName = &"target"
-@export var distance_max: float = 150.0
-
-var _max_sq: float
-
-func _setup() -> void:
-    _max_sq = distance_max * distance_max
-
-func _tick(_delta: float) -> Status:
-    var target: Node2D = blackboard.get_var(target_var, null)
-    if not is_instance_valid(target):
-        return FAILURE
-    var in_range := agent.global_position.distance_squared_to(
-        target.global_position) <= _max_sq
-    return SUCCESS if in_range else FAILURE
-```
-
-### C#
-
-```csharp
-// MoveTowardTask.cs — place in res://ai/tasks/
-using Godot;
-
-[Tool]
-public partial class MoveTowardTask : BTAction
-{
-    [Export] public StringName TargetPosVar { get; set; } = "target_pos";
-    [Export] public float Speed { get; set; } = 200f;
-
-    public override string _GenerateName() =>
-        $"MoveToward {LimboUtility.DecorateVar(TargetPosVar)}";
-
-    public override void _Setup() { }
-
-    public override void _Enter() { }
-
-    public override Status _Tick(double delta)
-    {
-        var target = (Vector2)Blackboard.GetVar(TargetPosVar, Vector2.Zero);
-        var body = (CharacterBody2D)Agent;
-        if (body.GlobalPosition.DistanceTo(target) < 5f)
-            return Status.Success;
-        body.Velocity = body.GlobalPosition.DirectionTo(target) * Speed;
-        body.MoveAndSlide();
-        return Status.Running;
-    }
-
-    public override void _Exit() { }
-}
-```
-
-```csharp
-// InRangeCondition.cs
-using Godot;
-
-[Tool]
-public partial class InRangeCondition : BTCondition
-{
-    [Export] public StringName TargetVar { get; set; } = "target";
-    [Export] public float DistanceMax { get; set; } = 150f;
-
-    private float _maxSq;
-
-    public override void _Setup() => _maxSq = DistanceMax * DistanceMax;
-
-    public override Status _Tick(double delta)
-    {
-        var target = Blackboard.GetVar(TargetVar, default(Variant)).As<Node2D>();
-        if (!GodotObject.IsInstanceValid(target))
-            return Status.Failure;
-        var agent2D = (Node2D)Agent;
-        bool inRange = agent2D.GlobalPosition.DistanceSquaredTo(
-            target.GlobalPosition) <= _maxSq;
-        return inRange ? Status.Success : Status.Failure;
-    }
-}
-```
+Choose [2D spatial tasks](references/2d-spatial-tasks.md) or [3D spatial tasks](references/3d-spatial-tasks.md). Blackboard storage and task lifecycle are shared.
 
 Task lifecycle: `_setup()` once before first tick → `_enter()` when status transitions from non-RUNNING → `_tick(delta)` every execution → `_exit()` after SUCCESS or FAILURE.
 
@@ -290,13 +181,13 @@ Useful `Blackboard` methods: `has_var(name)`, `erase_var(name)`, `list_vars()`, 
 
 ## 6. Hierarchical state machine (LimboHSM)
 
-`LimboHSM` is a `LimboState` node that manages child `LimboState` nodes. Transitions fire when a state calls `dispatch(event)`. See [references/hsm.md](references/hsm.md) for advanced patterns (any-state transitions, `BTState`, nested HSMs, guards).
+`LimboHSM` is a `LimboState` node that manages child `LimboState` nodes. Transitions fire when a state calls `dispatch(event)`. See [references/common-hsm.md](references/common-hsm.md) for advanced patterns (any-state transitions, `BTState`, nested HSMs, guards).
 
 ### GDScript — scene-tree setup
 
 ```gdscript
 # Character.gd — scene tree: Character → LimboHSM → IdleState, MoveState
-extends CharacterBody2D
+extends Node
 
 @onready var hsm: LimboHSM = $LimboHSM
 @onready var idle: LimboState = $LimboHSM/IdleState
@@ -315,7 +206,7 @@ func _ready() -> void:
 // Character.cs
 using Godot;
 
-public partial class Character : CharacterBody2D
+public partial class Character : Node
 {
     [Export] private LimboHSM _hsm;
     [Export] private LimboState _idle;

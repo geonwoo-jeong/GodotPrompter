@@ -3,7 +3,7 @@ name: godot-grill
 description: Use when a new Godot system or feature has open design decisions — interrogates them in batched rounds, scope first, each question with a recommended answer, and records the answers before any design or code. Triggers on "grill me", "ask me first", "question me on the design", "what do I need to decide before building". Not for choosing between nodes or APIs, and not for bug fixes.
 ---
 
-# Godot Grill
+# Godot Grill (Common)
 
 Settle the decisions only the developer can make, before anyone designs a scene tree or writes
 code. The output is a **decision record**, not a design.

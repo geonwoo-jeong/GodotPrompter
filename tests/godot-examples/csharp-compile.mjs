@@ -39,7 +39,12 @@ for (const sample of samples) {
     // Complete source examples retain their exact text (including their own imports).
     output += mapped;
   }
-  await writeFile(join(project, `${sample.className}.cs`), output);
+  // Independent recipes may intentionally use the same class name. Namespace their
+  // fixtures instead of renaming the documented source or overwriting another file.
+  const outputDir = sample.namespace ? join(project, sample.namespace) : project;
+  await mkdir(outputDir, { recursive: true });
+  if (sample.namespace) output = `namespace ${sample.namespace};\n` + output;
+  await writeFile(join(outputDir, `${sample.className}.cs`), output);
 }
 await writeFile(join(project, 'Examples.csproj'), `<Project Sdk="Godot.NET.Sdk/4.7.2">
   <PropertyGroup>
