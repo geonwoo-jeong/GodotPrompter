@@ -49,21 +49,17 @@ func serialize_inventory(inventory: Inventory) -> Array:
 
 func deserialize_inventory(inventory: Inventory, data: Array) -> void:
     for i in inventory.slots.size():
-        inventory.slots[i] = InventorySlot.new()
-    for i in mini(data.size(), inventory.slots.size()):
-        var entry = data[i]
-        if entry == null:
-            inventory.slots[i] = InventorySlot.new()
-        else:
-            var item: ItemData = get_item(entry["id"])
-            if item == null:
-                push_error("ItemRegistry: unknown item id '%s'" % entry["id"])
-                inventory.slots[i] = InventorySlot.new()
-                continue
-            var slot          := InventorySlot.new()
-            slot.item         = item
-            slot.quantity     = entry["qty"]
-            inventory.slots[i] = slot
+        var slot := InventorySlot.new()
+        inventory.slots[i] = slot
+        if i >= data.size() or data[i] == null:
+            continue
+        var entry: Dictionary = data[i]
+        var item: ItemData = get_item(entry["id"])
+        if item == null:
+            push_error("ItemRegistry: unknown item id '%s'" % entry["id"])
+            continue
+        slot.item = item
+        slot.quantity = entry["qty"]
     inventory.inventory_changed.emit()
 ```
 
@@ -124,30 +120,22 @@ public partial class ItemRegistry : Node
     public void DeserializeInventory(Inventory inventory, Godot.Collections.Array data)
     {
         for (int i = 0; i < inventory.Slots.Count; i++)
-            inventory.Slots[i] = new InventorySlot();
-        int count = Mathf.Min(data.Count, inventory.Slots.Count);
-        for (int i = 0; i < count; i++)
         {
-            if (data[i].VariantType == Variant.Type.Nil)
-            {
-                inventory.Slots[i] = new InventorySlot();
+            var slot = new InventorySlot();
+            inventory.Slots[i] = slot;
+            if (i >= data.Count || data[i].VariantType == Variant.Type.Nil)
                 continue;
-            }
 
             var entry = data[i].AsGodotDictionary();
             var item  = GetItem(entry["id"].As<string>());
             if (item == null)
             {
                 GD.PushError($"ItemRegistry: unknown item id '{entry["id"]}'");
-                inventory.Slots[i] = new InventorySlot();
                 continue;
             }
 
-            inventory.Slots[i] = new InventorySlot
-            {
-                Item     = item,
-                Quantity = entry["qty"].As<int>(),
-            };
+            slot.Item = item;
+            slot.Quantity = entry["qty"].As<int>();
         }
         inventory.EmitSignal(Inventory.SignalName.InventoryChanged);
     }

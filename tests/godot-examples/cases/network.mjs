@@ -80,7 +80,7 @@ func run() -> void:
     check(client_peer.create_client("127.0.0.1", server_peer.host.get_local_port()) == OK, "Loopback client must initialize")
     server_api.multiplayer_peer = server_peer
     client_api.multiplayer_peer = client_peer
-    var world_scene := load("res://world.tscn") as PackedScene
+    var world_scene: PackedScene = load("res://world.tscn")
     var server_world := world_scene.instantiate()
     var client_world := world_scene.instantiate()
     server_branch.add_child(server_world)

@@ -134,7 +134,7 @@ func spawn(world_position: Vector2, amount: int, is_critical: bool = false) -> v
     var screen_pos: Vector2 = get_viewport().get_canvas_transform() * world_position
 
     # Wraps around — if POOL_SIZE is too small, older labels get recycled mid-animation.
-    var dn := _pool[_pool_index % POOL_SIZE]
+    var dn := _pool[_pool_index]
     _pool_index = (_pool_index + 1) % POOL_SIZE
 
     dn.position = screen_pos
@@ -174,7 +174,7 @@ public partial class DamageNumberSpawner : Node
     {
         var screenPos = GetViewport().GetCanvasTransform() * worldPosition;
 
-        var dn = _pool[_poolIndex % PoolSize];
+        var dn = _pool[_poolIndex];
         _poolIndex = (_poolIndex + 1) % PoolSize;
 
         dn.Position = screenPos;

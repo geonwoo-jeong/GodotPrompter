@@ -19,7 +19,7 @@ const indent = text => text.split('\n').map(line => line ? `    ${line}` : '').j
 
 export default [
   {
-    name: 'ui: health bars read component state for either signal payload',
+    name: 'ui: health bars follow the component damage and healing signals',
     async setup({ repoRoot, projectDir }) {
       const health = await gdscriptBlock(repoRoot, 'skills/hud-system/SKILL.md', 'class_name HealthBar');
       const component = await gdscriptBlock(repoRoot, 'skills/scene-organization/SKILL.md', 'class_name HealthComponent');
@@ -40,13 +40,12 @@ export default [
     await bars.back()._tween.finished
     for bar in bars:
         expect(is_equal_approx(bar.value, 25.0) and bar.max_value == 100, "Old/new payloads must preserve the component's maximum")
-    # A project can instead send (current, maximum); the component state still wins.
-    component.current_health = 60
+    # Healing emits (old=25, new=60); the maximum still comes from the component.
     component.max_health = 120
-    component.health_changed.emit(60, 120)
+    component.heal(35)
     await bars.back()._tween.finished
     for bar in bars:
-        expect(is_equal_approx(bar.value, 60.0) and bar.max_value == 120, "Current/maximum payloads must also use component state")
+        expect(is_equal_approx(bar.value, 60.0) and bar.max_value == 120, "Healing must update the value and read the component's maximum")
     expect(component.health_changed.get_connections().size() == 2, "Each bar must connect once")
     finish()`),
       });
@@ -85,7 +84,7 @@ export default [
     for i in 19:
         spawner.spawn(Vector2(30, 40), 2)
     spawner.spawn(Vector2(100, 100), 3, true)
-    var first := spawner.get_child(0) as DamageNumber
+    var first: DamageNumber = spawner.get_child(0)
     var interrupted_tween := first._tween
     interrupted_tween.pause()
     interrupted_tween.custom_step(0.03)

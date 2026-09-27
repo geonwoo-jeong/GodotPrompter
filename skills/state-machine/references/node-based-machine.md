@@ -59,24 +59,18 @@ func _set_callbacks(enabled: bool) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _active:
-		return
 	var next := current_state.handle_input(event)
 	if next:
 		transition_to(next)
 
 
 func _process(delta: float) -> void:
-	if not _active:
-		return
 	var next := current_state.update(delta)
 	if next:
 		transition_to(next)
 
 
 func _physics_process(delta: float) -> void:
-	if not _active:
-		return
 	var next := current_state.physics_update(delta)
 	if next:
 		transition_to(next)
@@ -153,21 +147,18 @@ public partial class StateMachine : Node
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (!_active) return;
         var next = CurrentState.HandleInput(@event);
         if (!string.IsNullOrEmpty(next)) TransitionTo(next);
     }
 
     public override void _Process(double delta)
     {
-        if (!_active) return;
         var next = CurrentState.Update(delta);
         if (!string.IsNullOrEmpty(next)) TransitionTo(next);
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if (!_active) return;
         var next = CurrentState.PhysicsUpdate(delta);
         if (!string.IsNullOrEmpty(next)) TransitionTo(next);
     }
