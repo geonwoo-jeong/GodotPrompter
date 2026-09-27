@@ -113,6 +113,9 @@ skeleton.set_bone_parent(1, 0)
 skeleton.set_bone_parent(2, 1)
 skeleton.set_bone_rest(1, Transform3D(Basis.IDENTITY, Vector3.UP))
 skeleton.set_bone_rest(2, Transform3D(Basis.IDENTITY, Vector3.UP))
+# Setting rest transforms does not initialize the current pose. Give the solver
+# nonzero bone lengths before the actor and its modifier enter the scene tree.
+skeleton.reset_bone_poses()
 var target := Node3D.new()
 target.name = "IKTarget"
 target.position = Vector3(1, 1, 0)
@@ -125,8 +128,13 @@ if not check(ik.get_joint_count(0) == 3, "FABRIK must derive all three connected
     return
 if not check(ik.get_node(ik.get_target_node(0)) == target, "FABRIK target must resolve relative to the modifier"):
     return
-actor.queue_free()
+# Run a real solver update before finishing the test, so frame scheduling cannot
+# hide an invalid pose or a solver error behind successful configuration checks.
+await ik.modification_processed
+# Let modifier processing finish before removing the entire fixture synchronously.
 await process_frame
+root.remove_child(actor)
+actor.free()
 print("GODOT_EXAMPLES_OK")
 quit(0)`),
       });
